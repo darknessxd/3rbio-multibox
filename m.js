@@ -702,9 +702,9 @@
       _0x14f7b2("#skin").blur(() => {
         let _0x145a78 = _0x14f7b2('#skin').val();
         if (!_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x145a78 || '')).includes('XXXXXXX')) {
-          return this.setarbSkin();
+          return this.setSkin(_0x145a78);
         }
-        this.setSkin(_0x14f7b2("#skin").val());
+        this.setarbSkin();
       });
     }
     static ["switch"](_0x5517bb) {
@@ -2908,7 +2908,7 @@
         _0x27f603.set(_0x1bed1b, _0x3ec24e);
         _0x48358c["delete"](_0x1bed1b);
         _0x3ec24e.isMine = true;
-        _0x3ec24e.nick = _0x90a1a7.nick;
+        _0x3ec24e.nick = (_0x90a1a7.tag ? '[' + _0x90a1a7.tag + ']' : '') + _0x90a1a7.nick;
       }
     }
     static ["eatCell"](_0x5cbea9, _0x65a01d, _0x66ed43) {
@@ -3225,7 +3225,7 @@
     static set ["skin"](_0x1a9370) {
       const _0x5518a5 = _0x386cbc.getImgurCode(_0x1a9370);
       const _0x356638 = _0x386cbc.getRaindowFlag(_0x1a9370);
-      return _0x5518a5 ? (this.isRGB !== _0x356638 && (this.isRGB = _0x356638, _0x2d5cce.rgbMode()), this._skin = _0x5518a5, void _0x2d5cce.skin()) : void _0x40f48a.alert("Multibox", _0x59f59a.current.notif.invalidSkinUrl);
+      return "XXXXXXX" !== _0x5518a5 && _0x5518a5 ? (this.isRGB !== _0x356638 && (this.isRGB = _0x356638, _0x2d5cce.rgbMode()), this._skin = _0x5518a5, void _0x2d5cce.skin()) : void _0x40f48a.alert("Multibox", _0x59f59a.current.notif.invalidSkinUrl);
     }
     static get ['skin']() {
       return this._skin;
@@ -4275,11 +4275,11 @@
       }
     }
     static ["handleChat"](_0x4be406) {
-      var _0x58e523 = new TextDecoder().decode(_0x4be406.dataView.buffer);
-      console.log(_0x58e523);
-      var _0x16ef7c = _0x4be406.readStringZeroUtf8().replace('[]', '');
-      var _0x365e8b = _0x4be406.readStringZeroUtf8();
-      _0x40f48a.alert(_0x16ef7c, _0x365e8b);
+      var _0id = _0x4be406.readUInt32();
+      for (var _0i = 0; _0i < 7; _0i++) _0x4be406.readUInt8();
+      var _0name = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '').replace(/^\[.\]/, '');
+      var _0msg = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '');
+      if (_0msg) _0x40f48a.normal(_0name || 'Player', _0msg);
     }
     static ["worldUpdate"](_0x449cb9, _0x43ee07 = 1) {
       _0xb45f1b.refreshTime();
@@ -4570,7 +4570,7 @@
         if ('' === _0x90a1a7.nick) {
           _0x90a1a7.nick = "Unnamed cell";
         }
-        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
+        let _0x4a58df = unescape(encodeURIComponent((_0x90a1a7.tag ? '[' + _0x90a1a7.tag + ']' : '') + _0x90a1a7.nick));
         let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
         const _0x4208f8 = {
           'n': _0x4a58df
@@ -5184,6 +5184,23 @@
       for (const _0x5d3988 of _0x12ac51.teamPlayers.values()) if (_0x5d3988.isAlive && !_0x5d3988.skin.includes("XXXXXXX")) {
         this.skinMap.set(_0x5d3988.worldID, this.code2Url(_0x5d3988.skin));
       }
+      const _0xtag = _0x90a1a7.tag;
+      if (_0xtag) {
+        const _0xtagPattern = '[' + _0xtag + ']';
+        const _0xskinUrl = this.skinMap.get(_0x90a1a7.worldID) || this.skinMap.get(_0x90a1a7.worldID2) || (this.arbSkin ? "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + this.arbSkin.replace(/free\/|.png/g, '') + ".png" : '');
+        if (_0xskinUrl) {
+          for (const _0xcell of _0x14d4a3.cells.values()) {
+            if (_0xcell.nick && !_0xcell.isVirus && !_0xcell.isEjected && _0xcell.nick.includes(_0xtagPattern) && !this.skinMap.has(_0xcell.worldID)) {
+              this.skinMap.set(_0xcell.worldID, _0xskinUrl);
+            }
+          }
+          for (const _0xcell2 of _0x14d4a3.cells2.values()) {
+            if (_0xcell2.nick && !_0xcell2.isVirus && !_0xcell2.isEjected && _0xcell2.nick.includes(_0xtagPattern) && !this.skinMap.has(_0xcell2.worldID)) {
+              this.skinMap.set(_0xcell2.worldID, _0xskinUrl);
+            }
+          }
+        }
+      }
     }
     static ["createRGBset"]() {
       this.rgbTeammates.clear();
@@ -5247,14 +5264,14 @@
       _0x252d42.src = _0x31eb71;
     }
     static ["getImgurCode"](_0x96fe5e) {
-      const _0x5e0df5 = _0x96fe5e.match(/https?:\/\/i\.imgur\.com\/([\w0-9]{7})\.(png|jpg|gif)/i);
-      return null === _0x5e0df5 ? "XXXXXXX" : _0x5e0df5[1];
+      const _0x5e0df5 = _0x96fe5e.match(/https?:\/\/.+\.(png|jpg|gif|webp)/i);
+      return null === _0x5e0df5 ? "XXXXXXX" : _0x5e0df5[0];
     }
     static ["getRaindowFlag"](_0x4a64ed) {
       return null !== _0x4a64ed.match(/#hue\s??=\s??auto\s??,\s??blend\s??=\s??auto/i);
     }
     static ["code2Url"](_0x4e8aaa) {
-      return "https://i.imgur.com/" + _0x4e8aaa + '.png';
+      return _0x4e8aaa.startsWith("http") ? _0x4e8aaa : "https://i.imgur.com/" + _0x4e8aaa + '.png';
     }
     static ["commands"]() {
       const _0x5b9c43 = this.ctx;
