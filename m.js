@@ -322,6 +322,10 @@
     foodGlowDistance: "Food glow distance",
     foodGlowColor: "Food glow color",
     maouCircle: "Maou circle",
+    cellShadow: "Cell shadow",
+    rainbowFood: "Rainbow food",
+    eatEffect: "Eat effect",
+    eatEffectColor: "Eat effect color",
     cellTransparency: "Cell transparency",
     lightenCellColor: "Lighten cell color",
     borderColor: "Border color",
@@ -1499,6 +1503,13 @@
       this.foodGlowDistance = ~~_0x19d5af.get("theme", "foodGlowDistance") || 30;
       this.foodGlowColor = _0x19d5af.get('theme', "foodGlowColor") || "#00ff00";
       this.maouCircle = _0x19d5af.get("theme", "maouCircle") || "off";
+      this.cellShadow = _0x19d5af.get("theme", "cellShadow") || "off";
+      this.rainbowFood = _0x19d5af.get("theme", "rainbowFood") || "off";
+      this.eatEffect = _0x19d5af.get("theme", "eatEffect") || "off";
+      this.eatEffectColor = _0x19d5af.get('theme', "eatEffectColor") || "#ffffff";
+      this._rainbowFoodHue = 0;
+      this._foodTrack = new Map();
+      this._particles = [];
       this.team1color = _0x19d5af.get("theme", "team1color") || "#aeaeae";
       this.team2color = _0x19d5af.get("theme", 'team2color') || "#ff171f";
       this.multiboxActive = _0x19d5af.get("theme", "multiboxActive") || "#ff61f8";
@@ -3701,6 +3712,29 @@
   }
   class _0x4c0fb5 {
     static ["render"]() {
+      _0x480be4._rainbowFoodHue = (_0x480be4._rainbowFoodHue + 2) % 360;
+      if (_0x480be4.eatEffect === "on") {
+        const _0x5fd1ce = new Set();
+        for (const _0x53a49e of _0x14d4a3.food) {
+          _0x5fd1ce.add(_0x53a49e.id);
+        }
+        for (const [_0x595cb1, _0x285674] of _0x480be4._foodTrack) {
+          if (!_0x5fd1ce.has(_0x595cb1)) {
+            _0x480be4._particles.push({
+              x: _0x285674.x,
+              y: _0x285674.y,
+              size: 5,
+              maxSize: 40,
+              opacity: 1,
+              life: 0
+            });
+            _0x480be4._foodTrack.delete(_0x595cb1);
+          }
+        }
+        for (const _0x342f19 of _0x14d4a3.food) {
+          _0x480be4._foodTrack.set(_0x342f19.id, { x: _0x342f19.animX, y: _0x342f19.animY });
+        }
+      }
       if ("off" !== _0x2cc0f3.food) {
         if ("monoColored" === _0x2cc0f3.food) {
           this.monoColored();
@@ -3708,29 +3742,65 @@
           this.rainbow();
         }
       }
+      if (_0x480be4.eatEffect === "on") {
+        const _0x2cfdcc = _0x386cbc.ctx;
+        for (let _0x3512ea = _0x480be4._particles.length - 1; _0x3512ea >= 0; _0x3512ea--) {
+          const _0x460e1b = _0x480be4._particles[_0x3512ea];
+          _0x460e1b.life++;
+          _0x460e1b.size += 1.5;
+          _0x460e1b.opacity *= 0.92;
+          if (_0x460e1b.opacity < 0.02 || _0x460e1b.size > _0x460e1b.maxSize) {
+            _0x480be4._particles.splice(_0x3512ea, 1);
+            continue;
+          }
+          _0x2cfdcc.beginPath();
+          _0x2cfdcc.arc(_0x460e1b.x, _0x460e1b.y, _0x460e1b.size, 0, _0x386cbc.pi2, true);
+          _0x2cfdcc.closePath();
+          _0x2cfdcc.strokeStyle = _0x480be4.eatEffectColor;
+          _0x2cfdcc.globalAlpha = _0x460e1b.opacity;
+          _0x2cfdcc.lineWidth = 3;
+          _0x2cfdcc.stroke();
+          _0x2cfdcc.globalAlpha = 1;
+        }
+      }
     }
     static ["monoColored"]() {
       const _0x35608f = _0x386cbc.ctx;
       const _0xb35fb3 = _0x480be4.foodSize;
-      let _0x452dec = _0x14d4a3.food.length;
-      _0x35608f.fillStyle = _0x480be4.foodColor;
-      for (_0x35608f.beginPath(); _0x452dec--;) {
-        const _0x6bc6c7 = {
-          x: 0x0,
-          y: 0x0
-        };
-        const _0x105e9e = _0x14d4a3.food[_0x452dec];
-        const _0x12f0da = 2 === _0x105e9e.cellType ? _0x996564.position : _0x6bc6c7;
-        const _0x3d8a95 = _0x105e9e.animRadius + _0xb35fb3;
-        _0x35608f.moveTo(_0x105e9e.animX - _0x12f0da.x + _0x3d8a95, _0x105e9e.animY - _0x12f0da.y);
-        _0x35608f.arc(_0x105e9e.animX - _0x12f0da.x, _0x105e9e.animY - _0x12f0da.y, _0x3d8a95, 0, _0x386cbc.pi2, true);
+      if (_0x480be4.rainbowFood === "on") {
+        let _0x25b6f1 = 0;
+        for (let _0x452dec = _0x14d4a3.food.length; _0x452dec--;) {
+          const _0x6bc6c7 = { x: 0x0, y: 0x0 };
+          const _0x105e9e = _0x14d4a3.food[_0x452dec];
+          const _0x12f0da = 2 === _0x105e9e.cellType ? _0x996564.position : _0x6bc6c7;
+          const _0x3d8a95 = _0x105e9e.animRadius + _0xb35fb3;
+          _0x35608f.beginPath();
+          _0x35608f.arc(_0x105e9e.animX - _0x12f0da.x, _0x105e9e.animY - _0x12f0da.y, _0x3d8a95, 0, _0x386cbc.pi2, true);
+          _0x35608f.closePath();
+          _0x35608f.fillStyle = "hsl(" + ((_0x480be4._rainbowFoodHue + _0x25b6f1 * 30) % 360) + ",100%,50%)";
+          _0x35608f.fill();
+          _0x25b6f1++;
+        }
+      } else {
+        _0x35608f.fillStyle = _0x480be4.foodColor;
+        let _0x452dec = _0x14d4a3.food.length;
+        for (_0x35608f.beginPath(); _0x452dec--;) {
+          const _0x6bc6c7 = { x: 0x0, y: 0x0 };
+          const _0x105e9e = _0x14d4a3.food[_0x452dec];
+          const _0x12f0da = 2 === _0x105e9e.cellType ? _0x996564.position : _0x6bc6c7;
+          const _0x3d8a95 = _0x105e9e.animRadius + _0xb35fb3;
+          _0x35608f.moveTo(_0x105e9e.animX - _0x12f0da.x + _0x3d8a95, _0x105e9e.animY - _0x12f0da.y);
+          _0x35608f.arc(_0x105e9e.animX - _0x12f0da.x, _0x105e9e.animY - _0x12f0da.y, _0x3d8a95, 0, _0x386cbc.pi2, true);
+        }
+        _0x35608f.closePath();
+        _0x35608f.fill();
       }
-      _0x35608f.closePath();
-      _0x35608f.fill();
     }
     static ["rainbow"]() {
       let _0x31b51a = _0x386cbc.ctx;
       let _0x23c062 = _0x480be4.foodSize;
+      const _0x3e6d17 = _0x480be4.rainbowFood === "on";
+      let _0x25b6f1 = 0;
       for (let _0x198238 = _0x14d4a3.food.length; _0x198238--;) {
         const _0x5096a7 = {
           x: 0x0,
@@ -3739,7 +3809,12 @@
         const _0x4e1e7f = _0x14d4a3.food[_0x198238];
         const _0x142eae = 2 === _0x4e1e7f.cellType ? _0x996564.position : _0x5096a7;
         const _0x5c6dd3 = _0x4e1e7f.animRadius + _0x23c062;
-        _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
+        if (_0x3e6d17) {
+          _0x31b51a.fillStyle = "hsl(" + ((_0x480be4._rainbowFoodHue + _0x25b6f1 * 30) % 360) + ",100%,50%)";
+          _0x25b6f1++;
+        } else {
+          _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
+        }
         if (2 > _0x5c6dd3 * _0xddb6d6.viewport) {
           _0x31b51a.fillRect(_0x4e1e7f.animX - _0x142eae.x - _0x5c6dd3, _0x4e1e7f.animY - _0x142eae.y - _0x5c6dd3, 2 * _0x5c6dd3, 2 * _0x5c6dd3);
         } else {
@@ -5216,12 +5291,20 @@
           _0xfdf4f4.shadowColor = 'transparent';
         } else {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
+          if (_0x480be4.cellShadow === "on" && _0x480be4.maouCircle !== "on") {
+            _0xfdf4f4.shadowBlur = 15;
+            _0xfdf4f4.shadowColor = "black";
+          }
           if (_0x5ab10a * _0x21653d < 1) {
             _0xfdf4f4.globalAlpha = _0x5ab10a * _0x21653d;
             _0xfdf4f4.fill();
             _0xfdf4f4.globalAlpha = 1;
           } else {
             _0xfdf4f4.fill();
+          }
+          if (_0x480be4.cellShadow === "on" && _0x480be4.maouCircle !== "on") {
+            _0xfdf4f4.shadowBlur = 0;
+            _0xfdf4f4.shadowColor = 'transparent';
           }
         }
         if (_0x5987fa.isEjected) {
