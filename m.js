@@ -314,6 +314,7 @@
     chatFontSize: "Chat font size",
     minimapSize: "Minimap size",
     "skinBorder": "Skin border",
+    rainbowBorder: "Rainbow border",
     cellTransparency: "Cell transparency",
     lightenCellColor: "Lighten cell color",
     borderColor: "Border color",
@@ -782,7 +783,6 @@
     static ['setTag'](_0x57c637) {
       _0x90a1a7.tag = _0x57c637;
       _0x19d5af.set('profiles', "tag", _0x57c637);
-      if (_0x12ac51._mxConnect) _0x12ac51._mxConnect();
     }
     static ["updateMainSkin"](_0x55f338) {
       const _0x1f6a96 = _0x14f7b2('#skin').val();
@@ -1483,6 +1483,8 @@
       this.lightenCellColor = ~~_0x19d5af.get("theme", "lightenCellColor") || 100;
       this.borderWidth = ~~_0x19d5af.get("theme", "borderWidth") || 60;
       this.borderColor = _0x19d5af.get('theme', "borderColor") || "#ffffff";
+      this.rainbowBorder = _0x19d5af.get("theme", "rainbowBorder") || "off";
+      this._rainbowHue = 0;
       this.team1color = _0x19d5af.get("theme", "team1color") || "#aeaeae";
       this.team2color = _0x19d5af.get("theme", 'team2color') || "#ff171f";
       this.multiboxActive = _0x19d5af.get("theme", "multiboxActive") || "#ff61f8";
@@ -4666,61 +4668,6 @@
       this.teamData = _0x5e31b7;
       this.biggestIsOn = false;
       this.biggest = new _0xb33099(0);
-      this._mxSession = Date.now() + '_' + Math.random();
-      this._mxWs = null;
-      this._mxConnect = function () {
-        if (_0x12ac51._mxWs) try { _0x12ac51._mxWs.close(); } catch (_0xe) {}
-        try {
-          _0x12ac51._mxWs = new WebSocket('wss://ss-project-kjsi.onrender.com');
-          _0x12ac51._mxWs.onopen = function () {
-            if (_0x90a1a7.tag) {
-              _0x12ac51._mxWs.send(JSON.stringify({ type: 'join', tag: _0x90a1a7.tag, session: _0x12ac51._mxSession, nick: _0x90a1a7.nick }));
-            }
-          };
-          _0x12ac51._mxWs.onmessage = function (_0xe) {
-            try {
-              var _0xd = JSON.parse(_0xe.data);
-              if (_0xd.type === 'update' && _0xd.session !== _0x12ac51._mxSession) {
-                var _0xplayer = _0x12ac51.teamPlayers.get(_0xd.session);
-                if (!_0xplayer) {
-                  _0xplayer = _0x12ac51.newPlayer(_0xd.session);
-                  _0xplayer.animX = _0xd.x;
-                  _0xplayer.animY = _0xd.y;
-                }
-                _0xplayer.x = _0xd.x;
-                _0xplayer.y = _0xd.y;
-                _0xplayer.nick = _0xd.nick || '';
-                _0xplayer.isAlive = true;
-                _0xplayer.timeStamp = _0xb45f1b.time;
-              } else if (_0xd.type === 'leave' && _0xd.session !== _0x12ac51._mxSession) {
-                _0x12ac51.teamPlayers['delete'](_0xd.session);
-              }
-            } catch (_0xe2) {}
-          };
-          _0x12ac51._mxWs.onclose = function () {
-            _0x12ac51._mxWs = null;
-            setTimeout(_0x12ac51._mxConnect, 3000);
-          };
-          _0x12ac51._mxWs.onerror = function () {
-            _0x12ac51._mxWs.close();
-          };
-        } catch (_0xe) {}
-      };
-      _0x12ac51._mxConnect();
-      setInterval(function () {
-        var _0xnow = _0xb45f1b.time;
-        _0x12ac51.teamPlayers.forEach(function (_0xp, _0xk) {
-          if (_0xnow - _0xp.timeStamp > 5000) {
-            _0x12ac51.teamPlayers['delete'](_0xk);
-          }
-        });
-      }, 3000);
-      window.addEventListener('beforeunload', function () {
-        if (_0x12ac51._mxWs) {
-          _0x12ac51._mxWs.send(JSON.stringify({ type: 'leave', session: _0x12ac51._mxSession }));
-          _0x12ac51._mxWs.close();
-        }
-      });
     }
     static ["clear"]() {
       this.teamPlayers.clear();
@@ -5084,17 +5031,6 @@
       this.cells();
       this.commands();
       _0x34f3bb.cleaner();
-      if (_0x12ac51._mxWs && _0x12ac51._mxWs.readyState === 1 && _0x90a1a7.tag && _0x90a1a7.isAlive) {
-        try {
-          _0x12ac51._mxWs.send(JSON.stringify({
-            type: 'update',
-            session: _0x12ac51._mxSession,
-            nick: _0x90a1a7.nick,
-            x: _0x90a1a7.x,
-            y: _0x90a1a7.y
-          }));
-        } catch (_0xe) {}
-      }
       this.ctx.restore();
     }
     static ["vanillaGrid"]() {
@@ -5126,9 +5062,56 @@
     static ["border"]() {
       const _0x3f1e55 = this.ctx;
       const _0x1b4ff4 = _0x480be4.borderWidth >> 1;
-      _0x3f1e55.strokeStyle = _0x480be4.borderColor;
-      _0x3f1e55.lineWidth = _0x480be4.borderWidth;
-      _0x3f1e55.strokeRect(_0x996564.left - _0x1b4ff4, _0x996564.top - _0x1b4ff4, _0x996564.edge + _0x480be4.borderWidth, _0x996564.edge + _0x480be4.borderWidth);
+      if (_0x480be4.rainbowBorder !== "on") {
+        _0x3f1e55.strokeStyle = _0x480be4.borderColor;
+        _0x3f1e55.lineWidth = _0x480be4.borderWidth;
+        _0x3f1e55.strokeRect(_0x996564.left - _0x1b4ff4, _0x996564.top - _0x1b4ff4, _0x996564.edge + _0x480be4.borderWidth, _0x996564.edge + _0x480be4.borderWidth);
+        return;
+      }
+      const _0x14e95b = _0x480be4.borderWidth;
+      const _0x2f4167 = _0x996564.left - _0x1b4ff4;
+      const _0x531a16 = _0x996564.top - _0x1b4ff4;
+      const _0x3e7362 = _0x996564.edge + _0x14e95b;
+      const _0x18ec80 = _0x996564.edge + _0x14e95b;
+      const _0x298e0a = (_0x480be4._rainbowHue || 0) % 360;
+      _0x480be4._rainbowHue = _0x298e0a + 2;
+      const _0x1fce1b = _0x298e0a;
+      const _0x2c7ca7 = (_0x298e0a + 72) % 360;
+      const _0x4289cc = (_0x298e0a + 144) % 360;
+      const _0x1d5a73 = (_0x298e0a + 216) % 360;
+      const _0x160a8f = (_0x298e0a + 288) % 360;
+      let _0x22cafb = _0x3f1e55.createLinearGradient(_0x2f4167, _0x531a16, _0x2f4167, _0x531a16 + _0x18ec80);
+      _0x22cafb.addColorStop(0, "hsl(" + _0x1fce1b + ",100%,50%)");
+      _0x22cafb.addColorStop(0.25, "hsl(" + _0x2c7ca7 + ",100%,50%)");
+      _0x22cafb.addColorStop(0.5, "hsl(" + _0x4289cc + ",100%,50%)");
+      _0x22cafb.addColorStop(0.75, "hsl(" + _0x1d5a73 + ",100%,50%)");
+      _0x22cafb.addColorStop(1, "hsl(" + _0x160a8f + ",100%,50%)");
+      _0x3f1e55.fillStyle = _0x22cafb;
+      _0x3f1e55.fillRect(_0x2f4167, _0x531a16, _0x14e95b, _0x18ec80);
+      _0x22cafb = _0x3f1e55.createLinearGradient(_0x2f4167 + _0x3e7362, _0x531a16, _0x2f4167 + _0x3e7362, _0x531a16 + _0x18ec80);
+      _0x22cafb.addColorStop(0, "hsl(" + _0x160a8f + ",100%,50%)");
+      _0x22cafb.addColorStop(0.25, "hsl(" + _0x1d5a73 + ",100%,50%)");
+      _0x22cafb.addColorStop(0.5, "hsl(" + _0x4289cc + ",100%,50%)");
+      _0x22cafb.addColorStop(0.75, "hsl(" + _0x2c7ca7 + ",100%,50%)");
+      _0x22cafb.addColorStop(1, "hsl(" + _0x1fce1b + ",100%,50%)");
+      _0x3f1e55.fillStyle = _0x22cafb;
+      _0x3f1e55.fillRect(_0x2f4167 + _0x3e7362 - _0x14e95b, _0x531a16, _0x14e95b, _0x18ec80);
+      _0x22cafb = _0x3f1e55.createLinearGradient(_0x2f4167 + _0x3e7362, _0x531a16, _0x2f4167, _0x531a16);
+      _0x22cafb.addColorStop(0, "hsl(" + _0x160a8f + ",100%,50%)");
+      _0x22cafb.addColorStop(0.25, "hsl(" + _0x1d5a73 + ",100%,50%)");
+      _0x22cafb.addColorStop(0.5, "hsl(" + _0x4289cc + ",100%,50%)");
+      _0x22cafb.addColorStop(0.75, "hsl(" + _0x2c7ca7 + ",100%,50%)");
+      _0x22cafb.addColorStop(1, "hsl(" + _0x1fce1b + ",100%,50%)");
+      _0x3f1e55.fillStyle = _0x22cafb;
+      _0x3f1e55.fillRect(_0x2f4167, _0x531a16, _0x3e7362, _0x14e95b);
+      _0x22cafb = _0x3f1e55.createLinearGradient(_0x2f4167, _0x531a16 + _0x18ec80, _0x2f4167 + _0x3e7362, _0x531a16 + _0x18ec80);
+      _0x22cafb.addColorStop(0, "hsl(" + _0x1fce1b + ",100%,50%)");
+      _0x22cafb.addColorStop(0.25, "hsl(" + _0x2c7ca7 + ",100%,50%)");
+      _0x22cafb.addColorStop(0.5, "hsl(" + _0x4289cc + ",100%,50%)");
+      _0x22cafb.addColorStop(0.75, "hsl(" + _0x1d5a73 + ",100%,50%)");
+      _0x22cafb.addColorStop(1, "hsl(" + _0x160a8f + ",100%,50%)");
+      _0x3f1e55.fillStyle = _0x22cafb;
+      _0x3f1e55.fillRect(_0x2f4167, _0x531a16 + _0x18ec80 - _0x14e95b, _0x3e7362, _0x14e95b);
     }
     static ['cells']() {
       const _0xfdf4f4 = this.ctx;
