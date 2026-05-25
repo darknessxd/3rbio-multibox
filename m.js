@@ -215,6 +215,11 @@
     teamIndicator: "Teammate indicator",
     commander: "Commander",
     "chatType": "Chat type",
+    virusMass: "Virus mass",
+    showMassInLB: "Show mass in leaderboard",
+    cellLuminous: "Cell Luminous",
+    multiboxShield: "Multibox Shield",
+    antiAliasing: "Anti-aliasing",
     targeting: "Cell Targeting [Spectate mode]",
     "opt_on": 'On',
     "opt_off": 'Off',
@@ -235,7 +240,9 @@
     opt_onlyLines: "Only lines",
     opt_snowflakes: "Snowflakes",
     opt_chatroom: "Chatroom",
-    "opt_popup": "Pop up chat"
+    "opt_popup": "Pop up chat",
+    opt_fill: "Fill",
+    opt_text: "Text"
   };
   const _0xc530a1 = {
     "title": 'Hotkeys',
@@ -351,6 +358,26 @@
     indicatorSize: "Teammate indicator size",
     "team1color": "Team 1 color [Double Tag Mode]",
     "team2color": "Team 2 color [Double Tag Mode]",
+    borderOpacity: "Border Opacity",
+    borderGlowSize: "Border glow size",
+    borderGlowStrength: "Border glow strength",
+    cursorLineColor: "Cursor Line Color",
+    leaderboardTitleColor: "Leaderboard title color",
+    customLeaderboardHead: "Custom Leaderboard Head",
+    globalRotationSpeed: "Global Rotation Speed",
+    maouCircleUrl: "Maou Circle Skin URL",
+    multiboxShieldUrl: "Multibox Shield URL",
+    virusGlowSize: "Virus glow size",
+    virusGlowStrength: "Virus glow strength",
+    ghostColor: "Ghost cell color [minimap]",
+    selfColor: "Self cell color [minimap]",
+    selfViewportColor: "Self viewport color [minimap]",
+    selfViewportAlpha: "Self viewport alpha",
+    topViewportColor: "Top viewport color [minimap]",
+    topViewportAlpha: "Top viewport alpha",
+    teammateColor: "Teammate cells color [minimap]",
+    teammateNameColor: "Teammate name color [minimap]",
+    backgroundImage: "Background Image URL",
     on: 'On',
     "off": "Off"
   };
@@ -399,6 +426,11 @@
       this.targeting = _0x19d5af.get("settings", "targeting") || "off";
       this.chatType = _0x19d5af.get("settings", "chatType") || 'popup';
       this.multiboxMode = _0x19d5af.get('settings', "multiboxMode") || 'on';
+      this.virusMass = _0x19d5af.get("settings", "virusMass") || 'off';
+      this.showMassInLB = _0x19d5af.get("settings", "showMassInLB") || 'off';
+      this.cellLuminous = _0x19d5af.get("settings", "cellLuminous") || 'off';
+      this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
+      this.antiAliasing = _0x19d5af.get("settings", "antiAliasing") || 'on';
       this.setDomValues();
       this.addEvents();
     }
@@ -1534,10 +1566,42 @@
       this.backgroundColor = _0x19d5af.get("theme", "backgroundColor") || "#000000";
       this.indicatorSize = ~~_0x19d5af.get("theme", "indicatorSize") || 100;
       this.cursor = _0x19d5af.get("theme", "cursor") || 13;
+      this.borderOpacity = ~~_0x19d5af.get("theme", "borderOpacity") || 10;
+      this.borderGlowSize = ~~_0x19d5af.get("theme", "borderGlowSize") || 10;
+      this.borderGlowStrength = ~~_0x19d5af.get("theme", "borderGlowStrength") || 5;
+      this.cursorLineColor = _0x19d5af.get("theme", "cursorLineColor") || "#ff0000";
+      this.leaderboardTitleColor = _0x19d5af.get("theme", "leaderboardTitleColor") || "#ffffff";
+      this.customLeaderboardHead = _0x19d5af.get("theme", "customLeaderboardHead") || "off";
+      this.globalRotationSpeed = ~~_0x19d5af.get("theme", "globalRotationSpeed") || 5;
+      this.maouCircleUrl = _0x19d5af.get("theme", "maouCircleUrl") || "";
+      this.multiboxShieldUrl = _0x19d5af.get("theme", "multiboxShieldUrl") || "";
+      this.virusGlowSize = ~~_0x19d5af.get("theme", "virusGlowSize") || 50;
+      this.virusGlowStrength = ~~_0x19d5af.get("theme", "virusGlowStrength") || 5;
+      this.ghostColor = _0x19d5af.get("theme", "ghostColor") || "#aaa";
+      this.selfColor = _0x19d5af.get("theme", "selfColor") || "#fff";
+      this.selfViewportColor = _0x19d5af.get("theme", "selfViewportColor") || "#fff";
+      this.selfViewportAlpha = ~~_0x19d5af.get("theme", "selfViewportAlpha") || 5;
+      this.topViewportColor = _0x19d5af.get("theme", "topViewportColor") || "#fff";
+      this.topViewportAlpha = ~~_0x19d5af.get("theme", "topViewportAlpha") || 5;
+      this.teammateColor = _0x19d5af.get("theme", "teammateColor") || "#555";
+      this.teammateNameColor = _0x19d5af.get("theme", "teammateNameColor") || "#fff";
+      this.backgroundImage = _0x19d5af.get("theme", "backgroundImage") || "";
       this.addPresets();
       this.setDomValues();
       this.addEvents();
+      this.setLeaderboardTitle();
+      this.setBackgroundImage(this.backgroundImage);
       this._initMaouCircle();
+      this._initMultiboxShield();
+    }
+    static ["_initMultiboxShield"]() {
+      this._shieldReady = false;
+      this.shieldImage = new Image();
+      this.shieldImage.crossOrigin = "anonymous";
+      this.shieldImage.onload = () => { this._shieldReady = true; };
+      this.shieldImage.src = this.multiboxShieldUrl && this.multiboxShieldUrl.length > 0
+        ? this.multiboxShieldUrl
+        : "https://raw.githubusercontent.com/darknessxd/3rbio-multibox/main/hslo_ring.png";
     }
     static ["_initMaouCircle"]() {
       this.maouRotation = 0;
@@ -1549,14 +1613,14 @@
       this.maouInner = new Image();
       this.maouOuter.crossOrigin = "anonymous";
       this.maouInner.crossOrigin = "anonymous";
-      const _0xb0d1c2 = "https://raw.githubusercontent.com/darknessxd/3rbio-multibox/main/";
+      const _0xb0d1c2 = this.maouCircleUrl && this.maouCircleUrl.length > 0 ? this.maouCircleUrl : "https://raw.githubusercontent.com/darknessxd/3rbio-multibox/main/";
       this.maouOuter.onload = () => { this._maouReady = true; };
       this.maouInner.onload = () => { if (this.maouOuter.complete) this._maouReady = true; };
       this.maouOuter.src = _0xb0d1c2 + "hslo_ring.png";
       this.maouInner.src = _0xb0d1c2 + "maou_inner.png";
       setInterval(() => {
         if (this.maouCircle !== "on" || !this._maouReady) return;
-        this.maouRotation = (this.maouRotation + 1) % 360;
+        this.maouRotation = (this.maouRotation + (this.globalRotationSpeed || 1)) % 360;
         const _0x5e3f1a = 256.5;
         this.maouCtx.save();
         this.maouCtx.setTransform(1, 0, 0, -1, _0x5e3f1a + 0.5, _0x5e3f1a + 0.5);
@@ -1772,6 +1836,12 @@
       if ("nickColor" === _0x589c1b) {
         _0x34f3bb.nickCaches.clear();
       }
+      if ("leaderboardTitleColor" === _0x589c1b || "customLeaderboardHead" === _0x589c1b) {
+        this.setLeaderboardTitle();
+      }
+      if ("backgroundImage" === _0x589c1b) {
+        this.setBackgroundImage(_0x33fe69);
+      }
       _0x19d5af.set('theme', _0x589c1b, _0x33fe69);
     }
     static ["setBackground"](_0x4ffb10) {
@@ -1808,6 +1878,20 @@
       _0x14f7b2(".minimap-head").css("bottom", _0x567cb6 + 9 + 'px');
     }
     static ['setCursor'](_0xef6b4e) {}
+    static ["setLeaderboardTitle"]() {
+      const _0x2933e8 = this.customLeaderboardHead;
+      const _0x245fbe = "off" === _0x2933e8 ? "DarknessV1" : _0x2933e8;
+      _0x14f7b2("#leaderboard-head").css("color", this.leaderboardTitleColor);
+      _0x14f7b2("#leaderboard-head span").text(_0x245fbe);
+    }
+    static ["setBackgroundImage"](_0x3e7195) {
+      if (_0x3e7195 && _0x3e7195.length > 0) {
+        _0x14f7b2('body').css("background-image", "url(" + _0x3e7195 + ")");
+        _0x14f7b2('body').css("background-size", "cover");
+      } else {
+        _0x14f7b2('body').css("background-image", "none");
+      }
+    }
     static ["selectPreset"](_0x4da382) {
       const _0x5ae372 = this.presets[_0x4da382];
       if ("custom" !== _0x4da382 && _0x5ae372) {
@@ -1856,7 +1940,27 @@
         commanderColor: "#0849d4",
         backgroundColor: "#000",
         indicatorSize: 0x64,
-        "cursor": 0x7
+        "cursor": 0x7,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x4d89ea = {
         CellAnimation: 0xa0,
@@ -1904,7 +2008,27 @@
         commanderColor: "#0849d4",
         backgroundColor: '#000000',
         indicatorSize: 0x64,
-        cursor: 0x1
+        cursor: 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x351870 = {
         CellAnimation: 0x78,
@@ -1952,7 +2076,27 @@
         commanderColor: "#0849d4",
         backgroundColor: "#000000",
         indicatorSize: 0x64,
-        "cursor": 0x1
+        "cursor": 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x4cb220 = {
         CellAnimation: 0x78,
@@ -2000,7 +2144,27 @@
         commanderColor: "#0849d4",
         backgroundColor: "#000a11",
         indicatorSize: 0x64,
-        "cursor": 0x1
+        "cursor": 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x8508de = {
         CellAnimation: 0x8c,
@@ -2048,7 +2212,27 @@
         commanderColor: "#00fff7",
         backgroundColor: "#000000",
         indicatorSize: 0x64,
-        "cursor": 0x1
+        "cursor": 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0xa9ef03 = {
         CellAnimation: 0x78,
@@ -2096,7 +2280,27 @@
         commanderColor: "#00fff7",
         backgroundColor: "#111",
         indicatorSize: 0x64,
-        cursor: 0x1
+        cursor: 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x59aee0 = {
         CellAnimation: 0x78,
@@ -2144,7 +2348,27 @@
         commanderColor: "#ffffff",
         backgroundColor: "#000000",
         indicatorSize: 0x64,
-        "cursor": 0x1
+        "cursor": 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x66c0ae = {
         CellAnimation: 0x78,
@@ -2192,7 +2416,27 @@
         commanderColor: "#ff006f",
         backgroundColor: "#222222",
         indicatorSize: 0x64,
-        cursor: 0x1
+        cursor: 0x1,
+        borderOpacity: 0xa,
+        borderGlowSize: 0xa,
+        borderGlowStrength: 0x5,
+        cursorLineColor: "#ff0000",
+        leaderboardTitleColor: "#ffffff",
+        customLeaderboardHead: "off",
+        globalRotationSpeed: 0x5,
+        maouCircleUrl: "",
+        multiboxShieldUrl: "",
+        virusGlowSize: 0x32,
+        virusGlowStrength: 0x5,
+        ghostColor: "#aaa",
+        selfColor: "#fff",
+        selfViewportColor: "#fff",
+        selfViewportAlpha: 0x5,
+        topViewportColor: "#fff",
+        topViewportAlpha: 0x5,
+        teammateColor: "#555",
+        teammateNameColor: "#fff",
+        backgroundImage: ""
       };
       const _0x32fa65 = {
         CellAnimation: 0x8c,
@@ -2313,13 +2557,14 @@
       this.barsCss = _0x24f9ab.createElement("style");
       _0x24f9ab.head.append(this.barsCss);
     }
-    static ['add'](_0x163eb9, _0x45d22b, _0x16dc97, _0x1f5c26, _0x5e4055) {
+    static ['add'](_0x163eb9, _0x45d22b, _0x16dc97, _0x1f5c26, _0x5e4055, _0x3c8584) {
       const _0x215fe4 = {
         "nick": _0x163eb9,
         "position": _0x45d22b,
         isSelf: _0x16dc97,
         account: _0x5e4055,
-        "isFriend": _0x1f5c26
+        "isFriend": _0x1f5c26,
+        "mass": _0x3c8584 || 0
       };
       this.list.add(_0x215fe4);
     }
@@ -2340,7 +2585,13 @@
         this.teamLBvisible = false;
       }
       let _0x25ab99 = '';
-      for (const _0x5341c7 of this.list.values()) _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + '<span>';
+      for (const _0x5341c7 of this.list.values()) {
+        if (_0x2cc0f3.showMassInLB === "on") {
+          _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + " <span class=\"lb-mass\">[" + _0x5341c7.mass + "]</span><span>";
+        } else {
+          _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + '<span>';
+        }
+      }
       this.div.innerHTML = _0x25ab99;
     }
     static ["cleanNick"](_0x23f18d) {
@@ -2367,21 +2618,27 @@
       const _0x145776 = this.size / _0x996564.edge;
       const _0x3f151d = _0xddb6d6.viewBounds;
       _0x46ff1c.clearRect(0, 0, this.size, this.size);
-      _0x46ff1c.fillStyle = "rgba(50, 50, 50, 0.4)";
+      const _0x3a9422 = _0x480be4.selfViewportAlpha / 10;
+      _0x46ff1c.globalAlpha = _0x3a9422;
+      _0x46ff1c.fillStyle = _0x480be4.selfViewportColor || "#fff";
       _0x46ff1c.fillRect(0 | (_0x3f151d.left - _0x996564.offset.x + 8000) * _0x145776, 0 | (_0x3f151d.top - _0x996564.offset.y + 8000) * _0x145776, 0 | (_0x3f151d.right - _0x3f151d.left) * _0x145776, 0 | (_0x3f151d.bottom - _0x3f151d.top) * _0x145776);
+      _0x46ff1c.globalAlpha = 1;
       if (_0x12ac51.biggestIsOn && (!_0xddb6d6.isSpectating || _0xddb6d6.freeSpectate)) {
         _0x12ac51.biggest.animate();
         const _0x10ec1e = _0x12ac51.biggest.mapX;
         const _0x28b9b8 = _0x12ac51.biggest.mapY;
+        const _0x24b0cd = _0x480be4.topViewportAlpha / 10;
         _0x46ff1c.beginPath();
         _0x46ff1c.arc(_0x10ec1e, _0x28b9b8, 7, 0, this.pi2, false);
         _0x46ff1c.closePath();
-        _0x46ff1c.fillStyle = '#fff';
+        _0x46ff1c.fillStyle = _0x480be4.topViewportColor || "#fff";
+        _0x46ff1c.globalAlpha = _0x24b0cd;
         _0x46ff1c.fill();
+        _0x46ff1c.globalAlpha = 1;
         _0x46ff1c.stroke();
         _0x46ff1c.fillText(_0x59f59a.current.huds.num1position || "#1 position", _0x10ec1e, _0x28b9b8 - 8);
       }
-      _0x46ff1c.strokeStyle = "#666";
+      _0x46ff1c.strokeStyle = _0x480be4.ghostColor || "#666";
       const _0x524787 = (8000 - _0x996564.offset.x + _0x90a1a7.deathLocation.x) * _0x145776;
       const _0x31e116 = (8000 - _0x996564.offset.y + _0x90a1a7.deathLocation.y) * _0x145776;
       _0x46ff1c.beginPath();
@@ -2398,7 +2655,7 @@
       _0x46ff1c.beginPath();
       _0x46ff1c.arc(_0x3a9e37, _0x192baa, _0x26be95, 0, this.pi2, false);
       _0x46ff1c.closePath();
-      _0x46ff1c.fillStyle = "#fff";
+      _0x46ff1c.fillStyle = _0x480be4.selfColor || "#fff";
       _0x46ff1c.fill();
       _0x46ff1c.stroke();
       if (_0x12ac51.isSpectator) {
@@ -2418,8 +2675,8 @@
         _0x5db847.beginPath();
         _0x5db847.arc(_0x37e58c, _0x5936f8, 5, 0, this.pi2, false);
         _0x5db847.closePath();
-        _0x5db847.fillStyle = "#fff";
         if (0 < _0x3f6db4.nick.length) {
+          _0x5db847.fillStyle = _0x480be4.teammateNameColor || "#fff";
           _0x5db847.fillText(_0x3f6db4.nick, _0x37e58c, _0x5936f8 - 6);
         }
         _0x5db847.fillStyle = 1 === _0x3f6db4.team ? _0x480be4.team1color : _0x480be4.team2color;
@@ -2439,11 +2696,12 @@
         _0x121e2c.moveTo(_0x15a5b7 + 5, _0x119d6b);
         _0x121e2c.arc(_0x15a5b7, _0x119d6b, 5, 0, this.pi2, false);
         if (0 < _0x477434.nick.length) {
+          _0x121e2c.fillStyle = _0x480be4.teammateNameColor || "#fff";
           _0x121e2c.fillText(_0x477434.nick, _0x15a5b7, _0x119d6b - 6);
         }
       }
       _0x121e2c.closePath();
-      _0x121e2c.fillStyle = "#555";
+      _0x121e2c.fillStyle = _0x480be4.teammateColor || "#555";
       _0x121e2c.fill();
     }
   }
@@ -4499,7 +4757,7 @@
         _0x35833d = _0x1d0b9f.readUInt16();
         _0x54147a = _0x1d0b9f.readUInt32();
         _0x19bafb = _0x1d0b9f.readStringZeroUtf8() || "unnamed cell";
-        _0xa916b.add(_0x19bafb, _0x35833d || 1, false, false, false);
+        _0xa916b.add(_0x19bafb, _0x35833d || 1, false, false, false, _0x54147a);
       }
       _0xa916b.update();
     }
@@ -5068,6 +5326,7 @@
     }
     static ["run"]() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.imageSmoothingEnabled = _0x2cc0f3.antiAliasing === "on";
       this.ctx.save();
       this.vanillaGrid();
       const _0x810445 = (this.canvas.width >> 1) / _0xddb6d6.viewport - _0xddb6d6.x;
@@ -5115,10 +5374,19 @@
     static ["border"]() {
       const _0x3f1e55 = this.ctx;
       const _0x1b4ff4 = _0x480be4.borderWidth >> 1;
+      const _0x1b2d38 = _0x480be4.borderOpacity / 10;
+      _0x3f1e55.globalAlpha = _0x1b2d38;
+      if (_0x480be4.borderGlowSize > 0) {
+        _0x3f1e55.shadowBlur = ~~_0x480be4.borderGlowSize;
+        _0x3f1e55.shadowColor = _0x480be4.borderColor;
+      }
       if (_0x480be4.rainbowBorder !== "on") {
         _0x3f1e55.strokeStyle = _0x480be4.borderColor;
         _0x3f1e55.lineWidth = _0x480be4.borderWidth;
         _0x3f1e55.strokeRect(_0x996564.left - _0x1b4ff4, _0x996564.top - _0x1b4ff4, _0x996564.edge + _0x480be4.borderWidth, _0x996564.edge + _0x480be4.borderWidth);
+        _0x3f1e55.shadowBlur = 0;
+        _0x3f1e55.shadowColor = 'transparent';
+        _0x3f1e55.globalAlpha = 1;
         return;
       }
       const _0x14e95b = _0x480be4.borderWidth;
@@ -5165,6 +5433,9 @@
       _0x22cafb.addColorStop(1, "hsl(" + _0x160a8f + ",100%,50%)");
       _0x3f1e55.fillStyle = _0x22cafb;
       _0x3f1e55.fillRect(_0x2f4167, _0x531a16 + _0x18ec80 - _0x14e95b, _0x3e7362, _0x14e95b);
+      _0x3f1e55.shadowBlur = 0;
+      _0x3f1e55.shadowColor = 'transparent';
+      _0x3f1e55.globalAlpha = 1;
     }
     static ['cells']() {
       const _0xfdf4f4 = this.ctx;
@@ -5207,7 +5478,7 @@
           _0xfdf4f4.fillStyle = _0x480be4.virusColor;
           _0xfdf4f4.globalAlpha = 0.7;
           if (_0x480be4.virusGlow === "on") {
-            _0xfdf4f4.shadowBlur = ~~_0x480be4.virusGlowDistance;
+            _0xfdf4f4.shadowBlur = ~~_0x480be4.virusGlowSize;
             _0xfdf4f4.shadowColor = _0x480be4.virusGlowColor;
           }
           _0xfdf4f4.fill();
@@ -5215,6 +5486,19 @@
           _0xfdf4f4.shadowColor = 'transparent';
           _0xfdf4f4.globalAlpha = 1;
           _0xfdf4f4.stroke();
+          if (_0x2cc0f3.virusMass === "text") {
+            const _0x175afd = _0x5987fa.animX - _0x1241cd.x;
+            const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
+            _0xfdf4f4.fillStyle = "#fff";
+            _0xfdf4f4.font = "bold 18px ubuntu";
+            _0xfdf4f4.textAlign = "center";
+            _0xfdf4f4.textBaseline = "middle";
+            _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
+          } else if (_0x2cc0f3.virusMass === "fill") {
+            const _0x2e0edd = _0x5987fa.animRadius + 5;
+            _0xfdf4f4.fillStyle = "rgba(0,0,0,0.5)";
+            _0xfdf4f4.fillText("V", _0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y);
+          }
         } else if (_0x5987fa.isFood && _0x480be4.foodGlow === "on") {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
           _0xfdf4f4.shadowBlur = ~~_0x480be4.foodGlowDistance;
@@ -5259,6 +5543,20 @@
           _0xfdf4f4.stroke();
           _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
           _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
+        }
+        if (_0x2cc0f3.multiboxShield === "on" && _0x5987fa.isMine && _0x480be4._shieldReady) {
+          const _0x3b92c8 = _0x5987fa.animRadius * 2.8;
+          _0xfdf4f4.drawImage(_0x480be4.shieldImage, _0x5987fa.animX - _0x1241cd.x - _0x3b92c8 / 2, _0x5987fa.animY - _0x1241cd.y - _0x3b92c8 / 2, _0x3b92c8, _0x3b92c8);
+        }
+        if (_0x2cc0f3.cellLuminous === "on" && _0x5987fa.isMine) {
+          _0xfdf4f4.shadowBlur = 30;
+          _0xfdf4f4.shadowColor = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
+          _0xfdf4f4.beginPath();
+          _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5, 0, this.pi2, true);
+          _0xfdf4f4.closePath();
+          _0xfdf4f4.fill();
+          _0xfdf4f4.shadowBlur = 0;
+          _0xfdf4f4.shadowColor = 'transparent';
         }
         if (_0x480be4.maouCircle === "on" && _0x5987fa.isMine && _0x480be4._maouReady) {
           const _0x49e3f8 = _0x5987fa.animRadius * 2.6;
@@ -5407,7 +5705,7 @@
     static ["mouseTracker"]() {
       if ("off" !== _0x2cc0f3.cursorLine) {
         const _0x33c20a = this.ctx;
-        _0x33c20a.strokeStyle = "#fff";
+        _0x33c20a.strokeStyle = _0x480be4.cursorLineColor;
         _0x33c20a.lineWidth = 4;
         _0x33c20a.lineCap = "round";
         _0x33c20a.lineJoin = "round";
