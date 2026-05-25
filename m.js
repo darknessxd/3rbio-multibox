@@ -361,6 +361,7 @@
     borderOpacity: "Border Opacity",
     borderGlowSize: "Border glow size",
     borderGlowStrength: "Border glow strength",
+    borderGlowColor: "Border glow color",
     cursorLineColor: "Cursor Line Color",
     leaderboardTitleColor: "Leaderboard title color",
     customLeaderboardHead: "Custom Leaderboard Head",
@@ -431,6 +432,7 @@
       this.cellLuminous = _0x19d5af.get("settings", "cellLuminous") || 'off';
       this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
       this.antiAliasing = _0x19d5af.get("settings", "antiAliasing") || 'on';
+      this.virusRing = _0x19d5af.get("settings", "virusRing") || 'off';
       this.setDomValues();
       this.addEvents();
     }
@@ -1569,6 +1571,7 @@
       this.borderOpacity = ~~_0x19d5af.get("theme", "borderOpacity") || 10;
       this.borderGlowSize = ~~_0x19d5af.get("theme", "borderGlowSize") || 10;
       this.borderGlowStrength = ~~_0x19d5af.get("theme", "borderGlowStrength") || 5;
+      this.borderGlowColor = _0x19d5af.get("theme", "borderGlowColor") || "#ffffff";
       this.cursorLineColor = _0x19d5af.get("theme", "cursorLineColor") || "#ff0000";
       this.leaderboardTitleColor = _0x19d5af.get("theme", "leaderboardTitleColor") || "#ffffff";
       this.customLeaderboardHead = _0x19d5af.get("theme", "customLeaderboardHead") || "off";
@@ -1577,6 +1580,8 @@
       this.multiboxShieldUrl = _0x19d5af.get("theme", "multiboxShieldUrl") || "";
       this.virusGlowSize = ~~_0x19d5af.get("theme", "virusGlowSize") || 50;
       this.virusGlowStrength = ~~_0x19d5af.get("theme", "virusGlowStrength") || 5;
+      this.virusRingWidth = ~~_0x19d5af.get("theme", "virusRingWidth") || 10;
+      this.virusRingColor = _0x19d5af.get("theme", "virusRingColor") || "#ffffff";
       this.ghostColor = _0x19d5af.get("theme", "ghostColor") || "#aaa";
       this.selfColor = _0x19d5af.get("theme", "selfColor") || "#fff";
       this.selfViewportColor = _0x19d5af.get("theme", "selfViewportColor") || "#fff";
@@ -1681,6 +1686,14 @@
         });
       });
       _0x14f7b2(".theme-close").click(() => this.close());
+      _0x14f7b2("input#backgroundImage, input#maouCircleUrl, input#multiboxShieldUrl").each(function () {
+        const _0x558bc6 = _0x14f7b2(this).attr('id');
+        _0x14f7b2(this).val(_0x480be4[_0x558bc6] || '');
+        _0x14f7b2(this).on('input', function () {
+          const _0x2b7e1d = _0x14f7b2(this).val();
+          _0x480be4.saveTheme(_0x558bc6, _0x2b7e1d);
+        });
+      });
     }
     static ['toggle']() {
       if (this.isOpened) {
@@ -1944,6 +1957,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2012,6 +2026,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2080,6 +2095,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2148,6 +2164,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2216,6 +2233,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2284,6 +2302,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2352,6 +2371,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2420,6 +2440,7 @@
         borderOpacity: 0xa,
         borderGlowSize: 0xa,
         borderGlowStrength: 0x5,
+        borderGlowColor: "#ffffff",
         cursorLineColor: "#ff0000",
         leaderboardTitleColor: "#ffffff",
         customLeaderboardHead: "off",
@@ -2586,11 +2607,8 @@
       }
       let _0x25ab99 = '';
       for (const _0x5341c7 of this.list.values()) {
-        if (_0x2cc0f3.showMassInLB === "on") {
-          _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + " <span class=\"lb-mass\">[" + _0x5341c7.mass + "]</span><span>";
-        } else {
-          _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + '<span>';
-        }
+        const _0x2d18ff = _0x2cc0f3.showMassInLB === "on" && _0x5341c7.mass > 0 ? " <span class=\"lb-mass\">" + _0x5341c7.mass + "</span>" : "";
+        _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + _0x2d18ff + "</span>";
       }
       this.div.innerHTML = _0x25ab99;
     }
@@ -5378,7 +5396,7 @@
       _0x3f1e55.globalAlpha = _0x1b2d38;
       if (_0x480be4.borderGlowSize > 0) {
         _0x3f1e55.shadowBlur = ~~_0x480be4.borderGlowSize;
-        _0x3f1e55.shadowColor = _0x480be4.borderColor;
+        _0x3f1e55.shadowColor = _0x480be4.borderGlowColor;
       }
       if (_0x480be4.rainbowBorder !== "on") {
         _0x3f1e55.strokeStyle = _0x480be4.borderColor;
@@ -5478,7 +5496,7 @@
           _0xfdf4f4.fillStyle = _0x480be4.virusColor;
           _0xfdf4f4.globalAlpha = 0.7;
           if (_0x480be4.virusGlow === "on") {
-            _0xfdf4f4.shadowBlur = ~~_0x480be4.virusGlowSize;
+            _0xfdf4f4.shadowBlur = ~~(_0x480be4.virusGlowSize * _0x480be4.virusGlowStrength / 5);
             _0xfdf4f4.shadowColor = _0x480be4.virusGlowColor;
           }
           _0xfdf4f4.fill();
@@ -5486,18 +5504,42 @@
           _0xfdf4f4.shadowColor = 'transparent';
           _0xfdf4f4.globalAlpha = 1;
           _0xfdf4f4.stroke();
+          if (_0x2cc0f3.virusRing === 'on') {
+            const _0x3c2b6a = _0x5987fa.animRadius * _0x480be4.virusRingWidth / 100;
+            _0xfdf4f4.beginPath();
+            _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5 - (_0x3c2b6a >> 1), 0, this.pi2, true);
+            _0xfdf4f4.closePath();
+            _0xfdf4f4.lineWidth = _0x3c2b6a | 0;
+            _0xfdf4f4.strokeStyle = _0x480be4.virusRingColor;
+            _0xfdf4f4.stroke();
+            _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
+            _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
+          }
           if (_0x2cc0f3.virusMass === "text") {
             const _0x175afd = _0x5987fa.animX - _0x1241cd.x;
             const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
+            const _0x4edbb9 = ~~_0x5987fa.animRadius * 0.3;
+            _0xfdf4f4.fillStyle = "rgba(0,0,0,0.7)";
+            _0xfdf4f4.font = "bold " + Math.max(12, _0x4edbb9) + "px ubuntu";
+            _0xfdf4f4.textAlign = "center";
+            _0xfdf4f4.textBaseline = "middle";
+            _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd + 1, _0x4f4e2b + 1);
             _0xfdf4f4.fillStyle = "#fff";
-            _0xfdf4f4.font = "bold 18px ubuntu";
+            _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
+          } else if (_0x2cc0f3.virusMass === "fill") {
+            const _0x175afd = _0x5987fa.animX - _0x1241cd.x;
+            const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
+            const _0x4edbb9 = ~~_0x5987fa.animRadius * 0.35;
+            _0xfdf4f4.fillStyle = "rgba(0,0,0,0.5)";
+            _0xfdf4f4.beginPath();
+            _0xfdf4f4.arc(_0x175afd, _0x4f4e2b, _0x5987fa.animRadius + 5, 0, this.pi2, true);
+            _0xfdf4f4.closePath();
+            _0xfdf4f4.fill();
+            _0xfdf4f4.fillStyle = "#fff";
+            _0xfdf4f4.font = "bold " + Math.max(12, _0x4edbb9) + "px ubuntu";
             _0xfdf4f4.textAlign = "center";
             _0xfdf4f4.textBaseline = "middle";
             _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
-          } else if (_0x2cc0f3.virusMass === "fill") {
-            const _0x2e0edd = _0x5987fa.animRadius + 5;
-            _0xfdf4f4.fillStyle = "rgba(0,0,0,0.5)";
-            _0xfdf4f4.fillText("V", _0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y);
           }
         } else if (_0x5987fa.isFood && _0x480be4.foodGlow === "on") {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
