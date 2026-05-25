@@ -220,6 +220,8 @@
     cellLuminous: "Cell Luminous",
     multiboxShield: "Multibox Shield",
     antiAliasing: "Anti-aliasing",
+    virusRing: "Virus Ring",
+    foodGlow: "Food Glow",
     targeting: "Cell Targeting [Spectate mode]",
     "opt_on": 'On',
     "opt_off": 'Off',
@@ -327,8 +329,6 @@
     virusGlowDistance: "Virus glow distance",
     virusGlowColor: "Virus glow color",
     foodGlow: "Food glow",
-    foodGlowDistance: "Food glow distance",
-    foodGlowColor: "Food glow color",
     maouCircle: "Maou circle",
     cellTransparency: "Cell transparency",
     lightenCellColor: "Lighten cell color",
@@ -370,6 +370,11 @@
     multiboxShieldUrl: "Multibox Shield URL",
     virusGlowSize: "Virus glow size",
     virusGlowStrength: "Virus glow strength",
+    virusRingWidth: "Virus Ring Width",
+    virusRingColor: "Virus Ring Color",
+    foodGlowSize: "Food Glow Size",
+    foodGlowStrength: "Food Glow Strength",
+    foodGlowColor: "Food Glow Color",
     ghostColor: "Ghost cell color [minimap]",
     selfColor: "Self cell color [minimap]",
     selfViewportColor: "Self viewport color [minimap]",
@@ -433,6 +438,7 @@
       this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
       this.antiAliasing = _0x19d5af.get("settings", "antiAliasing") || 'on';
       this.virusRing = _0x19d5af.get("settings", "virusRing") || 'off';
+      this.foodGlow = _0x19d5af.get("settings", "foodGlow") || 'off';
       this.setDomValues();
       this.addEvents();
     }
@@ -1537,9 +1543,9 @@
       this.virusGlow = _0x19d5af.get("theme", "virusGlow") || "off";
       this.virusGlowDistance = ~~_0x19d5af.get("theme", "virusGlowDistance") || 50;
       this.virusGlowColor = _0x19d5af.get('theme', "virusGlowColor") || "#00bcff";
-      this.foodGlow = _0x19d5af.get("theme", "foodGlow") || "off";
-      this.foodGlowDistance = ~~_0x19d5af.get("theme", "foodGlowDistance") || 30;
       this.foodGlowColor = _0x19d5af.get('theme', "foodGlowColor") || "#00ff00";
+      this.foodGlowSize = ~~_0x19d5af.get("theme", "foodGlowSize") || 20;
+      this.foodGlowStrength = ~~_0x19d5af.get("theme", "foodGlowStrength") || 1;
       this.maouCircle = _0x19d5af.get("theme", "maouCircle") || "off";
       this.team1color = _0x19d5af.get("theme", "team1color") || "#aeaeae";
       this.team2color = _0x19d5af.get("theme", 'team2color') || "#ff171f";
@@ -1898,12 +1904,7 @@
       _0x14f7b2("#leaderboard-head span").text(_0x245fbe);
     }
     static ["setBackgroundImage"](_0x3e7195) {
-      if (_0x3e7195 && _0x3e7195.length > 0) {
-        _0x14f7b2('body').css("background-image", "url(" + _0x3e7195 + ")");
-        _0x14f7b2('body').css("background-size", "cover");
-      } else {
-        _0x14f7b2('body').css("background-image", "none");
-      }
+      _0x386cbc._loadBgImage(_0x3e7195);
     }
     static ["selectPreset"](_0x4da382) {
       const _0x5ae372 = this.presets[_0x4da382];
@@ -5331,6 +5332,9 @@
       this.rgbTeammates = new Set();
       this.indicator = this.cacheIndicator();
       this.getKnownSkins();
+      this._bgImage = new Image();
+      this._bgImage.crossOrigin = "anonymous";
+      this._bgReady = false;
       _0x51fad0.init();
       _0x2ab3a8.init();
       this.resizeCanvas();
@@ -5338,12 +5342,27 @@
         this.resizeCanvas();
       };
     }
+    static ["_loadBgImage"](_0x1a2b3c) {
+      if (_0x1a2b3c && _0x1a2b3c.length > 0) {
+        this._bgImage = new Image();
+        this._bgImage.crossOrigin = "anonymous";
+        this._bgImage.onload = () => { this._bgReady = true; };
+        this._bgImage.onerror = () => { this._bgReady = false; };
+        this._bgImage.src = _0x1a2b3c;
+      } else {
+        this._bgReady = false;
+      }
+    }
     static ["resizeCanvas"]() {
       this.canvas.width = 0 | _0x1c478d.innerWidth;
       this.canvas.height = 0 | _0x1c478d.innerHeight;
     }
     static ["run"]() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      if (this._bgReady) {
+        this.ctx.globalAlpha = 1;
+        this.ctx.drawImage(this._bgImage, 0, 0, this.canvas.width, this.canvas.height);
+      }
       this.ctx.imageSmoothingEnabled = _0x2cc0f3.antiAliasing === "on";
       this.ctx.save();
       this.vanillaGrid();
@@ -5541,9 +5560,9 @@
             _0xfdf4f4.textBaseline = "middle";
             _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
           }
-        } else if (_0x5987fa.isFood && _0x480be4.foodGlow === "on") {
+        } else if (_0x5987fa.isFood && _0x2cc0f3.foodGlow === "on") {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
-          _0xfdf4f4.shadowBlur = ~~_0x480be4.foodGlowDistance;
+          _0xfdf4f4.shadowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
           _0xfdf4f4.shadowColor = _0x480be4.foodGlowColor;
           _0xfdf4f4.fill();
           _0xfdf4f4.shadowBlur = 0;
