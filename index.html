@@ -1107,6 +1107,15 @@
                         <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </span>
                 </div>
+                <div class="row">
+                    <span class="title" data="html.settingMenu.virusRing">Virus Ring</span>
+                    <span class="settings-options" type="options" name="virusRing">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        <b value="off" class="active" data="html.settingMenu.opt_off">Off</b>
+                        <b value="on" data="html.settingMenu.opt_on">On</b>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </span>
+                </div>
             </div>
         </div>
         <div id="inputs" class="menu-panel">
@@ -1789,6 +1798,12 @@
                     </span>
                 </div>
                 <div class="row">
+                    <span class="title" data="html.themeMenu.borderGlowColor">Border glow color</span>
+                    <span class="theme-options" type="colorpicker">
+                        <input id="borderGlowColor" opacity="0">
+                    </span>
+                </div>
+                <div class="row">
                     <span class="title" data="html.themeMenu.cursorLineColor">Cursor Line Color</span>
                     <span class="theme-options" type="colorpicker">
                         <input id="cursorLineColor" opacity="0">
@@ -1825,14 +1840,14 @@
                 </div>
                 <div class="row">
                     <span class="title" data="html.themeMenu.maouCircleUrl">Maou Circle Skin URL</span>
-                    <span class="theme-options" type="colorpicker">
-                        <input id="maouCircleUrl" opacity="0">
+                    <span class="theme-options" type="url">
+                        <input id="maouCircleUrl">
                     </span>
                 </div>
                 <div class="row">
                     <span class="title" data="html.themeMenu.multiboxShieldUrl">Multibox Shield URL</span>
-                    <span class="theme-options" type="colorpicker">
-                        <input id="multiboxShieldUrl" opacity="0">
+                    <span class="theme-options" type="url">
+                        <input id="multiboxShieldUrl">
                     </span>
                 </div>
                 <div class="row divider"></div>
@@ -1856,6 +1871,23 @@
                         </span>
                         <i class="fa fa-chevron-right" aria-hidden="true"></i>
                         <span class="range-value">[0]</span>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="title" data="html.themeMenu.virusRingWidth">Virus Ring Width</span>
+                    <span class="theme-options" type="range" name="virusRingWidth">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        <span value="10" step="1" min="1" max="50" class="outer">
+                            <span class="inner"></span>
+                        </span>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                        <span class="range-value">[0]</span>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="title" data="html.themeMenu.virusRingColor">Virus Ring Color</span>
+                    <span class="theme-options" type="colorpicker">
+                        <input id="virusRingColor" opacity="0">
                     </span>
                 </div>
                 <div class="row divider"></div>
@@ -1919,8 +1951,8 @@
                 </div>
                 <div class="row">
                     <span class="title" data="html.themeMenu.backgroundImage">Background Image URL</span>
-                    <span class="theme-options" type="colorpicker">
-                        <input id="backgroundImage" opacity="0">
+                    <span class="theme-options" type="url">
+                        <input id="backgroundImage">
                     </span>
                 </div>
             </div>
