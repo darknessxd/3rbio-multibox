@@ -1388,13 +1388,6 @@
       _0x480be4.maouCircle = "off" === _0x480be4.maouCircle ? 'off' !== _0x3c9a1b && _0x3c9a1b || 'on' : 'off';
     }
     static ["respawn"]() {
-      const _0x2fc6df = _0x90a1a7.typeID;
-      _0x302a2c.spectate(_0x2fc6df);
-      if (_0x2fc6df === 1) {
-        _0x90a1a7._isAlive = false;
-      } else {
-        _0x90a1a7._isAlive2 = false;
-      }
       const _0x247aae = setInterval(() => {
         if (_0x18a8d1.connected) {
           _0x302a2c.spawn();
