@@ -5359,10 +5359,6 @@
     }
     static ["run"]() {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      if (this._bgReady) {
-        this.ctx.globalAlpha = 1;
-        this.ctx.drawImage(this._bgImage, 0, 0, this.canvas.width, this.canvas.height);
-      }
       this.ctx.imageSmoothingEnabled = _0x2cc0f3.antiAliasing === "on";
       this.ctx.save();
       this.vanillaGrid();
@@ -5370,6 +5366,14 @@
       const _0x2de058 = (this.canvas.height >> 1) / _0xddb6d6.viewport - _0xddb6d6.y;
       this.ctx.scale(_0xddb6d6.viewport, _0xddb6d6.viewport);
       this.ctx.translate(_0x810445, _0x2de058);
+      if (this._bgReady) {
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.rect(_0x996564.left, _0x996564.top, _0x996564.edge, _0x996564.edge);
+        this.ctx.clip();
+        this.ctx.drawImage(this._bgImage, _0x996564.left, _0x996564.top, _0x996564.edge, _0x996564.edge);
+        this.ctx.restore();
+      }
       _0x2ab3a8.update();
       _0x51fad0.render();
       this.border();
