@@ -355,6 +355,7 @@
     "virusDecor": "Virus Decoration",
     backgroundColor: "Background color",
     commanderColor: "Commander color",
+    commanderImageUrl: "Commander image URL",
     indicatorSize: "Teammate indicator size",
     "team1color": "Team 1 color [Double Tag Mode]",
     "team2color": "Team 2 color [Double Tag Mode]",
@@ -1571,6 +1572,7 @@
       this.virusBorderColor = _0x19d5af.get('theme', "virusBorderColor") || "#c2c2c2";
       this.virusBorderWidth = ~~_0x19d5af.get("theme", "virusBorderWidth") || 10;
       this.commanderColor = _0x19d5af.get("theme", "commanderColor") || "#f5e35d";
+      this.commanderImageUrl = _0x19d5af.get("theme", "commanderImageUrl") || "";
       this.backgroundColor = _0x19d5af.get("theme", "backgroundColor") || "#000000";
       this.indicatorSize = ~~_0x19d5af.get("theme", "indicatorSize") || 100;
       this.cursor = _0x19d5af.get("theme", "cursor") || 13;
@@ -1692,12 +1694,15 @@
         });
       });
       _0x14f7b2(".theme-close").click(() => this.close());
-      _0x14f7b2("input#backgroundImage, input#maouCircleUrl, input#multiboxShieldUrl").each(function () {
+      _0x14f7b2("input#backgroundImage, input#maouCircleUrl, input#multiboxShieldUrl, input#commanderImageUrl").each(function () {
         const _0x558bc6 = _0x14f7b2(this).attr('id');
         _0x14f7b2(this).val(_0x480be4[_0x558bc6] || '');
         _0x14f7b2(this).on('input', function () {
           const _0x2b7e1d = _0x14f7b2(this).val();
           _0x480be4.saveTheme(_0x558bc6, _0x2b7e1d);
+          if ('commanderImageUrl' === _0x558bc6) {
+            _0x386cbc._loadCeImage(_0x2b7e1d);
+          }
         });
       });
     }
@@ -5347,12 +5352,26 @@
       this._bgImage = new Image();
       this._bgImage.crossOrigin = "anonymous";
       this._bgReady = false;
+      this._ceImage = new Image();
+      this._ceImage.crossOrigin = "anonymous";
+      this._ceReady = false;
+      this._loadCeImage(_0x480be4.commanderImageUrl);
       _0x51fad0.init();
       _0x2ab3a8.init();
       this.resizeCanvas();
       _0x1c478d.onresize = () => {
         this.resizeCanvas();
       };
+    }
+    static ["_loadCeImage"](_0x2c6a91) {
+      this._ceReady = false;
+      if (_0x2c6a91 && _0x2c6a91.length > 0) {
+        this._ceImage = new Image();
+        this._ceImage.crossOrigin = "anonymous";
+        this._ceImage.onload = () => { this._ceReady = true; };
+        this._ceImage.onerror = () => { this._ceReady = false; };
+        this._ceImage.src = _0x2c6a91;
+      }
     }
     static ["_loadBgImage"](_0x1a2b3c) {
       if (_0x1a2b3c && _0x1a2b3c.length > 0) {
@@ -5764,12 +5783,17 @@
           if (!(_0x41c288 || 50 > _0x266134)) {
             const _0xa9830a = 1000 * _0x266134 / 2000;
             const _0x3bc5a1 = _0xa9830a > 333 ? (1000 - _0xa9830a) / 667 : 1;
-            const _0x5c9d41 = 100 * _0xa9830a / 1000 * 6;
+            const _0x5c9d41 = 200 * _0xa9830a / 1000 * 8;
             const _0x1d25a8 = _0x266134 / 1000 * (_0x480be4.globalRotationSpeed || 5);
             _0x5b9c43.save();
             _0x5b9c43.globalAlpha = _0x3bc5a1;
             _0x5b9c43.translate(_0x537d77, _0x130956);
-            if (_0x480be4._maouReady) {
+            if (this._ceReady) {
+              _0x5b9c43.save();
+              _0x5b9c43.rotate(_0x1d25a8 * 3);
+              _0x5b9c43.drawImage(this._ceImage, -_0x5c9d41, -_0x5c9d41, _0x5c9d41 * 2, _0x5c9d41 * 2);
+              _0x5b9c43.restore();
+            } else if (_0x480be4._maouReady) {
               _0x5b9c43.save();
               _0x5b9c43.rotate(_0x1d25a8 * 3);
               _0x5b9c43.drawImage(_0x480be4.maouOuter, -_0x5c9d41, -_0x5c9d41, _0x5c9d41 * 2, _0x5c9d41 * 2);
