@@ -3448,6 +3448,13 @@
           this.colorHex = _0x305bc5.colorHex;
           break;
         }
+        setTimeout(() => {
+          if ('off' === _0x2cc0f3.commander) return;
+          for (const _0x188d46 of _0x14d4a3.myCells.values()) {
+            _0x386cbc.commanderPoints.add({ x: _0x188d46.animX, y: _0x188d46.animY, time: _0xb45f1b.time });
+            break;
+          }
+        }, 100);
       }
     }
     static ['playing2']() {
@@ -3460,6 +3467,13 @@
           this.colorHex2 = _0x4e2c94.colorHex;
           break;
         }
+        setTimeout(() => {
+          if ('off' === _0x2cc0f3.commander) return;
+          for (const _0x1c6de9 of _0x14d4a3.myCells2.values()) {
+            _0x386cbc.commanderPoints.add({ x: _0x1c6de9.animX, y: _0x1c6de9.animY, time: _0xb45f1b.time });
+            break;
+          }
+        }, 100);
       }
     }
     static ["updateData"]() {
@@ -5742,27 +5756,45 @@
     static ["commands"]() {
       const _0x5b9c43 = this.ctx;
       const _0x41c288 = 'off' === _0x2cc0f3.commander;
-      _0x5b9c43.strokeStyle = "#ffffff";
-      _0x5b9c43.lineWidth = 5;
       for (const _0x52ff22 of this.commanderPoints.values()) {
         const _0x537d77 = _0x52ff22.x;
         const _0x130956 = _0x52ff22.y;
         const _0x266134 = _0xb45f1b.time - _0x52ff22.time;
-        if (_0x266134 > 1250) {
+        if (_0x266134 > 2000) {
           this.commanderPoints['delete'](_0x52ff22);
         } else {
-          if (!(_0x41c288 || 1 > _0x266134)) {
-            const _0xa9830a = 1000 * _0x266134 / 1250;
-            _0x5b9c43.globalAlpha = _0xa9830a > 333 ? (1000 - _0xa9830a) / 667 : 1;
-            const _0x42effd = _0x5b9c43.createRadialGradient(_0x537d77, _0x130956, 0.7 * _0xa9830a, _0x537d77, _0x130956, _0xa9830a);
-            _0x42effd.addColorStop(0, "rgba(0,0,0,0)");
-            _0x42effd.addColorStop(1, _0x480be4.commanderColor);
-            _0x5b9c43.fillStyle = _0x42effd;
-            _0x5b9c43.beginPath();
-            _0x5b9c43.arc(_0x537d77, _0x130956, _0xa9830a, 0, this.pi2, true);
-            _0x5b9c43.closePath();
-            _0x5b9c43.fill();
-            _0x5b9c43.stroke();
+          if (!(_0x41c288 || 100 > _0x266134)) {
+            const _0xa9830a = 1000 * _0x266134 / 2000;
+            const _0x3bc5a1 = _0xa9830a > 333 ? (1000 - _0xa9830a) / 667 : 1;
+            const _0x5c9d41 = 50 * _0xa9830a / 1000 * 5;
+            const _0x1d25a8 = _0x266134 / 1000 * (_0x480be4.globalRotationSpeed || 5);
+            _0x5b9c43.save();
+            _0x5b9c43.globalAlpha = _0x3bc5a1;
+            _0x5b9c43.translate(_0x537d77, _0x130956);
+            if (_0x480be4._maouReady) {
+              _0x5b9c43.save();
+              _0x5b9c43.rotate(_0x1d25a8 * 3);
+              _0x5b9c43.drawImage(_0x480be4.maouOuter, -_0x5c9d41, -_0x5c9d41, _0x5c9d41 * 2, _0x5c9d41 * 2);
+              _0x5b9c43.restore();
+              _0x5b9c43.save();
+              _0x5b9c43.rotate(-_0x1d25a8 * 2);
+              _0x5b9c43.drawImage(_0x480be4.maouInner, -_0x5c9d41, -_0x5c9d41, _0x5c9d41 * 2, _0x5c9d41 * 2);
+              _0x5b9c43.restore();
+            } else {
+              const _0x47c30e = 1000 * _0x266134 / 2000;
+              const _0x490014 = _0x5b9c43.createRadialGradient(0, 0, 0.7 * _0x47c30e, 0, 0, _0x47c30e);
+              _0x490014.addColorStop(0, "rgba(0,0,0,0)");
+              _0x490014.addColorStop(1, _0x480be4.commanderColor);
+              _0x5b9c43.fillStyle = _0x490014;
+              _0x5b9c43.beginPath();
+              _0x5b9c43.arc(0, 0, _0x47c30e, 0, this.pi2);
+              _0x5b9c43.closePath();
+              _0x5b9c43.fill();
+              _0x5b9c43.strokeStyle = "#ffffff";
+              _0x5b9c43.lineWidth = 5;
+              _0x5b9c43.stroke();
+            }
+            _0x5b9c43.restore();
           }
         }
       }
