@@ -3448,13 +3448,12 @@
           this.colorHex = _0x305bc5.colorHex;
           break;
         }
-        setTimeout(() => {
-          if ('off' === _0x2cc0f3.commander) return;
+        if ('on' === _0x2cc0f3.commander) {
           for (const _0x188d46 of _0x14d4a3.myCells.values()) {
             _0x386cbc.commanderPoints.add({ x: _0x188d46.animX, y: _0x188d46.animY, time: _0xb45f1b.time });
             break;
           }
-        }, 100);
+        }
       }
     }
     static ['playing2']() {
@@ -3467,13 +3466,12 @@
           this.colorHex2 = _0x4e2c94.colorHex;
           break;
         }
-        setTimeout(() => {
-          if ('off' === _0x2cc0f3.commander) return;
+        if ('on' === _0x2cc0f3.commander) {
           for (const _0x1c6de9 of _0x14d4a3.myCells2.values()) {
             _0x386cbc.commanderPoints.add({ x: _0x1c6de9.animX, y: _0x1c6de9.animY, time: _0xb45f1b.time });
             break;
           }
-        }, 100);
+        }
       }
     }
     static ["updateData"]() {
@@ -5763,10 +5761,10 @@
         if (_0x266134 > 2000) {
           this.commanderPoints['delete'](_0x52ff22);
         } else {
-          if (!(_0x41c288 || 100 > _0x266134)) {
+          if (!(_0x41c288 || 50 > _0x266134)) {
             const _0xa9830a = 1000 * _0x266134 / 2000;
             const _0x3bc5a1 = _0xa9830a > 333 ? (1000 - _0xa9830a) / 667 : 1;
-            const _0x5c9d41 = 50 * _0xa9830a / 1000 * 5;
+            const _0x5c9d41 = 100 * _0xa9830a / 1000 * 6;
             const _0x1d25a8 = _0x266134 / 1000 * (_0x480be4.globalRotationSpeed || 5);
             _0x5b9c43.save();
             _0x5b9c43.globalAlpha = _0x3bc5a1;
