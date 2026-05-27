@@ -216,12 +216,10 @@
     commander: "Commander",
     "chatType": "Chat type",
     virusMass: "Virus mass",
-    showMassInLB: "Show mass in leaderboard",
     cellLuminous: "Cell Luminous",
     multiboxShield: "Multibox Shield",
     antiAliasing: "Anti-aliasing",
     virusRing: "Virus Ring",
-    foodGlow: "Food Glow",
     targeting: "Cell Targeting [Spectate mode]",
     "opt_on": 'On',
     "opt_off": 'Off',
@@ -328,7 +326,6 @@
     virusGlow: "Virus glow",
     virusGlowDistance: "Virus glow distance",
     virusGlowColor: "Virus glow color",
-    foodGlow: "Food glow",
     maouCircle: "Maou circle",
     cellTransparency: "Cell transparency",
     lightenCellColor: "Lighten cell color",
@@ -374,9 +371,6 @@
     virusRingWidth: "Virus Ring Width",
     virusRingColor: "Virus Ring Color",
     virusGearColor: "Virus Gear Color",
-    foodGlowSize: "Food Glow Size",
-    foodGlowStrength: "Food Glow Strength",
-    foodGlowColor: "Food Glow Color",
     ghostColor: "Ghost cell color [minimap]",
     selfColor: "Self cell color [minimap]",
     selfViewportColor: "Self viewport color [minimap]",
@@ -435,12 +429,10 @@
       this.chatType = _0x19d5af.get("settings", "chatType") || 'popup';
       this.multiboxMode = _0x19d5af.get('settings', "multiboxMode") || 'on';
       this.virusMass = _0x19d5af.get("settings", "virusMass") || 'off';
-      this.showMassInLB = _0x19d5af.get("settings", "showMassInLB") || 'off';
       this.cellLuminous = _0x19d5af.get("settings", "cellLuminous") || 'off';
       this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
       this.antiAliasing = _0x19d5af.get("settings", "antiAliasing") || 'on';
       this.virusRing = _0x19d5af.get("settings", "virusRing") || 'off';
-      this.foodGlow = _0x19d5af.get("settings", "foodGlow") || 'off';
       this.setDomValues();
       this.addEvents();
     }
@@ -1545,9 +1537,6 @@
       this.virusGlow = _0x19d5af.get("theme", "virusGlow") || "off";
       this.virusGlowDistance = ~~_0x19d5af.get("theme", "virusGlowDistance") || 50;
       this.virusGlowColor = _0x19d5af.get('theme', "virusGlowColor") || "#00bcff";
-      this.foodGlowColor = _0x19d5af.get('theme', "foodGlowColor") || "#00ff00";
-      this.foodGlowSize = ~~_0x19d5af.get("theme", "foodGlowSize") || 20;
-      this.foodGlowStrength = ~~_0x19d5af.get("theme", "foodGlowStrength") || 1;
       this.maouCircle = _0x19d5af.get("theme", "maouCircle") || "off";
       this.team1color = _0x19d5af.get("theme", "team1color") || "#aeaeae";
       this.team2color = _0x19d5af.get("theme", 'team2color') || "#ff171f";
@@ -2615,8 +2604,7 @@
       }
       let _0x25ab99 = '';
       for (const _0x5341c7 of this.list.values()) {
-        const _0x2d18ff = _0x2cc0f3.showMassInLB === "on" && _0x5341c7.mass > 0 ? " <span class=\"lb-mass\">" + _0x5341c7.mass + "</span>" : "";
-        _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + _0x2d18ff + "</span>";
+        _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + "</span>";
       }
       this.div.innerHTML = _0x25ab99;
     }
@@ -4012,16 +4000,43 @@
       const _0x35608f = _0x386cbc.ctx;
       const _0xb35fb3 = _0x480be4.foodSize;
       let _0x452dec = _0x14d4a3.food.length;
-      const _0x2glowOn = _0x2cc0f3.foodGlow === "on";
-      const _0x2glowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
-      const _0x2glowColor = _0x480be4.foodGlowColor;
       _0x35608f.fillStyle = _0x480be4.foodColor;
-      if (_0x2glowOn) {
-        _0x35608f.shadowBlur = _0x2glowBlur;
-        _0x35608f.shadowColor = _0x2glowColor;
-        _0x35608f.shadowOffsetX = 0;
-        _0x35608f.shadowOffsetY = 0;
+      for (_0x35608f.beginPath(); _0x452dec--;) {
+        const _0x6bc6c7 = {
+          x: 0x0,
+          y: 0x0
+        };
+        const _0x105e9e = _0x14d4a3.food[_0x452dec];
+        const _0x12f0da = 2 === _0x105e9e.cellType ? _0x996564.position : _0x6bc6c7;
+        const _0x3d8a95 = _0x105e9e.animRadius + _0xb35fb3;
+        _0x35608f.moveTo(_0x105e9e.animX - _0x12f0da.x + _0x3d8a95, _0x105e9e.animY - _0x12f0da.y);
+        _0x35608f.arc(_0x105e9e.animX - _0x12f0da.x, _0x105e9e.animY - _0x12f0da.y, _0x3d8a95, 0, _0x386cbc.pi2, true);
       }
+      _0x35608f.closePath();
+      _0x35608f.fill();
+    }
+    static ["rainbow"]() {
+      let _0x31b51a = _0x386cbc.ctx;
+      let _0x23c062 = _0x480be4.foodSize;
+      for (let _0x198238 = _0x14d4a3.food.length; _0x198238--;) {
+        const _0x5096a7 = {
+          x: 0x0,
+          y: 0x0
+        };
+        const _0x4e1e7f = _0x14d4a3.food[_0x198238];
+        const _0x142eae = 2 === _0x4e1e7f.cellType ? _0x996564.position : _0x5096a7;
+        const _0x5c6dd3 = _0x4e1e7f.animRadius + _0x23c062;
+        _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
+        if (2 > _0x5c6dd3 * _0xddb6d6.viewport) {
+          _0x31b51a.fillRect(_0x4e1e7f.animX - _0x142eae.x - _0x5c6dd3, _0x4e1e7f.animY - _0x142eae.y - _0x5c6dd3, 2 * _0x5c6dd3, 2 * _0x5c6dd3);
+        } else {
+          _0x31b51a.beginPath();
+          _0x31b51a.arc(_0x4e1e7f.animX - _0x142eae.x, _0x4e1e7f.animY - _0x142eae.y, _0x5c6dd3, 0, _0x386cbc.pi2, true);
+          _0x31b51a.closePath();
+          _0x31b51a.fill();
+        }
+      }
+    }
       for (_0x35608f.beginPath(); _0x452dec--;) {
         const _0x6bc6c7 = {
           x: 0x0,
@@ -4043,9 +4058,6 @@
     static ["rainbow"]() {
       let _0x31b51a = _0x386cbc.ctx;
       let _0x23c062 = _0x480be4.foodSize;
-      const _0x2glowOn = _0x2cc0f3.foodGlow === "on";
-      const _0x2glowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
-      const _0x2glowColor = _0x480be4.foodGlowColor;
       for (let _0x198238 = _0x14d4a3.food.length; _0x198238--;) {
         const _0x5096a7 = {
           x: 0x0,
@@ -4055,12 +4067,6 @@
         const _0x142eae = 2 === _0x4e1e7f.cellType ? _0x996564.position : _0x5096a7;
         const _0x5c6dd3 = _0x4e1e7f.animRadius + _0x23c062;
         _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
-        if (_0x2glowOn) {
-          _0x31b51a.shadowBlur = _0x2glowBlur;
-          _0x31b51a.shadowColor = _0x2glowColor;
-          _0x31b51a.shadowOffsetX = 0;
-          _0x31b51a.shadowOffsetY = 0;
-        }
         if (2 > _0x5c6dd3 * _0xddb6d6.viewport) {
           _0x31b51a.fillRect(_0x4e1e7f.animX - _0x142eae.x - _0x5c6dd3, _0x4e1e7f.animY - _0x142eae.y - _0x5c6dd3, 2 * _0x5c6dd3, 2 * _0x5c6dd3);
         } else {
