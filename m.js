@@ -3288,13 +3288,16 @@
       const _0tag = _0x90a1a7.tag;
       if (!_0tag) return;
       const _0pattern = '[' + _0tag + ']';
-      _0x12ac51.teamPlayers.clear();
+      const _0myNick = _0pattern + _0x90a1a7.nick;
+      const _0seen = new Set();
       const _0check = (_0xc) => {
         if (_0xc.isMine || _0xc.fadeStartTime || !_0xc.nick) return;
+        if (_0xc.nick === _0myNick) return;
         if (_0xc.nick.indexOf(_0pattern) !== 0) return;
-        const _0pid = _0xc.id;
-        let _0p = _0x12ac51.teamPlayers.get(_0pid);
-        if (!_0p) { _0p = new _0xb33099(_0pid); _0x12ac51.teamPlayers.set(_0pid, _0p); }
+        const _0key = _0xc.nick;
+        _0seen.add(_0key);
+        let _0p = _0x12ac51.teamPlayers.get(_0key);
+        if (!_0p) { _0p = new _0xb33099(0); _0x12ac51.teamPlayers.set(_0key, _0p); }
         _0p.x = _0xc.x; _0p.y = _0xc.y; _0p.mass = _0xc.staticMass;
         _0p.nick = _0xc.nick || ''; _0p.skin = _0xc.skin;
         _0p.colorHex = _0xc.colorHex; _0p.isAlive = 1;
@@ -3304,6 +3307,9 @@
       };
       for (const _0cell of this.cells.values()) _0check(_0cell);
       for (const _0cell of this.cells2.values()) _0check(_0cell);
+      for (const _0k of _0x12ac51.teamPlayers.keys()) {
+        if (!_0seen.has(_0k)) _0x12ac51.teamPlayers["delete"](_0k);
+      }
     }
     static ['isInView'](_0x519429) {
       const _0x106585 = {
@@ -5287,21 +5293,15 @@
     static ["tag"]() {
       const _0x35e0be = _0x90a1a7.tag;
       if (_0x35e0be && _0x35e0be.length > 0) {
-        let _0x21b532 = _0x35e0be.length;
-        const _0x427eb0 = this.createView(2 + _0x35e0be.length);
-        _0x427eb0.setUint8(0, 8, true);
-        for (; _0x21b532--;) {
-          _0x427eb0.setUint8(_0x21b532 + 1, _0x35e0be.charCodeAt(_0x21b532), true);
-        }
-        _0x427eb0.setUint8(1 + _0x35e0be.length, 0, true);
         if (_0x1530af.connected) {
+          let _0x21b532 = _0x35e0be.length;
+          const _0x427eb0 = this.createView(2 + _0x35e0be.length);
+          _0x427eb0.setUint8(0, 4, true);
+          for (; _0x21b532--;) {
+            _0x427eb0.setUint8(_0x21b532 + 1, _0x35e0be.charCodeAt(_0x21b532), true);
+          }
+          _0x427eb0.setUint8(1 + _0x35e0be.length, 0, true);
           _0x1530af.send(_0x427eb0.buffer);
-        }
-        if (_0x18a8d1.wsOpen) {
-          _0x18a8d1.send(_0x427eb0.buffer, 1);
-        }
-        if (_0x18a8d1.ws2Open) {
-          _0x18a8d1.send(_0x427eb0.buffer, 2);
         }
       }
     }
