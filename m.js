@@ -4467,6 +4467,10 @@
         return _0x40f48a.warn('Multibox', "Server IP is invalid");
       }
       if (_0x23e168) {
+        const _0party = _0x90a1a7.partyToken;
+        if (_0party) {
+          _0x23e168 += (_0x23e168.includes('?') ? '&' : '?') + 'party=' + encodeURIComponent(_0party);
+        }
         this.disconnect();
         this.resetData();
         this.ws = new WebSocket(_0x23e168, "algamees");
