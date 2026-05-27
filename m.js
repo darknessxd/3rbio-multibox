@@ -4730,10 +4730,6 @@
         _0x55e445 = !!(32 & _0x8aab7f);
         _0x2283b5 = !!(64 & _0x8aab7f);
         _0xd54ce1 = !!(128 & _0x8aab7f);
-        if (_0x49c709) {
-          _0xabb49d.clanID = _0x449cb9.readUInt32();
-          _0xabb49d.clanFlag = _0x449cb9.readUInt8();
-        }
         if (_0x2283b5) {
           _0x449cb9.readInt32();
         }
@@ -4862,7 +4858,6 @@
       } else {
         _0x18a8d1.connected2 = true;
       }
-      _0x2d5cce.tag();
     }
     static ["handleDisabledProperty"](_0x1b3281) {
       document.querySelector("#button-play").disabled = _0x1b3281;
