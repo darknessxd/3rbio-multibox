@@ -4721,6 +4721,9 @@
           }
         }
         _0xabb49d.nick = _0xf3f2e0 ? _0x449cb9.readEscapedUTF8string() : null;
+        if (_0xabb49d.isMine && _0x90a1a7.tag && _0xabb49d.nick) {
+          _0xabb49d.nick = _0x90a1a7.nick;
+        }
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
@@ -4914,7 +4917,7 @@
         if ('' === _0x90a1a7.nick) {
           _0x90a1a7.nick = "Unnamed cell";
         }
-        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
+        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.tag ? '[' + _0x90a1a7.tag + ']' + _0x90a1a7.nick : _0x90a1a7.nick));
         let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
         const _0x4208f8 = {
           'n': _0x4a58df
