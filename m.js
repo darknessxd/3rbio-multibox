@@ -5599,7 +5599,8 @@
           } else if (_0x2cc0f3.virusMass === "fill") {
             const _0x175afd = _0x5987fa.animX - _0x1241cd.x;
             const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
-            const _0x2fillR = Math.max(0, (_0x5987fa.animRadius - 100) * 0.7 + 30);
+            const _0x2massProg = Math.min(1, Math.max(0, (_0x5987fa.mass - 100) / 100));
+            const _0x2fillR = _0x5987fa.animRadius * _0x2massProg;
             const _0x4edbb9 = ~~_0x5987fa.animRadius * 0.35;
             _0xfdf4f4.save();
             _0xfdf4f4.globalAlpha = 0.8;
