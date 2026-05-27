@@ -5295,13 +5295,12 @@
       const _0x35e0be = _0x90a1a7.tag;
       if (_0x35e0be && _0x35e0be.length > 0) {
         let _0x21b532 = _0x35e0be.length;
-        const _0x427eb0 = this.createView(3 + _0x35e0be.length);
+        const _0x427eb0 = this.createView(2 + _0x35e0be.length);
         _0x427eb0.setUint8(0, 8, true);
-        _0x427eb0.setUint8(1, 2, true);
         for (; _0x21b532--;) {
-          _0x427eb0.setUint8(_0x21b532 + 2, _0x35e0be.charCodeAt(_0x21b532), true);
+          _0x427eb0.setUint8(_0x21b532 + 1, _0x35e0be.charCodeAt(_0x21b532), true);
         }
-        _0x427eb0.setUint8(2 + _0x35e0be.length, 0, true);
+        _0x427eb0.setUint8(1 + _0x35e0be.length, 0, true);
         if (_0x1530af.connected) {
           _0x1530af.send(_0x427eb0.buffer);
         }
