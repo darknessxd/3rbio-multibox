@@ -706,7 +706,6 @@
       _0x14f7b2("#nick").val(_0x518ea9.nick);
       _0x14f7b2("#skin").val(_0x518ea9.skin);
       _0x14f7b2("#tag").val(this.tag);
-      _0x14f7b2("#proxy-host").val(localStorage.getItem('3rb-proxy-url') || '');
       _0x14f7b2("#arbSkin").val(_0x518ea9.arbSkin);
       this.updateMainSkin();
       for (let _0x365a86 = 8; 0 < _0x365a86;) {
@@ -735,9 +734,6 @@
           _0x14f7b2(".skin-wheel").fadeOut(250);
           this.wheelIsOpened = false;
         }
-      });
-      _0x14f7b2("#proxy-host").blur(() => {
-        localStorage.setItem('3rb-proxy-url', _0x14f7b2("#proxy-host").val());
       });
       _0x14f7b2("#tag").blur(() => {
         this.setTag(_0x14f7b2("#tag").val());
@@ -3535,7 +3531,6 @@
     static ["dead"]() {
       if (this._isAlive) {
         this._isAlive = false;
-        _0x2d5cce.aliveStatus();
         if (this._isAlive2) {
           this.type = 2;
           _0x302a2c.spectate(1);
@@ -3830,9 +3825,6 @@
         return false;
       }
       let _0x356a8b = _0x18cbda.nick.substring(_0x18cbda.nick.indexOf('}') + 1) || '';
-      if (_0x18cbda.isMine && _0x90a1a7.tag) {
-        _0x356a8b = '[' + _0x90a1a7.tag + '] ' + _0x356a8b;
-      }
       const _0x490323 = this.nickCaches.get(_0x356a8b) || this.newNickCache(_0x356a8b);
       _0x490323.lastUsedAt = _0xb45f1b.time;
       const _0x202e61 = 50 > this.getScreenRadius(_0x18cbda.animRadius) ? 0 : 1;
@@ -4726,9 +4718,6 @@
           }
         }
         _0xabb49d.nick = _0xf3f2e0 ? _0x449cb9.readEscapedUTF8string() : null;
-        if (_0xabb49d.isMine && _0x90a1a7.tag && _0xabb49d.nick) {
-          _0xabb49d.nick = _0x90a1a7.nick;
-        }
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
@@ -4922,7 +4911,7 @@
         if ('' === _0x90a1a7.nick) {
           _0x90a1a7.nick = "Unnamed cell";
         }
-        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.tag ? '[' + _0x90a1a7.tag + ']' + _0x90a1a7.nick : _0x90a1a7.nick));
+        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
         let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
         const _0x4208f8 = {
           'n': _0x4a58df
@@ -4972,57 +4961,24 @@
       this.ip = '';
       this.ws = null;
       this.connected = false;
-      this._posTimer = null;
       this.connect();
     }
-    static ['connect']() {
-      if (this.ws) return;
-      try {
-        const _0xproxyUrl = localStorage.getItem('3rb-proxy-url') || 'ws://localhost:3000';
-        this.ws = new WebSocket(_0xproxyUrl);
-        this.ws.binaryType = 'arraybuffer';
-        this.ws.onopen = () => this.onOpen();
-        this.ws.onmessage = (e) => this.onMessage(e.data);
-        this.ws.onclose = () => this.onClose();
-        this.ws.onerror = () => this.onError();
-      } catch(e) {
-        console.log("Proxy server not available.");
-      }
-    }
+    static ['connect']() {}
     static ["send"](_0x13f21e) {
-      if (this.ws && this.connected) {
-        this.ws.send(_0x13f21e);
-      }
+      this.ws.send(_0x13f21e);
     }
     static ['onOpen']() {
-      this.connected = true;
       _0x2d5cce.init();
-      if (this._posTimer) clearInterval(this._posTimer);
-      this._posTimer = setInterval(() => {
-        if (this.connected && _0x90a1a7.isAlive) {
-          _0x2d5cce.positionMass();
-        }
-      }, 100);
     }
     static ["onMessage"](_0x1ffd4c) {
       _0x7a58b0.parse(_0x1ffd4c);
     }
     static ["onClose"]() {
       this.connected = false;
-      this.ws = null;
-      if (this._posTimer) {
-        clearInterval(this._posTimer);
-        this._posTimer = null;
-      }
       console.log("Disconnected from networks.");
     }
     static ["onError"]() {
       this.connected = false;
-      this.ws = null;
-      if (this._posTimer) {
-        clearInterval(this._posTimer);
-        this._posTimer = null;
-      }
       console.log("Connection to networks errored out!");
     }
   }
@@ -5297,7 +5253,7 @@
         if (_0x1530af.connected) {
           let _0x21b532 = _0x35e0be.length;
           const _0x427eb0 = this.createView(2 + _0x35e0be.length);
-          _0x427eb0.setUint8(0, 6, true);
+          _0x427eb0.setUint8(0, 4, true);
           for (; _0x21b532--;) {
             _0x427eb0.setUint8(_0x21b532 + 1, _0x35e0be.charCodeAt(_0x21b532), true);
           }
