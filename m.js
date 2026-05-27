@@ -3284,33 +3284,7 @@
         }
       }
     }
-    static ["matchTeamPlayers"]() {
-      const _0tag = _0x90a1a7.tag;
-      if (!_0tag) return;
-      const _0pattern = '[' + _0tag + ']';
-      const _0myNick = _0pattern + _0x90a1a7.nick;
-      const _0seen = new Set();
-      const _0check = (_0xc) => {
-        if (_0xc.isMine || _0xc.fadeStartTime || !_0xc.nick) return;
-        if (_0xc.nick === _0myNick) return;
-        if (_0xc.nick.indexOf(_0pattern) !== 0) return;
-        const _0key = _0xc.nick;
-        _0seen.add(_0key);
-        let _0p = _0x12ac51.teamPlayers.get(_0key);
-        if (!_0p) { _0p = new _0xb33099(0); _0x12ac51.teamPlayers.set(_0key, _0p); }
-        _0p.x = _0xc.x; _0p.y = _0xc.y; _0p.mass = _0xc.staticMass;
-        _0p.nick = _0xc.nick || ''; _0p.skin = _0xc.skin;
-        _0p.colorHex = _0xc.colorHex; _0p.isAlive = 1;
-        _0p.isRGB = !!_0xc.isRGB || false;
-        _0p.animX = _0xc.animX; _0p.animY = _0xc.animY;
-        _0p.timeStamp = _0xb45f1b.time;
-      };
-      for (const _0cell of this.cells.values()) _0check(_0cell);
-      for (const _0cell of this.cells2.values()) _0check(_0cell);
-      for (const _0k of _0x12ac51.teamPlayers.keys()) {
-        if (!_0seen.has(_0k)) _0x12ac51.teamPlayers["delete"](_0k);
-      }
-    }
+
     static ['isInView'](_0x519429) {
       const _0x106585 = {
         x: 0x0,
@@ -3373,8 +3347,7 @@
       this.isFriend = false;
       this.account = '';
       this.cellType = _0x2a2eaf;
-      this.clanID = 0;
-      this.clanFlag = 0;
+
       this.animX = 0;
       this.animY = 0;
       this.animRadius = 0;
@@ -3440,7 +3413,7 @@
       this._nick = _0x14f7b2("#nick").val();
       this._arbSkin = _0x14f7b2("#arbSkin").val();
       this._skin = _0x386cbc.getImgurCode(_0x14f7b2("#skin").val());
-      this._tag = _0x14f7b2("#tag").val();
+      this.tag = _0x14f7b2("#tag").val();
       this._colorObject = _0x75abdd;
       this.colorHex = '#000';
       this.colorHex2 = "#000";
@@ -3609,13 +3582,7 @@
     static get ['skin']() {
       return this._skin;
     }
-    static set ['tag'](_0x3c927d) {
-      this._tag = _0x3c927d;
-      _0x2d5cce.tag();
-    }
-    static get ["tag"]() {
-      return this._tag;
-    }
+
     static set ["colorObject"](_0x50d681) {
       this._colorObject.r = _0x50d681.r;
       this._colorObject.g = _0x50d681.g;
@@ -4761,7 +4728,7 @@
         _0x468d84 = _0x449cb9.readUInt32();
         _0x14d4a3.removeCell(_0x468d84, _0x43ee07);
       }
-      _0x14d4a3.matchTeamPlayers();
+
     }
     static ["checkIsFood"](_0x451fee) {
       return _0x451fee.isUnnamed && _0x451fee.nodeType != 0 && !_0x451fee.isMine && !_0x451fee.isEjected && _0x451fee.radius < 100;
@@ -4947,17 +4914,10 @@
           _0x90a1a7.nick = "Unnamed cell";
         }
         let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
-        const _0xxtag = _0x90a1a7.tag;
-        if (_0xxtag) {
-          _0x4a58df = '[' + _0xxtag + ']' + _0x4a58df;
-        }
         let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
         const _0x4208f8 = {
           'n': _0x4a58df
         };
-        if (_0x90a1a7.tag) {
-          _0x4208f8.t = _0x90a1a7.tag;
-        }
         if (_0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
@@ -4971,7 +4931,6 @@
         }
         _0x314127.setUint8(_0x301649 + 1, 0, true);
         this.sendPacket(_0x314127, _0x115240);
-        _0x2d5cce.tag();
       }
     }
     static ["split"]() {
