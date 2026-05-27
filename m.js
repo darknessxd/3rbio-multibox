@@ -756,22 +756,6 @@
         }
         this.setarbSkin();
       });
-      _0x14f7b2("#create-party").click(() => {
-        const _0token = Math.random().toString(36).substring(2, 8).toUpperCase();
-        window.location.hash = _0token;
-        _0x14f7b2("#party-token").val(_0token);
-        _0x90a1a7.partyToken = _0token;
-        _0x14f7b2("#party-token").select();
-        document.execCommand("copy");
-        _0x40f48a.alert("Multibox", "Party created! Token copied: " + _0token);
-      });
-      _0x14f7b2("#join-party").click(() => {
-        const _0token = _0x14f7b2("#party-token").val().trim();
-        if (_0token) {
-          window.location.hash = _0token;
-          _0x90a1a7.partyToken = _0token;
-        }
-      });
     }
     static ["switch"](_0x5517bb) {
       this.selected = ~~_0x5517bb;
@@ -3157,12 +3141,12 @@
     }
     static ["toggleStreammode"]() {
       if (this.streammode) {
-        _0x14f7b2("#nick, #tag, #tag2, #party-token").removeClass("input-hidden");
+        _0x14f7b2("#nick, #tag, #tag2").removeClass("input-hidden");
         _0x14f7b2("#streamMode").html("<i class=\"fa fa-eye fa-fw\"></i>");
         this.streammode = false;
         _0x19d5af.set('extras', "streammode", this.streammode);
       } else {
-        _0x14f7b2("#nick, #tag, #tag2, #party-token").addClass("input-hidden");
+        _0x14f7b2("#nick, #tag, #tag2").addClass("input-hidden");
         _0x14f7b2("#streamMode").html("<i class=\"fa fa-eye-slash fa-fw\"></i>");
         this.streammode = true;
         _0x19d5af.set("extras", "streammode", this.streammode);
@@ -3300,7 +3284,31 @@
         }
       }
     }
-
+    static ["matchTeamPlayers"]() {
+      const _0tag = _0x90a1a7.tag;
+      if (!_0tag) return;
+      const _0pattern = '[' + _0tag + ']';
+      const _0seen = new Set();
+      const _0check = (_0c) => {
+        if (_0c.isMine || _0c.fadeStartTime || !_0c.nick) return;
+        if (_0c.nick.indexOf(_0pattern) !== 0) return;
+        const _0key = _0c.nick;
+        _0seen.add(_0key);
+        let _0p = _0x12ac51.teamPlayers.get(_0key);
+        if (!_0p) { _0p = new _0xb33099(0); _0x12ac51.teamPlayers.set(_0key, _0p); }
+        _0p.x = _0c.x; _0p.y = _0c.y; _0p.mass = _0c.staticMass;
+        _0p.nick = _0c.nick || ''; _0p.skin = _0c.skin;
+        _0p.colorHex = _0c.colorHex; _0p.isAlive = 1;
+        _0p.isRGB = !!_0c.isRGB || false;
+        _0p.animX = _0c.animX; _0p.animY = _0c.animY;
+        _0p.timeStamp = _0xb45f1b.time;
+      };
+      for (const _0cell of this.cells.values()) _0check(_0cell);
+      for (const _0cell of this.cells2.values()) _0check(_0cell);
+      for (const _0k of _0x12ac51.teamPlayers.keys()) {
+        if (!_0seen.has(_0k)) _0x12ac51.teamPlayers["delete"](_0k);
+      }
+    }
     static ['isInView'](_0x519429) {
       const _0x106585 = {
         x: 0x0,
@@ -3430,7 +3438,6 @@
       this._arbSkin = _0x14f7b2("#arbSkin").val();
       this._skin = _0x386cbc.getImgurCode(_0x14f7b2("#skin").val());
       this.tag = _0x14f7b2("#tag").val();
-      this.partyToken = _0x14f7b2("#party-token").val() || window.location.hash.replace('#', '');
       this._colorObject = _0x75abdd;
       this.colorHex = '#000';
       this.colorHex2 = "#000";
@@ -4467,10 +4474,6 @@
         return _0x40f48a.warn('Multibox', "Server IP is invalid");
       }
       if (_0x23e168) {
-        const _0party = _0x90a1a7.partyToken;
-        if (_0party) {
-          _0x23e168 += (_0x23e168.includes('?') ? '&' : '?') + 'party=' + encodeURIComponent(_0party);
-        }
         this.disconnect();
         this.resetData();
         this.ws = new WebSocket(_0x23e168, "algamees");
@@ -4749,7 +4752,7 @@
         _0x468d84 = _0x449cb9.readUInt32();
         _0x14d4a3.removeCell(_0x468d84, _0x43ee07);
       }
-
+      _0x14d4a3.matchTeamPlayers();
     }
     static ["checkIsFood"](_0x451fee) {
       return _0x451fee.isUnnamed && _0x451fee.nodeType != 0 && !_0x451fee.isMine && !_0x451fee.isEjected && _0x451fee.radius < 100;
@@ -4935,13 +4938,14 @@
           _0x90a1a7.nick = "Unnamed cell";
         }
         let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
+        const _0xtag = _0x90a1a7.tag;
+        if (_0xtag) {
+          _0x4a58df = '[' + _0xtag + ']' + _0x4a58df;
+        }
         let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
         const _0x4208f8 = {
           'n': _0x4a58df
         };
-        if (_0x90a1a7.partyToken) {
-          _0x4208f8.p = _0x90a1a7.partyToken;
-        }
         if (_0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
