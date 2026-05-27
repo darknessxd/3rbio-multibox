@@ -373,6 +373,7 @@
     virusGlowStrength: "Virus glow strength",
     virusRingWidth: "Virus Ring Width",
     virusRingColor: "Virus Ring Color",
+    virusGearColor: "Virus Gear Color",
     foodGlowSize: "Food Glow Size",
     foodGlowStrength: "Food Glow Strength",
     foodGlowColor: "Food Glow Color",
@@ -1590,6 +1591,7 @@
       this.virusGlowStrength = ~~_0x19d5af.get("theme", "virusGlowStrength") || 5;
       this.virusRingWidth = ~~_0x19d5af.get("theme", "virusRingWidth") || 10;
       this.virusRingColor = _0x19d5af.get("theme", "virusRingColor") || "#ffffff";
+      this.virusGearColor = _0x19d5af.get("theme", "virusGearColor") || "#ff0066";
       this.ghostColor = _0x19d5af.get("theme", "ghostColor") || "#aaa";
       this.selfColor = _0x19d5af.get("theme", "selfColor") || "#fff";
       this.selfViewportColor = _0x19d5af.get("theme", "selfViewportColor") || "#fff";
@@ -5561,11 +5563,11 @@
             const _0x2outerR = _0x2cr + _0x2toothH;
             const _0x2innerR = _0x2cr;
             const _0x2ctrlR = _0x2innerR + _0x2toothH * 0.7;
-            const _0x2rot = (_0xb45f1b.time / 1000 * (_0x480be4.globalRotationSpeed || 5)) % this.pi2;
+            const _0x2rot = (_0xb45f1b.time / 3000 * (_0x480be4.globalRotationSpeed || 5)) % this.pi2;
             _0xfdf4f4.save();
             _0xfdf4f4.translate(_0x2cx, _0x2cy);
             _0xfdf4f4.rotate(_0x2rot);
-            _0xfdf4f4.fillStyle = _0x480be4.virusRingColor;
+            _0xfdf4f4.fillStyle = _0x480be4.virusGearColor || _0x480be4.virusRingColor;
             _0xfdf4f4.globalAlpha = 0.8;
             for (let _0x2i = 0; _0x2i < _0x2teeth; _0x2i++) {
               const _0x2a = _0x2i * _0x2step;
