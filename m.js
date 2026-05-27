@@ -4012,7 +4012,16 @@
       const _0x35608f = _0x386cbc.ctx;
       const _0xb35fb3 = _0x480be4.foodSize;
       let _0x452dec = _0x14d4a3.food.length;
+      const _0x2glowOn = _0x2cc0f3.foodGlow === "on";
+      const _0x2glowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
+      const _0x2glowColor = _0x480be4.foodGlowColor;
       _0x35608f.fillStyle = _0x480be4.foodColor;
+      if (_0x2glowOn) {
+        _0x35608f.shadowBlur = _0x2glowBlur;
+        _0x35608f.shadowColor = _0x2glowColor;
+        _0x35608f.shadowOffsetX = 0;
+        _0x35608f.shadowOffsetY = 0;
+      }
       for (_0x35608f.beginPath(); _0x452dec--;) {
         const _0x6bc6c7 = {
           x: 0x0,
@@ -4026,10 +4035,17 @@
       }
       _0x35608f.closePath();
       _0x35608f.fill();
+      if (_0x2glowOn) {
+        _0x35608f.shadowBlur = 0;
+        _0x35608f.shadowColor = 'transparent';
+      }
     }
     static ["rainbow"]() {
       let _0x31b51a = _0x386cbc.ctx;
       let _0x23c062 = _0x480be4.foodSize;
+      const _0x2glowOn = _0x2cc0f3.foodGlow === "on";
+      const _0x2glowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
+      const _0x2glowColor = _0x480be4.foodGlowColor;
       for (let _0x198238 = _0x14d4a3.food.length; _0x198238--;) {
         const _0x5096a7 = {
           x: 0x0,
@@ -4039,6 +4055,12 @@
         const _0x142eae = 2 === _0x4e1e7f.cellType ? _0x996564.position : _0x5096a7;
         const _0x5c6dd3 = _0x4e1e7f.animRadius + _0x23c062;
         _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
+        if (_0x2glowOn) {
+          _0x31b51a.shadowBlur = _0x2glowBlur;
+          _0x31b51a.shadowColor = _0x2glowColor;
+          _0x31b51a.shadowOffsetX = 0;
+          _0x31b51a.shadowOffsetY = 0;
+        }
         if (2 > _0x5c6dd3 * _0xddb6d6.viewport) {
           _0x31b51a.fillRect(_0x4e1e7f.animX - _0x142eae.x - _0x5c6dd3, _0x4e1e7f.animY - _0x142eae.y - _0x5c6dd3, 2 * _0x5c6dd3, 2 * _0x5c6dd3);
         } else {
@@ -4047,6 +4069,10 @@
           _0x31b51a.closePath();
           _0x31b51a.fill();
         }
+      }
+      if (_0x2glowOn) {
+        _0x31b51a.shadowBlur = 0;
+        _0x31b51a.shadowColor = 'transparent';
       }
     }
   }
@@ -5617,13 +5643,6 @@
             _0xfdf4f4.textBaseline = "middle";
             _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
           }
-        } else if (_0x5987fa.isFood && _0x2cc0f3.foodGlow === "on") {
-          _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
-          _0xfdf4f4.shadowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
-          _0xfdf4f4.shadowColor = _0x480be4.foodGlowColor;
-          _0xfdf4f4.fill();
-          _0xfdf4f4.shadowBlur = 0;
-          _0xfdf4f4.shadowColor = 'transparent';
         } else {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
           if (_0x5ab10a * _0x21653d < 1) {
