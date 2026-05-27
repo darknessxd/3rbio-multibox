@@ -3825,8 +3825,8 @@
         return false;
       }
       let _0x356a8b = _0x18cbda.nick.substring(_0x18cbda.nick.indexOf('}') + 1) || '';
-      if (_0x18cbda.clanTag) {
-        _0x356a8b = '[' + _0x18cbda.clanTag + '] ' + _0x356a8b;
+      if (_0x18cbda.isMine && _0x90a1a7.tag) {
+        _0x356a8b = '[' + _0x90a1a7.tag + '] ' + _0x356a8b;
       }
       const _0x490323 = this.nickCaches.get(_0x356a8b) || this.newNickCache(_0x356a8b);
       _0x490323.lastUsedAt = _0xb45f1b.time;
@@ -4721,7 +4721,6 @@
           }
         }
         _0xabb49d.nick = _0xf3f2e0 ? _0x449cb9.readEscapedUTF8string() : null;
-        _0xabb49d.clanTag = _0x49c709 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
@@ -4920,9 +4919,6 @@
         const _0x4208f8 = {
           'n': _0x4a58df
         };
-        if (_0x90a1a7.tag) {
-          _0x4208f8.t = _0x90a1a7.tag;
-        }
         if (_0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
