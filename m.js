@@ -706,6 +706,7 @@
       _0x14f7b2("#nick").val(_0x518ea9.nick);
       _0x14f7b2("#skin").val(_0x518ea9.skin);
       _0x14f7b2("#tag").val(this.tag);
+      _0x14f7b2("#proxy-host").val(localStorage.getItem('3rb-proxy-url') || '');
       _0x14f7b2("#arbSkin").val(_0x518ea9.arbSkin);
       this.updateMainSkin();
       for (let _0x365a86 = 8; 0 < _0x365a86;) {
@@ -734,6 +735,9 @@
           _0x14f7b2(".skin-wheel").fadeOut(250);
           this.wheelIsOpened = false;
         }
+      });
+      _0x14f7b2("#proxy-host").blur(() => {
+        localStorage.setItem('3rb-proxy-url', _0x14f7b2("#proxy-host").val());
       });
       _0x14f7b2("#tag").blur(() => {
         this.setTag(_0x14f7b2("#tag").val());
@@ -3531,6 +3535,7 @@
     static ["dead"]() {
       if (this._isAlive) {
         this._isAlive = false;
+        _0x2d5cce.aliveStatus();
         if (this._isAlive2) {
           this.type = 2;
           _0x302a2c.spectate(1);
@@ -4967,24 +4972,57 @@
       this.ip = '';
       this.ws = null;
       this.connected = false;
+      this._posTimer = null;
       this.connect();
     }
-    static ['connect']() {}
+    static ['connect']() {
+      if (this.ws) return;
+      try {
+        const _0xproxyUrl = localStorage.getItem('3rb-proxy-url') || 'ws://localhost:3000';
+        this.ws = new WebSocket(_0xproxyUrl);
+        this.ws.binaryType = 'arraybuffer';
+        this.ws.onopen = () => this.onOpen();
+        this.ws.onmessage = (e) => this.onMessage(e.data);
+        this.ws.onclose = () => this.onClose();
+        this.ws.onerror = () => this.onError();
+      } catch(e) {
+        console.log("Proxy server not available.");
+      }
+    }
     static ["send"](_0x13f21e) {
-      this.ws.send(_0x13f21e);
+      if (this.ws && this.connected) {
+        this.ws.send(_0x13f21e);
+      }
     }
     static ['onOpen']() {
+      this.connected = true;
       _0x2d5cce.init();
+      if (this._posTimer) clearInterval(this._posTimer);
+      this._posTimer = setInterval(() => {
+        if (this.connected && _0x90a1a7.isAlive) {
+          _0x2d5cce.positionMass();
+        }
+      }, 100);
     }
     static ["onMessage"](_0x1ffd4c) {
       _0x7a58b0.parse(_0x1ffd4c);
     }
     static ["onClose"]() {
       this.connected = false;
+      this.ws = null;
+      if (this._posTimer) {
+        clearInterval(this._posTimer);
+        this._posTimer = null;
+      }
       console.log("Disconnected from networks.");
     }
     static ["onError"]() {
       this.connected = false;
+      this.ws = null;
+      if (this._posTimer) {
+        clearInterval(this._posTimer);
+        this._posTimer = null;
+      }
       console.log("Connection to networks errored out!");
     }
   }
@@ -5259,7 +5297,7 @@
         if (_0x1530af.connected) {
           let _0x21b532 = _0x35e0be.length;
           const _0x427eb0 = this.createView(2 + _0x35e0be.length);
-          _0x427eb0.setUint8(0, 4, true);
+          _0x427eb0.setUint8(0, 6, true);
           for (; _0x21b532--;) {
             _0x427eb0.setUint8(_0x21b532 + 1, _0x35e0be.charCodeAt(_0x21b532), true);
           }
