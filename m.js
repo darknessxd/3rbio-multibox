@@ -756,6 +756,22 @@
         }
         this.setarbSkin();
       });
+      _0x14f7b2("#create-party").click(() => {
+        const _0token = Math.random().toString(36).substring(2, 8).toUpperCase();
+        window.location.hash = _0token;
+        _0x14f7b2("#party-token").val(_0token);
+        _0x90a1a7.partyToken = _0token;
+        _0x14f7b2("#party-token").select();
+        document.execCommand("copy");
+        _0x40f48a.alert("Multibox", "Party created! Token copied: " + _0token);
+      });
+      _0x14f7b2("#join-party").click(() => {
+        const _0token = _0x14f7b2("#party-token").val().trim();
+        if (_0token) {
+          window.location.hash = _0token;
+          _0x90a1a7.partyToken = _0token;
+        }
+      });
     }
     static ["switch"](_0x5517bb) {
       this.selected = ~~_0x5517bb;
@@ -3414,6 +3430,7 @@
       this._arbSkin = _0x14f7b2("#arbSkin").val();
       this._skin = _0x386cbc.getImgurCode(_0x14f7b2("#skin").val());
       this.tag = _0x14f7b2("#tag").val();
+      this.partyToken = _0x14f7b2("#party-token").val() || window.location.hash.replace('#', '');
       this._colorObject = _0x75abdd;
       this.colorHex = '#000';
       this.colorHex2 = "#000";
@@ -4918,6 +4935,9 @@
         const _0x4208f8 = {
           'n': _0x4a58df
         };
+        if (_0x90a1a7.partyToken) {
+          _0x4208f8.p = _0x90a1a7.partyToken;
+        }
         if (_0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
