@@ -3284,6 +3284,33 @@
         }
       }
     }
+    static ["matchTeamPlayers"]() {
+      let _0xmyClan = 0;
+      for (const _0xcell of this.myCells.values()) {
+        if (_0xcell.clanID) { _0xmyClan = _0xcell.clanID; break; }
+      }
+      if (!_0xmyClan) {
+        for (const _0xcell of this.myCells2.values()) {
+          if (_0xcell.clanID) { _0xmyClan = _0xcell.clanID; break; }
+        }
+      }
+      if (!_0xmyClan) return;
+      _0x12ac51.teamPlayers.clear();
+      const _0xcheck = (_0xc) => {
+        if (_0xc.isMine || _0xc.fadeStartTime || !_0xc.clanID || _0xc.clanID !== _0xmyClan) return;
+        const _0pid = _0xc.id;
+        let _0p = _0x12ac51.teamPlayers.get(_0pid);
+        if (!_0p) { _0p = new _0xb33099(_0pid); _0x12ac51.teamPlayers.set(_0pid, _0p); }
+        _0p.x = _0xc.x; _0p.y = _0xc.y; _0p.mass = _0xc.staticMass;
+        _0p.nick = _0xc.nick || ''; _0p.skin = _0xc.skin;
+        _0p.colorHex = _0xc.colorHex; _0p.isAlive = 1;
+        _0p.isRGB = !!_0xc.isRGB || false;
+        _0p.animX = _0xc.animX; _0p.animY = _0xc.animY;
+        _0p.timeStamp = _0xb45f1b.time;
+      };
+      for (const _0cell of this.cells.values()) _0check(_0cell);
+      for (const _0cell of this.cells2.values()) _0check(_0cell);
+    }
     static ['isInView'](_0x519429) {
       const _0x106585 = {
         x: 0x0,
@@ -3346,6 +3373,8 @@
       this.isFriend = false;
       this.account = '';
       this.cellType = _0x2a2eaf;
+      this.clanID = 0;
+      this.clanFlag = 0;
       this.animX = 0;
       this.animY = 0;
       this.animRadius = 0;
@@ -4708,8 +4737,8 @@
         _0x2283b5 = !!(64 & _0x8aab7f);
         _0xd54ce1 = !!(128 & _0x8aab7f);
         if (_0x49c709) {
-          _0x449cb9.readUInt32();
-          _0x449cb9.readUInt8();
+          _0xabb49d.clanID = _0x449cb9.readUInt32();
+          _0xabb49d.clanFlag = _0x449cb9.readUInt8();
         }
         if (_0x2283b5) {
           _0x449cb9.readInt32();
@@ -4736,6 +4765,7 @@
         _0x468d84 = _0x449cb9.readUInt32();
         _0x14d4a3.removeCell(_0x468d84, _0x43ee07);
       }
+      _0x14d4a3.matchTeamPlayers();
     }
     static ["checkIsFood"](_0x451fee) {
       return _0x451fee.isUnnamed && _0x451fee.nodeType != 0 && !_0x451fee.isMine && !_0x451fee.isEjected && _0x451fee.radius < 100;
@@ -4942,6 +4972,7 @@
         }
         _0x314127.setUint8(_0x301649 + 1, 0, true);
         this.sendPacket(_0x314127, _0x115240);
+        _0x2d5cce.tag();
       }
     }
     static ["split"]() {
