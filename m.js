@@ -697,14 +697,18 @@
       const _0xededcf = {
         "nick": "profile " + this.selected,
         skin: "https://i.imgur.com/nRqSis7.png",
-        "arbSkin": ''
+        "arbSkin": '',
+        "nick2": '',
+        "skin2": ''
       };
       if (!_0x518ea9) {
         _0x518ea9 = _0xededcf;
       }
       _0x19d5af.set('profiles', "profile" + this.selected, _0x518ea9);
       _0x14f7b2("#nick").val(_0x518ea9.nick);
+      _0x14f7b2("#nick2").val(_0x518ea9.nick2 || '');
       _0x14f7b2("#skin").val(_0x518ea9.skin);
+      _0x14f7b2("#skin2").val(_0x518ea9.skin2 || '');
       _0x14f7b2("#tag").val(this.tag);
       _0x14f7b2("#arbSkin").val(_0x518ea9.arbSkin);
       this.updateMainSkin();
@@ -756,6 +760,20 @@
         }
         this.setarbSkin();
       });
+      _0x14f7b2("#nick2").blur(() => {
+        let _0xprofile2 = _0x19d5af.get('profiles', "profile" + this.selected);
+        if (!_0xprofile2) _0xprofile2 = {};
+        _0xprofile2.nick2 = _0x14f7b2("#nick2").val();
+        _0x19d5af.set('profiles', "profile" + this.selected, _0xprofile2);
+        _0x90a1a7.nick2 = _0xprofile2.nick2 || '';
+      });
+      _0x14f7b2("#skin2").blur(() => {
+        let _0xprofile2 = _0x19d5af.get('profiles', "profile" + this.selected);
+        if (!_0xprofile2) _0xprofile2 = {};
+        _0xprofile2.skin2 = _0x14f7b2("#skin2").val();
+        _0x19d5af.set('profiles', "profile" + this.selected, _0xprofile2);
+        _0x90a1a7.skin2 = _0x14f7b2("#skin2").val();
+      });
     }
     static ["switch"](_0x5517bb) {
       this.selected = ~~_0x5517bb;
@@ -764,16 +782,22 @@
       const _0x319c35 = {
         nick: "profile " + this.selected,
         skin: "https://i.imgur.com/nRqSis7.png",
-        arbSkin: ''
+        arbSkin: '',
+        nick2: '',
+        skin2: ''
       };
       if (!_0x4d475c) {
         _0x4d475c = _0x319c35;
       }
       _0x14f7b2("#nick").val(_0x4d475c.nick);
+      _0x14f7b2("#nick2").val(_0x4d475c.nick2 || '');
       _0x14f7b2('#skin').val(_0x4d475c.skin);
+      _0x14f7b2("#skin2").val(_0x4d475c.skin2 || '');
       _0x14f7b2("#arbSkin").val(_0x4d475c.arbSkin);
       _0x90a1a7.nick = '' === _0x4d475c.nick ? "Unnamed Cell" : _0x4d475c.nick;
+      _0x90a1a7.nick2 = _0x4d475c.nick2 || '';
       _0x90a1a7.skin = _0x4d475c.skin;
+      _0x90a1a7.skin2 = _0x4d475c.skin2 || '';
       _0x19d5af.set('profiles', "profile" + this.selected, _0x4d475c);
       this.updateMainSkin();
     }
@@ -786,7 +810,9 @@
       const _0x1170bc = {
         "nick": "profile " + this.selected,
         "skin": "https://i.imgur.com/nRqSis7.png",
-        "arbSkin": ''
+        "arbSkin": '',
+        "nick2": '',
+        "skin2": ''
       };
       if (!_0x235246) {
         _0x235246 = _0x1170bc;
@@ -800,12 +826,15 @@
       _0x90a1a7.arbSkin = _0x431fed;
       let _0x4b4ffa = _0x14f7b2("#skin").val();
       if (_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa || '')).includes("XXXXXXX")) {
+        const _0xprev = _0x19d5af.get('profiles', "profile" + this.selected) || {};
         const _0x5d3148 = {
           "nick": "profile " + this.selected,
           "skin": '',
           "arbSkin": _0x431fed,
           skin: _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa)),
-          "arbSkin": _0x431fed
+          "arbSkin": _0x431fed,
+          nick2: _0xprev.nick2 || '',
+          skin2: _0xprev.skin2 || ''
         };
         _0x90a1a7.skin = _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa));
         _0x19d5af.set('profiles', "profile" + this.selected, _0x5d3148);
@@ -818,7 +847,9 @@
       const _0x1197ad = {
         "nick": "profile " + this.selected,
         skin: "https://i.imgur.com/nRqSis7.png",
-        "arbSkin": ''
+        "arbSkin": '',
+        "nick2": '',
+        "skin2": ''
       };
       if (!_0x2716a1) {
         _0x2716a1 = _0x1197ad;
@@ -3410,8 +3441,10 @@
         y: 0x64
       };
       this._nick = _0x14f7b2("#nick").val();
+      this._nick2 = _0x14f7b2("#nick2").val();
       this._arbSkin = _0x14f7b2("#arbSkin").val();
       this._skin = _0x386cbc.getImgurCode(_0x14f7b2("#skin").val());
+      this._skin2 = _0x386cbc.getImgurCode(_0x14f7b2("#skin2").val());
       this.tag = _0x14f7b2("#tag").val();
       this._colorObject = _0x75abdd;
       this.colorHex = '#000';
@@ -3565,7 +3598,13 @@
       _0x2d5cce.nick();
     }
     static get ['nick']() {
-      return this._nick.substring(0, 15);
+      return this._nick ? this._nick.substring(0, 15) : '';
+    }
+    static set ["nick2"](_0x4397c5) {
+      this._nick2 = _0x4397c5;
+    }
+    static get ['nick2']() {
+      return this._nick2 ? this._nick2.substring(0, 15) : '';
     }
     static set ["arbSkin"](_0x591f79) {
       this._arbSkin = _0x591f79;
@@ -3580,6 +3619,15 @@
     }
     static get ['skin']() {
       return this._skin;
+    }
+    static set ["skin2"](_0x1a9370) {
+      const _0x5518a5 = _0x386cbc.getImgurCode(_0x1a9370);
+      if ("XXXXXXX" !== _0x5518a5 && _0x5518a5) {
+        this._skin2 = _0x5518a5;
+      }
+    }
+    static get ['skin2']() {
+      return this._skin2 || '';
     }
 
     static set ["colorObject"](_0x50d681) {
@@ -3604,7 +3652,8 @@
       return ':party' === _0x31c9b4.gMode ? _0x28c4c5 + this.colorHex : _0x28c4c5;
     }
     static get ["worldID2"]() {
-      let _0x5dbd66 = this._nick.substring(this._nick.indexOf('}') + 1);
+      const _0xsrc = this._nick2 || this._nick;
+      let _0x5dbd66 = _0xsrc.substring(_0xsrc.indexOf('}') + 1);
       _0x5dbd66 = _0x5dbd66.replace("%*^", '');
       return ":party" === _0x31c9b4.gMode ? _0x5dbd66 + this.colorHex2 : _0x5dbd66;
     }
@@ -4908,15 +4957,19 @@
       const _0x115240 = _0x90a1a7.typeID;
       if (this.chekConnection(_0x115240) && (!_0x90a1a7._isAlive && 1 === _0x115240 || !_0x90a1a7._isAlive2 && 2 === _0x115240)) {
         _0xddb6d6.isSpectating = false;
-        if ('' === _0x90a1a7.nick) {
-          _0x90a1a7.nick = "Unnamed cell";
+        const _0xisTab2 = _0x115240 === 2;
+        if ('' === (_0xisTab2 ? _0x90a1a7.nick2 : _0x90a1a7.nick)) {
+          _0xisTab2 ? _0x90a1a7.nick2 = "Unnamed cell" : _0x90a1a7.nick = "Unnamed cell";
         }
-        let _0x4a58df = unescape(encodeURIComponent(_0x90a1a7.nick));
-        let _0x1084d5 = unescape(encodeURIComponent("free/" + _0x2a0c5c.arbSkin));
+        let _0x4a58df = unescape(encodeURIComponent(_0xisTab2 ? _0x90a1a7.nick2 : _0x90a1a7.nick));
+        let _0x1084d5 = unescape(encodeURIComponent("free/" + (_0xisTab2 ? _0x90a1a7.arbSkin : _0x2a0c5c.arbSkin)));
         const _0x4208f8 = {
           'n': _0x4a58df
         };
-        if (_0x90a1a7.arbSkin) {
+        if (_0xisTab2 && _0x90a1a7.skin2 && !String(_0x90a1a7.skin2).includes("XXXXXXX")) {
+          _0x4208f8.s = unescape(encodeURIComponent(_0x90a1a7.skin2));
+          _0x4208f8.w = '';
+        } else if (_0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
         }
@@ -5683,9 +5736,14 @@
       this.skinMap.clear();
       if (!_0x90a1a7.skin.includes("XXXXXXX")) {
         this.skinMap.set(_0x90a1a7.worldID, this.code2Url(_0x90a1a7.skin));
-        this.skinMap.set(_0x90a1a7.worldID2, this.code2Url(_0x90a1a7.skin));
       } else if (this.arbSkin) {
         this.skinMap.set(_0x90a1a7.worldID, "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + this.arbSkin.replace(/free\/|.png/g, '') + ".png");
+      }
+      if (_0x90a1a7.skin2 && !_0x90a1a7.skin2.includes("XXXXXXX")) {
+        this.skinMap.set(_0x90a1a7.worldID2, this.code2Url(_0x90a1a7.skin2));
+      } else if (!_0x90a1a7.skin.includes("XXXXXXX")) {
+        this.skinMap.set(_0x90a1a7.worldID2, this.code2Url(_0x90a1a7.skin));
+      } else if (this.arbSkin) {
         this.skinMap.set(_0x90a1a7.worldID2, "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + this.arbSkin.replace(/free\/|.png/g, '') + '.png');
       }
       for (const _0x5d3988 of _0x12ac51.teamPlayers.values()) if (_0x5d3988.isAlive && !_0x5d3988.skin.includes("XXXXXXX")) {
