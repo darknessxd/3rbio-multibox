@@ -1,6 +1,6 @@
 !function (_0x1c478d, _0x14f7b2, _0x24f9ab) {
   const _0x1fd443 = function () {
-    let _0x294ed8 = true;dsqdzzazeaze
+    let _0x294ed8 = true;
     return function (_0x21be21, _0x1a0b0e) {
       const _0x1b4c66 = _0x294ed8 ? function () {
         if (_0x1a0b0e) {
