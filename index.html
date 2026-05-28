@@ -802,15 +802,23 @@
                 </div>
             </div>
             <div class="inputs-box">
-                <input class="menu-inputs" id="tag" placeholder="Tag">
-                <input class="menu-inputs" id="nick" placeholder="Nick">
-                <input class="menu-inputs" id="arbSkin" placeholder="Skin">
-                <input class="menu-inputs" id="skin" placeholder="Skin">
-                <select class="menu-inputs" id="servers">
+                <div style="display:flex;gap:4px;margin-bottom:4px">
+                    <input class="menu-inputs" id="tag" placeholder="Tag" style="width:50px">
+                    <input class="menu-inputs" id="nick" placeholder="Nick 1" style="flex:1">
+                    <input class="menu-inputs" id="nick2" placeholder="Nick 2" style="flex:1">
+                </div>
+                <div style="display:flex;gap:4px;margin-bottom:4px">
+                    <input class="menu-inputs" id="arbSkin" placeholder="Free Skin" style="width:90px">
+                    <input class="menu-inputs" id="skin" placeholder="Skin URL 1" style="flex:1">
+                    <input class="menu-inputs" id="skin2" placeholder="Skin URL 2" style="flex:1">
+                </div>
+                <select class="menu-inputs" id="servers" style="width:100%;margin-bottom:4px">
                     <option value="">Select Server ...</option>
                 </select>
-                <button id="button-play"><i class="fa fa-play fa-fw"></i> Play</button>
-                <button id="button-spectate"><i class="fa fa-expand fa-fw"></i> Spectate</button>
+                <div style="display:flex;gap:4px">
+                    <button id="button-play" style="flex:1"><i class="fa fa-play fa-fw"></i> Play</button>
+                    <button id="button-spectate" style="flex:1"><i class="fa fa-expand fa-fw"></i> Spectate</button>
+                </div>
                 <div class="decorator"
                     style="width: 100%;height: 86px;position: absolute;bottom: 0;left: 0;background-color: #222;border-radius: 0 0 2px 2px;z-index: -1;">
                 </div>
