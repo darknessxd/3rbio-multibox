@@ -587,67 +587,6 @@
 
         gtag('config', 'UA-140821828-1');
     </script>
-    <style>
-        .inputs-box {
-            padding: 12px;
-        }
-        .bots-grid {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-            align-items: stretch;
-        }
-        .bot-card {
-            flex: 1 1 0%;
-            min-width: 160px;
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            border-radius: 6px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .bot-card__label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            color: #888;
-            padding-bottom: 2px;
-            border-bottom: 1px solid #3a3a3a;
-            margin-bottom: 2px;
-        }
-        .bot-card__field {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            flex: 1;
-        }
-        .bot-card__field:first-child {
-            flex: 0 0 auto;
-        }
-        .field-label {
-            font-size: 10px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: .3px;
-        }
-        .bot-card .menu-inputs {
-            width: 100%;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        .bot-card .menu-inputs[style] {
-            width: 100% !important;
-        }
-        .bot-card__field input {
-            flex: 1;
-            min-height: 28px;
-        }
-    </style>
     <link type="image/x-icon" rel="shortcut icon" href="https://www.google.com/s2/favicons?domain=3rb.io">
 </head>
 
@@ -863,37 +802,15 @@
                 </div>
             </div>
             <div class="inputs-box">
-                <div class="bots-grid">
-                    <div class="bot-card bot-card--primary">
-                        <div class="bot-card__label">Bot 1</div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Tag</label>
-                            <input class="menu-inputs" id="tag" placeholder="e.g. [3rb]">
-                        </div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Nick</label>
-                            <input class="menu-inputs" id="nick" placeholder="Nick 1">
-                        </div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Free Skin</label>
-                            <input class="menu-inputs" id="arbSkin" placeholder="e.g. skin1">
-                        </div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Skin URL</label>
-                            <input class="menu-inputs" id="skin" placeholder="https://i.imgur.com/...png">
-                        </div>
-                    </div>
-                    <div class="bot-card bot-card--secondary">
-                        <div class="bot-card__label">Bot 2</div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Nick</label>
-                            <input class="menu-inputs" id="nick2" placeholder="Nick 2">
-                        </div>
-                        <div class="bot-card__field">
-                            <label class="field-label">Skin URL</label>
-                            <input class="menu-inputs" id="skin2" placeholder="https://i.imgur.com/...png">
-                        </div>
-                    </div>
+                <div style="display:flex;gap:4px;margin-bottom:4px">
+                    <input class="menu-inputs" id="tag" placeholder="Tag" style="width:50px">
+                    <input class="menu-inputs" id="nick" placeholder="Nick 1" style="flex:1">
+                    <input class="menu-inputs" id="nick2" placeholder="Nick 2" style="width:120px">
+                </div>
+                <div style="display:flex;gap:4px;margin-bottom:4px">
+                    <input class="menu-inputs" id="arbSkin" placeholder="Free Skin" style="width:90px">
+                    <input class="menu-inputs" id="skin" placeholder="Skin URL 1" style="flex:1">
+                    <input class="menu-inputs" id="skin2" placeholder="Skin URL 2" style="width:120px">
                 </div>
                 <select class="menu-inputs" id="servers" style="width:100%;margin-bottom:4px">
                     <option value="">Select Server ...</option>
