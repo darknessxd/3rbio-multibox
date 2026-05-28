@@ -593,11 +593,15 @@
         }
         .bots-grid {
             display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 8px;
+            align-items: stretch;
         }
         .bot-card {
-            flex: 1;
+            flex: 1 1 0%;
+            min-width: 160px;
             background: #2a2a2a;
             border: 1px solid #3a3a3a;
             border-radius: 6px;
@@ -620,6 +624,10 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            flex: 1;
+        }
+        .bot-card__field:first-child {
+            flex: 0 0 auto;
         }
         .field-label {
             font-size: 10px;
@@ -631,6 +639,13 @@
             width: 100%;
             margin: 0;
             box-sizing: border-box;
+        }
+        .bot-card .menu-inputs[style] {
+            width: 100% !important;
+        }
+        .bot-card__field input {
+            flex: 1;
+            min-height: 28px;
         }
     </style>
     <link type="image/x-icon" rel="shortcut icon" href="https://www.google.com/s2/favicons?domain=3rb.io">
