@@ -216,10 +216,12 @@
     commander: "Commander",
     "chatType": "Chat type",
     virusMass: "Virus mass",
+    showMassInLB: "Show mass in leaderboard",
     cellLuminous: "Cell Luminous",
     multiboxShield: "Multibox Shield",
     antiAliasing: "Anti-aliasing",
     virusRing: "Virus Ring",
+    foodGlow: "Food Glow",
     targeting: "Cell Targeting [Spectate mode]",
     "opt_on": 'On',
     "opt_off": 'Off',
@@ -326,6 +328,7 @@
     virusGlow: "Virus glow",
     virusGlowDistance: "Virus glow distance",
     virusGlowColor: "Virus glow color",
+    foodGlow: "Food glow",
     maouCircle: "Maou circle",
     cellTransparency: "Cell transparency",
     lightenCellColor: "Lighten cell color",
@@ -370,7 +373,9 @@
     virusGlowStrength: "Virus glow strength",
     virusRingWidth: "Virus Ring Width",
     virusRingColor: "Virus Ring Color",
-    virusGearColor: "Virus Gear Color",
+    foodGlowSize: "Food Glow Size",
+    foodGlowStrength: "Food Glow Strength",
+    foodGlowColor: "Food Glow Color",
     ghostColor: "Ghost cell color [minimap]",
     selfColor: "Self cell color [minimap]",
     selfViewportColor: "Self viewport color [minimap]",
@@ -429,10 +434,12 @@
       this.chatType = _0x19d5af.get("settings", "chatType") || 'popup';
       this.multiboxMode = _0x19d5af.get('settings', "multiboxMode") || 'on';
       this.virusMass = _0x19d5af.get("settings", "virusMass") || 'off';
+      this.showMassInLB = _0x19d5af.get("settings", "showMassInLB") || 'off';
       this.cellLuminous = _0x19d5af.get("settings", "cellLuminous") || 'off';
       this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
       this.antiAliasing = _0x19d5af.get("settings", "antiAliasing") || 'on';
       this.virusRing = _0x19d5af.get("settings", "virusRing") || 'off';
+      this.foodGlow = _0x19d5af.get("settings", "foodGlow") || 'off';
       this.setDomValues();
       this.addEvents();
     }
@@ -1537,6 +1544,9 @@
       this.virusGlow = _0x19d5af.get("theme", "virusGlow") || "off";
       this.virusGlowDistance = ~~_0x19d5af.get("theme", "virusGlowDistance") || 50;
       this.virusGlowColor = _0x19d5af.get('theme', "virusGlowColor") || "#00bcff";
+      this.foodGlowColor = _0x19d5af.get('theme', "foodGlowColor") || "#00ff00";
+      this.foodGlowSize = ~~_0x19d5af.get("theme", "foodGlowSize") || 20;
+      this.foodGlowStrength = ~~_0x19d5af.get("theme", "foodGlowStrength") || 1;
       this.maouCircle = _0x19d5af.get("theme", "maouCircle") || "off";
       this.team1color = _0x19d5af.get("theme", "team1color") || "#aeaeae";
       this.team2color = _0x19d5af.get("theme", 'team2color') || "#ff171f";
@@ -1580,7 +1590,6 @@
       this.virusGlowStrength = ~~_0x19d5af.get("theme", "virusGlowStrength") || 5;
       this.virusRingWidth = ~~_0x19d5af.get("theme", "virusRingWidth") || 10;
       this.virusRingColor = _0x19d5af.get("theme", "virusRingColor") || "#ffffff";
-      this.virusGearColor = _0x19d5af.get("theme", "virusGearColor") || "#ff0066";
       this.ghostColor = _0x19d5af.get("theme", "ghostColor") || "#aaa";
       this.selfColor = _0x19d5af.get("theme", "selfColor") || "#fff";
       this.selfViewportColor = _0x19d5af.get("theme", "selfViewportColor") || "#fff";
@@ -2604,7 +2613,8 @@
       }
       let _0x25ab99 = '';
       for (const _0x5341c7 of this.list.values()) {
-        _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + "</span>";
+        const _0x2d18ff = _0x2cc0f3.showMassInLB === "on" && _0x5341c7.mass > 0 ? " <span class=\"lb-mass\">" + _0x5341c7.mass + "</span>" : "";
+        _0x25ab99 += "<span style=\"direction: rtl;\"><strong>" + _0x5341c7.position + "  </strong>" + this.cleanNick(_0x5341c7.nick) + _0x2d18ff + "</span>";
       }
       this.div.innerHTML = _0x25ab99;
     }
@@ -4035,50 +4045,6 @@
           _0x31b51a.closePath();
           _0x31b51a.fill();
         }
-      }
-    }
-      for (_0x35608f.beginPath(); _0x452dec--;) {
-        const _0x6bc6c7 = {
-          x: 0x0,
-          y: 0x0
-        };
-        const _0x105e9e = _0x14d4a3.food[_0x452dec];
-        const _0x12f0da = 2 === _0x105e9e.cellType ? _0x996564.position : _0x6bc6c7;
-        const _0x3d8a95 = _0x105e9e.animRadius + _0xb35fb3;
-        _0x35608f.moveTo(_0x105e9e.animX - _0x12f0da.x + _0x3d8a95, _0x105e9e.animY - _0x12f0da.y);
-        _0x35608f.arc(_0x105e9e.animX - _0x12f0da.x, _0x105e9e.animY - _0x12f0da.y, _0x3d8a95, 0, _0x386cbc.pi2, true);
-      }
-      _0x35608f.closePath();
-      _0x35608f.fill();
-      if (_0x2glowOn) {
-        _0x35608f.shadowBlur = 0;
-        _0x35608f.shadowColor = 'transparent';
-      }
-    }
-    static ["rainbow"]() {
-      let _0x31b51a = _0x386cbc.ctx;
-      let _0x23c062 = _0x480be4.foodSize;
-      for (let _0x198238 = _0x14d4a3.food.length; _0x198238--;) {
-        const _0x5096a7 = {
-          x: 0x0,
-          y: 0x0
-        };
-        const _0x4e1e7f = _0x14d4a3.food[_0x198238];
-        const _0x142eae = 2 === _0x4e1e7f.cellType ? _0x996564.position : _0x5096a7;
-        const _0x5c6dd3 = _0x4e1e7f.animRadius + _0x23c062;
-        _0x31b51a.fillStyle = _0x4e1e7f.colorHex;
-        if (2 > _0x5c6dd3 * _0xddb6d6.viewport) {
-          _0x31b51a.fillRect(_0x4e1e7f.animX - _0x142eae.x - _0x5c6dd3, _0x4e1e7f.animY - _0x142eae.y - _0x5c6dd3, 2 * _0x5c6dd3, 2 * _0x5c6dd3);
-        } else {
-          _0x31b51a.beginPath();
-          _0x31b51a.arc(_0x4e1e7f.animX - _0x142eae.x, _0x4e1e7f.animY - _0x142eae.y, _0x5c6dd3, 0, _0x386cbc.pi2, true);
-          _0x31b51a.closePath();
-          _0x31b51a.fill();
-        }
-      }
-      if (_0x2glowOn) {
-        _0x31b51a.shadowBlur = 0;
-        _0x31b51a.shadowColor = 'transparent';
       }
     }
   }
@@ -5586,34 +5552,13 @@
           _0xfdf4f4.globalAlpha = 1;
           _0xfdf4f4.stroke();
           if (_0x2cc0f3.virusRing === 'on') {
-            const _0x2cx = _0x5987fa.animX - _0x1241cd.x;
-            const _0x2cy = _0x5987fa.animY - _0x1241cd.y;
-            const _0x2cr = _0x5987fa.animRadius + 5;
-            const _0x2teeth = 16;
-            const _0x2step = this.pi2 / _0x2teeth;
-            const _0x2toothH = _0x2cr * _0x480be4.virusRingWidth / 100;
-            const _0x2outerR = _0x2cr + _0x2toothH;
-            const _0x2innerR = _0x2cr;
-            const _0x2ctrlR = _0x2innerR + _0x2toothH * 0.7;
-            const _0x2rot = (_0xb45f1b.time / 3000 * (_0x480be4.globalRotationSpeed || 5)) % this.pi2;
-            _0xfdf4f4.save();
-            _0xfdf4f4.translate(_0x2cx, _0x2cy);
-            _0xfdf4f4.rotate(_0x2rot);
-            _0xfdf4f4.fillStyle = _0x480be4.virusGearColor || _0x480be4.virusRingColor;
-            _0xfdf4f4.globalAlpha = 0.8;
-            for (let _0x2i = 0; _0x2i < _0x2teeth; _0x2i++) {
-              const _0x2a = _0x2i * _0x2step;
-              const _0x2l = _0x2a - _0x2step * 0.3;
-              const _0x2c = _0x2a + _0x2step * 0.3;
-              _0xfdf4f4.beginPath();
-              _0xfdf4f4.moveTo(Math.cos(_0x2l) * _0x2innerR, Math.sin(_0x2l) * _0x2innerR);
-              _0xfdf4f4.quadraticCurveTo(Math.cos(_0x2l) * _0x2ctrlR, Math.sin(_0x2l) * _0x2ctrlR, Math.cos(_0x2a) * _0x2outerR, Math.sin(_0x2a) * _0x2outerR);
-              _0xfdf4f4.quadraticCurveTo(Math.cos(_0x2c) * _0x2ctrlR, Math.sin(_0x2c) * _0x2ctrlR, Math.cos(_0x2c) * _0x2innerR, Math.sin(_0x2c) * _0x2innerR);
-              _0xfdf4f4.closePath();
-              _0xfdf4f4.fill();
-            }
-            _0xfdf4f4.globalAlpha = 1;
-            _0xfdf4f4.restore();
+            const _0x3c2b6a = _0x5987fa.animRadius * _0x480be4.virusRingWidth / 100;
+            _0xfdf4f4.beginPath();
+            _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5 - (_0x3c2b6a >> 1), 0, this.pi2, true);
+            _0xfdf4f4.closePath();
+            _0xfdf4f4.lineWidth = _0x3c2b6a | 0;
+            _0xfdf4f4.strokeStyle = _0x480be4.virusRingColor;
+            _0xfdf4f4.stroke();
             _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
             _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
           }
@@ -5631,24 +5576,25 @@
           } else if (_0x2cc0f3.virusMass === "fill") {
             const _0x175afd = _0x5987fa.animX - _0x1241cd.x;
             const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
-            const _0x2massProg = Math.min(1, Math.max(0, (_0x5987fa.mass - 100) / 100));
-            const _0x2fillR = _0x5987fa.animRadius * _0x2massProg;
             const _0x4edbb9 = ~~_0x5987fa.animRadius * 0.35;
-            _0xfdf4f4.save();
-            _0xfdf4f4.globalAlpha = 0.8;
-            _0xfdf4f4.fillStyle = _0x480be4.virusBorderColor;
+            _0xfdf4f4.fillStyle = "rgba(0,0,0,0.5)";
             _0xfdf4f4.beginPath();
-            _0xfdf4f4.arc(_0x175afd, _0x4f4e2b, _0x2fillR, 0, this.pi2, true);
+            _0xfdf4f4.arc(_0x175afd, _0x4f4e2b, _0x5987fa.animRadius + 5, 0, this.pi2, true);
             _0xfdf4f4.closePath();
             _0xfdf4f4.fill();
-            _0xfdf4f4.globalAlpha = 1;
-            _0xfdf4f4.restore();
             _0xfdf4f4.fillStyle = "#fff";
             _0xfdf4f4.font = "bold " + Math.max(12, _0x4edbb9) + "px ubuntu";
             _0xfdf4f4.textAlign = "center";
             _0xfdf4f4.textBaseline = "middle";
             _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
           }
+        } else if (_0x5987fa.isFood && _0x2cc0f3.foodGlow === "on") {
+          _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
+          _0xfdf4f4.shadowBlur = ~~(_0x480be4.foodGlowSize * _0x480be4.foodGlowStrength / 5);
+          _0xfdf4f4.shadowColor = _0x480be4.foodGlowColor;
+          _0xfdf4f4.fill();
+          _0xfdf4f4.shadowBlur = 0;
+          _0xfdf4f4.shadowColor = 'transparent';
         } else {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
           if (_0x5ab10a * _0x21653d < 1) {
