@@ -4663,9 +4663,22 @@
         this.getLeaderboardFFA(_0x4f5972);
       } else if (65 === _0x6ab5d9) {
         this.borderUpdate(_0x4f5972, _0x24de2f);
+      } else if (85 === _0x6ab5d9) {
+        this.handleParty(_0x4f5972);
       }
       if (86 === _0x6ab5d9 && 1 === _0x24de2f) {
         this.handleChat(_0x4f5972);
+      }
+    }
+    static ["handleParty"](_0reader) {
+      const _0code = _0reader.readStringZeroUtf8();
+      if (_0code && _0code.length > 0) {
+        _0x302a2c.partyCode = _0code;
+        const _0display = _0code.replace('#', '');
+        _0x14f7b2("#party-code").val(_0display);
+        _0x14f7b2("#party-code-display").text("Party: 3rb.io/#" + _0display);
+        _0x14f7b2("#party-info").show();
+        _0x40f48a.normal("Party", "Joined room #" + _0display);
       }
     }
     static ["handleChat"](_0x4be406) {
@@ -4748,6 +4761,7 @@
         _0xe4d42a = !!(4 & _0x8aab7f);
         _0xf3f2e0 = !!(8 & _0x8aab7f);
         _0x49c709 = !!(16 & _0x8aab7f);
+        _0xabb49d.isParty = _0x49c709;
         _0x55e445 = !!(32 & _0x8aab7f);
         _0x2283b5 = !!(64 & _0x8aab7f);
         _0xd54ce1 = !!(128 & _0x8aab7f);
@@ -5008,6 +5022,43 @@
         this.sendPacket(_0x2272b3, 1);
       }
     }
+    static ["initParty"]() {
+      this.partyCode = null;
+      this.partyMembers = new Set();
+      _0x14f7b2("#button-party-join").click(() => {
+        const _0code = _0x14f7b2("#party-code").val().trim().toUpperCase();
+        if (_0code) {
+          _0x302a2c.sendPartyCode(_0code);
+        }
+      });
+      _0x14f7b2("#button-party-create").click(() => {
+        _0x302a2c.createParty();
+      });
+    }
+    static ["sendPartyCode"](_0partyCode) {
+      const _0typeId = _0x90a1a7.typeID;
+      if (this.chekConnection(_0typeId)) {
+        const _0encoded = unescape(encodeURIComponent("#" + _0partyCode));
+        const _0buf = this.createView(3 + _0encoded.length);
+        _0buf.setUint8(0, 85, true);
+        _0buf.setUint8(1, 1, true);
+        for (let _0i = 0; _0i < _0encoded.length; _0i++) {
+          _0buf.setUint8(2 + _0i, _0encoded.charCodeAt(_0i), true);
+        }
+        _0buf.setUint8(2 + _0encoded.length, 0, true);
+        this.sendPacket(_0buf, _0typeId);
+      }
+    }
+    static ["createParty"]() {
+      const _0typeId = _0x90a1a7.typeID;
+      if (this.chekConnection(_0typeId)) {
+        const _0buf = this.createView(3);
+        _0buf.setUint8(0, 85, true);
+        _0buf.setUint8(1, 0, true);
+        _0buf.setUint8(2, 0, true);
+        this.sendPacket(_0buf, _0typeId);
+      }
+    }
   }
   class _0x1530af {
     static ['init']() {
@@ -5051,7 +5102,6 @@
         '1': _0x399fc8,
         '2': _0x4fbb9e
       };
-      _0x1530af.init();
       this.teamPlayers = new Map();
       this.selfID = -1;
       this.isSpectator = false;
@@ -5686,6 +5736,21 @@
           _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
           _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
         }
+        if (_0x5987fa.isParty && !_0x5987fa.isVirus && _0x21653d === 1) {
+          const _0ringW = _0x5987fa.animRadius * 0.08;
+          _0xfdf4f4.beginPath();
+          _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5 - (_0ringW >> 1), 0, this.pi2, true);
+          _0xfdf4f4.closePath();
+          _0xfdf4f4.lineWidth = _0ringW | 0;
+          _0xfdf4f4.strokeStyle = "#FFD700";
+          _0xfdf4f4.shadowBlur = 15;
+          _0xfdf4f4.shadowColor = "#FFD700";
+          _0xfdf4f4.stroke();
+          _0xfdf4f4.shadowBlur = 0;
+          _0xfdf4f4.shadowColor = 'transparent';
+          _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
+          _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
+        }
         if (_0x2cc0f3.multiboxShield === "on" && _0x5987fa.isMine && _0x480be4._shieldReady) {
           const _0x3b92c8 = _0x5987fa.animRadius * 2.8;
           _0xfdf4f4.drawImage(_0x480be4.shieldImage, _0x5987fa.animX - _0x1241cd.x - _0x3b92c8 / 2, _0x5987fa.animY - _0x1241cd.y - _0x3b92c8 / 2, _0x3b92c8, _0x3b92c8);
@@ -5930,6 +5995,7 @@
       _0x90a1a7.init();
       _0xddb6d6.init();
       _0x12ac51.init();
+      _0x302a2c.initParty();
       _0x386cbc.init();
       this.loop = new _0x4660a8(() => {
         this.run();
