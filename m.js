@@ -1205,6 +1205,30 @@
           const _0x1d1b96 = (_0x47116f.clientY - (_0x1c478d.innerHeight >> 1)) / _0xddb6d6.viewport + _0xddb6d6.y;
           return void ('leftClick' === _0x26dc43 ? _0x3a83be.lockTarget(_0x100551, _0x1d1b96, 1) : "middleClick" === _0x26dc43 ? _0x3a83be.reset() : "rightClick" == _0x26dc43 && _0x3a83be.lockTarget(_0x100551, _0x1d1b96, 2));
         }
+        if (_0x302a2c.partyJoined && _0x26dc43 === 'rightClick' && !_0xddb6d6.isSpectating) {
+          const _0mx = _0xddb6d6.x + (_0x47116f.clientX - (_0x1c478d.innerWidth >> 1)) / _0xddb6d6.viewport;
+          const _0my = _0xddb6d6.y + (_0x47116f.clientY - (_0x1c478d.innerHeight >> 1)) / _0xddb6d6.viewport;
+          let _0closest = null;
+          for (const _0c of _0x14d4a3.sortedCells) {
+            if (!_0c.nick || _0c.isMine) continue;
+            const _0dx = _0c.animX - _0mx;
+            const _0dy = _0c.animY - _0my;
+            if (Math.sqrt(_0dx * _0dx + _0dy * _0dy) < _0c.animRadius) {
+              _0closest = _0c;
+              break;
+            }
+          }
+          if (_0closest) {
+            if (_0x302a2c.partyTracked.has(_0closest.nick)) {
+              _0x302a2c.partyTracked["delete"](_0closest.nick);
+              _0x40f48a.normal("Party", "Stopped tracking: " + _0closest.nick);
+            } else {
+              _0x302a2c.partyTracked.add(_0closest.nick);
+              _0x40f48a.normal("Party", "Now tracking: " + _0closest.nick);
+            }
+            _0x302a2c.updatePartyUI();
+          }
+        }
         const _0x468bbf = this[_0x26dc43];
         return "off" === _0x468bbf ? undefined : "feed" === _0x468bbf ? void _0x22a8df.feed() : 'macroFeed' === _0x468bbf ? void _0x22a8df.macroFeed(true) : 'split' === _0x468bbf ? void _0x22a8df.split() : "doubleSplit" === _0x468bbf ? void _0x22a8df.doubleSplit() : 'split16' === _0x468bbf ? void _0x22a8df.split16() : "commander" === _0x468bbf ? void _0x2d5cce.commander() : undefined;
       }
@@ -4686,6 +4710,7 @@
         _0x14f7b2("#party-code-display").text("Party: 3rb.io/#" + _0display);
         _0x14f7b2("#party-info").show();
         _0x302a2c.partyJoined = true;
+        _0x302a2c.updatePartyUI();
         _0x40f48a.normal("Party", "Joined room #" + _0display);
       }
     }
@@ -4694,7 +4719,13 @@
       for (var _0i = 0; _0i < 7; _0i++) _0x4be406.readUInt8();
       var _0name = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '').replace(/^\[.\]/, '');
       var _0msg = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '');
-      if (_0msg) _0x40f48a.normal(_0name || 'Player', _0msg);
+      if (_0msg) {
+        if (_0x302a2c.partyJoined && _0name) {
+          _0x302a2c.partyTracked.add(_0name);
+          _0x40f48a.normal("Party", "Tracking: " + _0name);
+        }
+        _0x40f48a.normal(_0name || 'Player', _0msg);
+      }
     }
     static ["worldUpdate"](_0x449cb9, _0x43ee07 = 1) {
       _0xb45f1b.refreshTime();
@@ -4792,8 +4823,7 @@
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
-        if (!_0xabb49d.isParty && _0xabb49d.nick && !_0xabb49d.isMine && _0x302a2c.partyJoined) {
-          _0xabb49d.isParty = true;
+        if (_0xabb49d.nick && !_0xabb49d.isMine && _0x302a2c.partyJoined && _0x302a2c.partyTracked.has(_0xabb49d.nick)) {
           const _0fkey = 'pf_' + _0xabb49d.nick;
           if (!_0x12ac51.teamPlayers.has(_0fkey)) {
             const _0fp = new _0xb33099(_0fkey);
@@ -5060,6 +5090,7 @@
     static ["initParty"]() {
       this.partyCode = null;
       this.partyJoined = false;
+      this.partyTracked = new Set();
       _0x14f7b2("#button-party-join").click(() => {
         const _0code = _0x14f7b2("#party-code").val().trim().toUpperCase();
         if (_0code) {
@@ -5069,6 +5100,20 @@
       _0x14f7b2("#button-party-create").click(() => {
         _0x302a2c.createParty();
       });
+      _0x14f7b2("#button-party-clear").click(() => {
+        _0x302a2c.partyTracked.clear();
+        for (const _0k of _0x12ac51.teamPlayers.keys()) {
+          if (_0k.startsWith('pf_')) _0x12ac51.teamPlayers["delete"](_0k);
+        }
+        _0x14f7b2("#party-tracked-list").text('');
+        _0x14f7b2("#button-party-clear").hide();
+      });
+    }
+    static ["updatePartyUI"]() {
+      if (_0x302a2c.partyTracked.size > 0) {
+        _0x14f7b2("#party-tracked-list").text("Tracking: " + Array.from(_0x302a2c.partyTracked).join(', '));
+        _0x14f7b2("#button-party-clear").show();
+      }
     }
     static ["sendPartyCode"](_0partyCode) {
       const _0typeId = _0x90a1a7.typeID;
