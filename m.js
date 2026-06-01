@@ -4792,13 +4792,18 @@
             _0x12ac51.teamPlayers.set(_0fkey, _0fp);
           }
           const _0fp = _0x12ac51.teamPlayers.get(_0fkey);
-          if (!_0fp._firstUpdate || _0xabb49d.radius > _0fp._biggestRadius) {
+          if (!_0fp._firstUpdate) {
+            _0fp._firstUpdate = true;
+            _0fp.x = _0xabb49d.x;
+            _0fp.y = _0xabb49d.y;
+            _0fp.animX = _0xabb49d.x;
+            _0fp.animY = _0xabb49d.y;
+          } else if (_0xabb49d.radius > _0fp._biggestRadius) {
             _0fp.x = _0xabb49d.x;
             _0fp.y = _0xabb49d.y;
             _0fp.animX = _0xabb49d.x;
             _0fp.animY = _0xabb49d.y;
             _0fp._biggestRadius = _0xabb49d.radius;
-            _0fp._firstUpdate = true;
           }
           _0fp.isAlive = true;
           _0fp.nick = _0xabb49d.nick;
@@ -4811,7 +4816,7 @@
       for (const _0fentry of _0x12ac51.teamPlayers) {
         if (_0fentry[0].startsWith('pt_')) {
           const _0fp = _0fentry[1];
-          if (_0fp.isAlive && _0xb45f1b.time - _0fp.timeStamp > 5000) {
+          if (_0fp.isAlive && _0xb45f1b.time - _0fp.timeStamp > 15000) {
             _0fp.isAlive = false;
           }
         }
