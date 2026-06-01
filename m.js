@@ -3704,6 +3704,7 @@
     get ["worldID"]() {
       let _0x469bf7 = this.nick.substring(this.nick.indexOf('}') + 1);
       _0x469bf7 = _0x469bf7.replace("%*^", '');
+      _0x469bf7 = _0x469bf7.replace(/\[.*?\]/g, '').trim();
       return ":party" === _0x31c9b4.gMode ? _0x469bf7 + this.colorHex : _0x469bf7;
     }
     get ["location"]() {
@@ -4796,18 +4797,23 @@
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
         if (_0xabb49d.nick && !_0xabb49d.isMine && _0x302a2c.partyJoined && _0x302a2c._partyTagSearch && _0xabb49d.nick.indexOf(_0x302a2c._partyTagSearch) !== -1) {
-          _0xabb49d.isParty = true;
           const _0fkey = 'pt_' + _0xabb49d.nick;
           if (!_0x12ac51.teamPlayers.has(_0fkey)) {
             const _0fp = new _0xb33099(_0fkey);
             _0x12ac51.teamPlayers.set(_0fkey, _0fp);
           }
           const _0fp = _0x12ac51.teamPlayers.get(_0fkey);
-          _0fp.x = _0xabb49d.animX;
-          _0fp.y = _0xabb49d.animY;
+          if (!_0fp._firstUpdate || _0xabb49d.radius > _0fp._biggestRadius) {
+            _0fp.x = _0xabb49d.x;
+            _0fp.y = _0xabb49d.y;
+            _0fp.animX = _0xabb49d.x;
+            _0fp.animY = _0xabb49d.y;
+            _0fp._biggestRadius = _0xabb49d.radius;
+            _0fp._firstUpdate = true;
+          }
           _0fp.isAlive = true;
-          _0fp.mass = _0xabb49d.radius * 2;
           _0fp.nick = _0xabb49d.nick;
+          _0fp.mass = _0xabb49d.radius * 2;
           _0fp.skin = _0xabb49d.skin || '';
           _0fp.colorHex = _0xabb49d.colorHex || '#000';
           _0fp.timeStamp = _0xb45f1b.time;
@@ -5796,21 +5802,7 @@
           _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
           _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
         }
-        if (_0x5987fa.isParty && !_0x5987fa.isVirus && _0x21653d === 1) {
-          const _0ringW = _0x5987fa.animRadius * 0.08;
-          _0xfdf4f4.beginPath();
-          _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5 - (_0ringW >> 1), 0, this.pi2, true);
-          _0xfdf4f4.closePath();
-          _0xfdf4f4.lineWidth = _0ringW | 0;
-          _0xfdf4f4.strokeStyle = "#FFD700";
-          _0xfdf4f4.shadowBlur = 15;
-          _0xfdf4f4.shadowColor = "#FFD700";
-          _0xfdf4f4.stroke();
-          _0xfdf4f4.shadowBlur = 0;
-          _0xfdf4f4.shadowColor = 'transparent';
-          _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
-          _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
-        }
+
         if (_0x2cc0f3.multiboxShield === "on" && _0x5987fa.isMine && _0x480be4._shieldReady) {
           const _0x3b92c8 = _0x5987fa.animRadius * 2.8;
           _0xfdf4f4.drawImage(_0x480be4.shieldImage, _0x5987fa.animX - _0x1241cd.x - _0x3b92c8 / 2, _0x5987fa.animY - _0x1241cd.y - _0x3b92c8 / 2, _0x3b92c8, _0x3b92c8);
