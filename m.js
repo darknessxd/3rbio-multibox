@@ -4670,8 +4670,6 @@
         this.getLeaderboardFFA(_0x4f5972);
       } else if (65 === _0x6ab5d9) {
         this.borderUpdate(_0x4f5972, _0x24de2f);
-      } else if (22 === _0x6ab5d9) {
-        this.handlePartyData(_0x4f5972);
       } else if (85 === _0x6ab5d9) {
         this.handleParty(_0x4f5972);
       }
@@ -4687,24 +4685,9 @@
         _0x14f7b2("#party-code").val(_0display);
         _0x14f7b2("#party-code-display").text("Party: 3rb.io/#" + _0display);
         _0x14f7b2("#party-info").show();
+        _0x302a2c.partyJoined = true;
         _0x40f48a.normal("Party", "Joined room #" + _0display);
-        if (!_0reader.endOfBuffer()) {
-          this.handlePartyData(_0reader);
-        }
       }
-    }
-    static ["handlePartyData"](_0reader) {
-      const _0count = _0reader.readUInt32();
-      _0x302a2c.partyMembers = new Map();
-      for (let _0i = 0; _0i < _0count; _0i++) {
-        const _0id = _0reader.readUInt32();
-        const _0name = _0reader.readStringZeroUtf8();
-        _0reader.readUInt8(); _0reader.readUInt8(); _0reader.readUInt8();
-        _0reader.readInt32();
-        _0reader.readFloat(); _0reader.readFloat();
-        _0x302a2c.partyMembers.set(_0id, _0name);
-      }
-      _0x40f48a.normal("Party", "Party members: " + _0count);
     }
     static ["handleChat"](_0x4be406) {
       var _0id = _0x4be406.readUInt32();
@@ -4809,11 +4792,30 @@
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
-        if (!_0xabb49d.isParty && _0xabb49d.nick && _0x302a2c.partyMembers && _0x302a2c.partyMembers.size) {
-          for (const _0name of _0x302a2c.partyMembers.values()) {
-            if (_0name === _0xabb49d.nick) {
-              _0xabb49d.isParty = true;
-              break;
+        if (!_0xabb49d.isParty && _0xabb49d.nick && !_0xabb49d.isMine && _0x302a2c.partyJoined) {
+          _0xabb49d.isParty = true;
+          const _0fkey = 'pf_' + _0xabb49d.nick;
+          if (!_0x12ac51.teamPlayers.has(_0fkey)) {
+            const _0fp = new _0xb33099(_0fkey);
+            _0x12ac51.teamPlayers.set(_0fkey, _0fp);
+          }
+          const _0fp = _0x12ac51.teamPlayers.get(_0fkey);
+          _0fp.x = _0xabb49d.animX;
+          _0fp.y = _0xabb49d.animY;
+          _0fp.isAlive = true;
+          _0fp.mass = _0xabb49d.radius * 2;
+          _0fp.nick = _0xabb49d.nick;
+          _0fp.skin = _0xabb49d.skin || '';
+          _0fp.colorHex = _0xabb49d.colorHex || '#000';
+          _0fp.timeStamp = _0xb45f1b.time;
+        }
+      }
+      if (_0x302a2c.partyJoined) {
+        for (const _0fentry of _0x12ac51.teamPlayers) {
+          if (_0fentry[0].startsWith('pf_')) {
+            const _0fp = _0fentry[1];
+            if (_0fp.isAlive && _0xb45f1b.time - _0fp.timeStamp > 5000) {
+              _0fp.isAlive = false;
             }
           }
         }
@@ -5057,7 +5059,7 @@
     }
     static ["initParty"]() {
       this.partyCode = null;
-      this.partyMembers = new Map();
+      this.partyJoined = false;
       _0x14f7b2("#button-party-join").click(() => {
         const _0code = _0x14f7b2("#party-code").val().trim().toUpperCase();
         if (_0code) {
