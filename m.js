@@ -3720,10 +3720,10 @@
       this.timeStamp = _0xb45f1b.time;
     }
     get ['mapX']() {
-      return (this.animX + 8000) / 16000 * _0x5cda9b.size;
+      return (this.animX - _0x996564.offset.x + 8000) / _0x996564.edge * _0x5cda9b.size;
     }
     get ["mapY"]() {
-      return (this.animY + 8000) / 16000 * _0x5cda9b.size;
+      return (this.animY - _0x996564.offset.y + 8000) / _0x996564.edge * _0x5cda9b.size;
     }
   }
   class _0x996564 {
@@ -4813,14 +4813,7 @@
           _0fp.timeStamp = _0xb45f1b.time;
         }
       }
-      for (const _0fentry of _0x12ac51.teamPlayers) {
-        if (_0fentry[0].startsWith('pt_')) {
-          const _0fp = _0fentry[1];
-          if (_0fp.isAlive && _0xb45f1b.time - _0fp.timeStamp > 15000) {
-            _0fp.isAlive = false;
-          }
-        }
-      }
+
       _0x9e119e = _0x449cb9.readUInt16();
       for (_0xbdb90c = 0; _0xbdb90c < _0x9e119e; _0xbdb90c++) {
         _0x468d84 = _0x449cb9.readUInt32();
