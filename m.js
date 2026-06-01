@@ -2647,7 +2647,7 @@
       let _0x25ab99 = '';
       for (const _0x5341c7 of this.list.values()) {
         const _0x2d18ff = _0x2cc0f3.showMassInLB === "on" && _0x5341c7.mass > 0 ? " [" + _0x5341c7.mass + "]" : "";
-        _0x25ab99 += "<span>" + _0x5341c7.position + ". " + this.cleanNick(_0x5341c7.nick) + _0x2d18ff + "</span>";
+        _0x25ab99 += "<span>" + _0x2d18ff + " " + this.cleanNick(_0x5341c7.nick) + " " + _0x5341c7.position + ".</span>";
       }
       this.div.innerHTML = _0x25ab99;
     }
