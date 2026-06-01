@@ -4679,6 +4679,18 @@
         _0x14f7b2("#party-code-display").text("Party: 3rb.io/#" + _0display);
         _0x14f7b2("#party-info").show();
         _0x40f48a.normal("Party", "Joined room #" + _0display);
+        if (!_0reader.endOfBuffer()) {
+          const _0count = _0reader.readUInt32();
+          _0x302a2c.partyMembers = new Map();
+          for (let _0i = 0; _0i < _0count; _0i++) {
+            const _0id = _0reader.readUInt32();
+            const _0name = _0reader.readStringZeroUtf8();
+            _0reader.readUInt8(); _0reader.readUInt8(); _0reader.readUInt8();
+            _0reader.readInt32();
+            _0reader.readFloat(); _0reader.readFloat();
+            _0x302a2c.partyMembers.set(_0id, _0name);
+          }
+        }
       }
     }
     static ["handleChat"](_0x4be406) {
@@ -4784,6 +4796,14 @@
         _0xabb49d.bNick = _0xd54ce1 ? _0x449cb9.readEscapedUTF8string() : null;
         _0xabb49d.isVirus = _0x3d627b;
         _0xabb49d.isEjected = _0x26f542;
+        if (!_0xabb49d.isParty && _0xabb49d.nick && _0x302a2c.partyMembers && _0x302a2c.partyMembers.size) {
+          for (const _0name of _0x302a2c.partyMembers.values()) {
+            if (_0name === _0xabb49d.nick) {
+              _0xabb49d.isParty = true;
+              break;
+            }
+          }
+        }
       }
       _0x9e119e = _0x449cb9.readUInt16();
       for (_0xbdb90c = 0; _0xbdb90c < _0x9e119e; _0xbdb90c++) {
@@ -5024,7 +5044,7 @@
     }
     static ["initParty"]() {
       this.partyCode = null;
-      this.partyMembers = new Set();
+      this.partyMembers = new Map();
       _0x14f7b2("#button-party-join").click(() => {
         const _0code = _0x14f7b2("#party-code").val().trim().toUpperCase();
         if (_0code) {
