@@ -5681,15 +5681,6 @@
         } else if (_0xb89262) {
           _0xfdf4f4.drawImage(_0xb89262, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
         }
-        if (_0x2cc0f3.grayscaleInactive === "on" && _0x5987fa.isMine && _0x5987fa.cellType !== _0x90a1a7.typeID) {
-          _0xfdf4f4.globalAlpha = 0.55;
-          _0xfdf4f4.fillStyle = '#808080';
-          _0xfdf4f4.beginPath();
-          _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5, 0, this.pi2, true);
-          _0xfdf4f4.closePath();
-          _0xfdf4f4.fill();
-          _0xfdf4f4.globalAlpha = 1;
-        }
         if (_0x5987fa.isMine && _0x3060bb) {
           const _0x27d8ff = _0x5987fa.animRadius * _0x26462b / 100;
           _0xfdf4f4.beginPath();
