@@ -5676,15 +5676,20 @@
         let _0x20f1ed = _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x5987fa.skin || '')).includes("XXXXXXX") ? _0x5987fa.skin : _0x5987fa.arbSkin;
         const _0x1a6b68 = _0x48567b && _0x290b1c && this.getCustomSkin(_0x5987fa.worldID);
         const _0xb89262 = _0x24bf81 && !_0x1a6b68 && _0x20f1ed && this.knownSkins.hasOwnProperty(_0x20f1ed.replace(/free\/|.png/, '')) && this.get3rbSkin(_0x20f1ed);
-        if (_0x2cc0f3.grayscaleInactive === "on" && _0x5987fa.isMine && _0x5987fa.cellType !== _0x90a1a7.typeID) {
-          _0xfdf4f4.filter = 'grayscale(1)';
-        }
         if (_0x1a6b68) {
           _0xfdf4f4.drawImage(_0x1a6b68, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
         } else if (_0xb89262) {
           _0xfdf4f4.drawImage(_0xb89262, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
         }
-        _0xfdf4f4.filter = 'none';
+        if (_0x2cc0f3.grayscaleInactive === "on" && _0x5987fa.isMine && _0x5987fa.cellType !== _0x90a1a7.typeID) {
+          _0xfdf4f4.globalAlpha = 0.55;
+          _0xfdf4f4.fillStyle = '#808080';
+          _0xfdf4f4.beginPath();
+          _0xfdf4f4.arc(_0x5987fa.animX - _0x1241cd.x, _0x5987fa.animY - _0x1241cd.y, _0x5987fa.animRadius + 5, 0, this.pi2, true);
+          _0xfdf4f4.closePath();
+          _0xfdf4f4.fill();
+          _0xfdf4f4.globalAlpha = 1;
+        }
         if (_0x5987fa.isMine && _0x3060bb) {
           const _0x27d8ff = _0x5987fa.animRadius * _0x26462b / 100;
           _0xfdf4f4.beginPath();
