@@ -3259,6 +3259,13 @@
         const _0x403ea8 = _0x58f7ba.animRadius;
         return _0x55c3fe === _0x403ea8 ? _0x58f7ba.id - _0x424a64.id : _0x55c3fe - _0x403ea8;
       });
+      if (_0x2cc0f3.multiboxMode === 'on') {
+        for (const _0cell of this.sortedCells) {
+          if (_0cell.isMine && _0cell.cellType !== _0x90a1a7.typeID && !_0cell.isVirus) {
+            _0cell.isParty = true;
+          }
+        }
+      }
     }
     static ['getCell'](_0x3f80e7, _0xeb4927) {
       return (1 === _0xeb4927 ? this.cells : this.cells2).get(_0x3f80e7) || this.addCell(_0x3f80e7, _0xeb4927);
