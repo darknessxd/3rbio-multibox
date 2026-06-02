@@ -5660,7 +5660,6 @@
             const _0x4f4e2b = _0x5987fa.animY - _0x1241cd.y;
             const _0x2massProg = Math.min(1, Math.max(0, (_0x5987fa.mass - 100) / 100));
             const _0x2fillR = _0x5987fa.animRadius * _0x2massProg;
-            const _0x4edbb9 = ~~_0x5987fa.animRadius * 0.35;
             _0xfdf4f4.save();
             _0xfdf4f4.globalAlpha = 0.8;
             _0xfdf4f4.fillStyle = _0x480be4.virusBorderColor;
@@ -5670,11 +5669,6 @@
             _0xfdf4f4.fill();
             _0xfdf4f4.globalAlpha = 1;
             _0xfdf4f4.restore();
-            _0xfdf4f4.fillStyle = "#fff";
-            _0xfdf4f4.font = "bold " + Math.max(12, _0x4edbb9) + "px ubuntu";
-            _0xfdf4f4.textAlign = "center";
-            _0xfdf4f4.textBaseline = "middle";
-            _0xfdf4f4.fillText(_0x5987fa.mass, _0x175afd, _0x4f4e2b);
           }
         } else if (_0x5987fa.isFood && _0x2cc0f3.foodGlow === "on") {
           _0xfdf4f4.fillStyle = _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
