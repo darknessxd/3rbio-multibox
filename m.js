@@ -4880,12 +4880,24 @@
       this.accountPacketSent = false;
       _0xddb6d6.isSpectating = false;
       _0xddb6d6.freeSpectate = false;
-      console.log("Connected to: " + _0x18a8d1.ip);
       if (1 === _0x578a51) {
-        _0x18a8d1.connected = true;
-      } else {
-        _0x18a8d1.connected2 = true;
+        this._initResetTimer();
       }
+    }
+    static ["_initResetTimer"]() {
+      if (this._resetTimerDiv) return;
+      const _0div = document.createElement('div');
+      _0div.id = 'resetTimerDisplay';
+      _0div.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#828282;font-family:ubuntu;background:rgba(0,0,0,0.5);padding:4px 10px;border-radius:3px;font-size:13px;font-weight:600;z-index:1000;pointer-events:none;user-select:none;white-space:nowrap;';
+      document.body.appendChild(_0div);
+      this._resetTimerDiv = _0div;
+      if (this._resetTimerInterval) clearInterval(this._resetTimerInterval);
+      this._resetTimerInterval = setInterval(() => {
+        const _0el = document.querySelector('#resetText');
+        if (_0el && _0el.textContent.trim()) {
+          _0div.textContent = _0el.textContent.trim();
+        }
+      }, 1000);
     }
     static ["handleDisabledProperty"](_0x1b3281) {
       document.querySelector("#button-play").disabled = _0x1b3281;
