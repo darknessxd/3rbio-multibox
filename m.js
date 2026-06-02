@@ -4880,8 +4880,12 @@
       this.accountPacketSent = false;
       _0xddb6d6.isSpectating = false;
       _0xddb6d6.freeSpectate = false;
+      console.log("Connected to: " + _0x18a8d1.ip);
       if (1 === _0x578a51) {
+        _0x18a8d1.connected = true;
         this._initResetTimer();
+      } else {
+        _0x18a8d1.connected2 = true;
       }
     }
     static ["_initResetTimer"]() {
