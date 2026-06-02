@@ -6035,30 +6035,24 @@
 
 // === Server Reset Timer Display ===
 (function() {
-  let _timerDiv = null;
-  let _interval = null;
   function initTimer() {
-    if (_timerDiv) return;
-    _timerDiv = document.createElement('div');
-    _timerDiv.id = 'serverResetTimer';
-    _timerDiv.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#fff;font-family:ubuntu;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;user-select:none;white-space:nowrap;text-shadow:0 0 5px #000;';
-    document.body.appendChild(_timerDiv);
-    _interval = setInterval(function() {
+    if (document.getElementById('serverResetTimer')) return;
+    var div = document.createElement('div');
+    div.id = 'serverResetTimer';
+    div.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#fff;font-family:ubuntu;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;user-select:none;white-space:nowrap;text-shadow:0 0 5px #000;';
+    div.textContent = 'Server — waiting...';
+    document.body.appendChild(div);
+    setInterval(function() {
       var el = document.getElementById('resetText');
       if (el && el.textContent) {
         var txt = el.textContent.trim();
-        if (txt) _timerDiv.textContent = txt;
+        if (txt) div.textContent = txt;
       }
     }, 1000);
   }
-  // Watch for when the game creates #resetText
-  var observer = new MutationObserver(function() {
-    if (document.getElementById('resetText')) {
-      initTimer();
-      observer.disconnect();
-    }
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
-  // Also try immediately in case it already exists
-  if (document.getElementById('resetText')) initTimer();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTimer);
+  } else {
+    initTimer();
+  }
 })();
