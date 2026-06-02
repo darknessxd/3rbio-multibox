@@ -6031,28 +6031,3 @@
     }
   }.init()));
 }(window, $, document);
-
-
-// === Server Reset Timer Display ===
-(function() {
-  function initTimer() {
-    if (document.getElementById('serverResetTimer')) return;
-    var div = document.createElement('div');
-    div.id = 'serverResetTimer';
-    div.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#fff;font-family:ubuntu;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;user-select:none;white-space:nowrap;text-shadow:0 0 5px #000;';
-    div.textContent = 'Server — waiting...';
-    document.body.appendChild(div);
-    setInterval(function() {
-      var el = document.getElementById('resetText');
-      if (el && el.textContent) {
-        var txt = el.textContent.trim();
-        if (txt) div.textContent = txt;
-      }
-    }, 1000);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTimer);
-  } else {
-    initTimer();
-  }
-})();
