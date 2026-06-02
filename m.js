@@ -4883,25 +4883,9 @@
       console.log("Connected to: " + _0x18a8d1.ip);
       if (1 === _0x578a51) {
         _0x18a8d1.connected = true;
-        this._initResetTimer();
       } else {
         _0x18a8d1.connected2 = true;
       }
-    }
-    static ["_initResetTimer"]() {
-      if (this._resetTimerDiv) return;
-      const _0div = document.createElement('div');
-      _0div.id = 'resetTimerDisplay';
-      _0div.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#828282;font-family:ubuntu;background:rgba(0,0,0,0.5);padding:4px 10px;border-radius:3px;font-size:13px;font-weight:600;z-index:1000;pointer-events:none;user-select:none;white-space:nowrap;';
-      document.body.appendChild(_0div);
-      this._resetTimerDiv = _0div;
-      if (this._resetTimerInterval) clearInterval(this._resetTimerInterval);
-      this._resetTimerInterval = setInterval(() => {
-        const _0el = document.querySelector('#resetText');
-        if (_0el && _0el.textContent.trim()) {
-          _0div.textContent = _0el.textContent.trim();
-        }
-      }, 1000);
     }
     static ["handleDisabledProperty"](_0x1b3281) {
       document.querySelector("#button-play").disabled = _0x1b3281;
@@ -6047,3 +6031,34 @@
     }
   }.init()));
 }(window, $, document);
+
+
+// === Server Reset Timer Display ===
+(function() {
+  let _timerDiv = null;
+  let _interval = null;
+  function initTimer() {
+    if (_timerDiv) return;
+    _timerDiv = document.createElement('div');
+    _timerDiv.id = 'serverResetTimer';
+    _timerDiv.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);color:#fff;font-family:ubuntu;font-size:14px;font-weight:600;z-index:9999;pointer-events:none;user-select:none;white-space:nowrap;text-shadow:0 0 5px #000;';
+    document.body.appendChild(_timerDiv);
+    _interval = setInterval(function() {
+      var el = document.getElementById('resetText');
+      if (el && el.textContent) {
+        var txt = el.textContent.trim();
+        if (txt) _timerDiv.textContent = txt;
+      }
+    }, 1000);
+  }
+  // Watch for when the game creates #resetText
+  var observer = new MutationObserver(function() {
+    if (document.getElementById('resetText')) {
+      initTimer();
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+  // Also try immediately in case it already exists
+  if (document.getElementById('resetText')) initTimer();
+})();
