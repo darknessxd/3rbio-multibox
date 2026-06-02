@@ -5745,7 +5745,7 @@
             }
           }
         }
-        if (_0x21653d === 1 && (_0x5987fa.isMine && !_0x5c97e3 || !_0x5987fa.isMine && _0x7ae23d)) {
+        if (_0x21653d === 1 && !_0x5987fa.isVirus && (_0x5987fa.isMine && !_0x5c97e3 || !_0x5987fa.isMine && _0x7ae23d)) {
           const _0x2e6835 = _0x34f3bb.mass(_0x5987fa);
           if (_0x2e6835) {
             const _0x1c92d8 = _0x494dac === 'on' ? _0x5987fa.animRadius : _0x494dac === "stepped" ? 50 + 75 * (_0x5987fa.animRadius / 75 | 0) : _0x5987fa.radius;
