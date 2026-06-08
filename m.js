@@ -3713,10 +3713,10 @@
       this.timeStamp = _0xb45f1b.time;
     }
     get ['mapX']() {
-      return (this.animX + 8000) / 16000 * _0x5cda9b.size;
+      return (this.animX - _0x996564.left) / _0x996564.edge * _0x5cda9b.size;
     }
     get ["mapY"]() {
-      return (this.animY + 8000) / 16000 * _0x5cda9b.size;
+      return (this.animY - _0x996564.top) / _0x996564.edge * _0x5cda9b.size;
     }
   }
   class _0x996564 {
@@ -4522,6 +4522,7 @@
         this.ws.onerror = () => {
           this.onError(1);
         };
+        _0xpartyNet.hookWs(this.ws);
       }
       if (_0x23e168) {
         this.ws2 = new WebSocket(_0x23e168, "algamees");
@@ -4538,6 +4539,7 @@
         this.ws2.onerror = () => {
           this.onError(2);
         };
+        _0xpartyNet.hookWs(this.ws2);
         this.ip = _0x23e168;
         console.log("Connecting to: " + _0x23e168);
       }
@@ -5067,10 +5069,13 @@
       this.teamData = _0x5e31b7;
       this.biggestIsOn = false;
       this.biggest = new _0xb33099(0);
+      this.partyCells = new Map();
     }
     static ["clear"]() {
-      this.teamPlayers.clear();
-      console.log("cleared");
+      for (const _key of this.teamPlayers.keys()) {
+        if (typeof _key === 'number') this.teamPlayers["delete"](_key);
+      }
+      this.partyCells.clear();
     }
     static ['remove'](_0x3660b6) {
       this.teamPlayers["delete"](_0x3660b6);
@@ -5760,6 +5765,55 @@
         }
       }
     }
+    static ["partyCells"]() {
+      const _ctx = this.ctx;
+      const _viewAlpha = _0x480be4.cellTransparency / 100;
+      for (const [_pid, _cells] of _0x12ac51.partyCells) {
+        const _pp = _0x12ac51.teamPlayers.get(_pid);
+        if (!_pp) continue;
+        const _wid = _pp.worldID;
+        const _hasSkin = this.skinMap.has(_wid);
+        for (let _ci = 0; _ci < _cells.length; _ci++) {
+          const _c = _cells[_ci];
+          const _pr = _c.r;
+          const _px = _c.x;
+          const _py = _c.y;
+          _ctx.beginPath();
+          _ctx.arc(_px, _py, _pr + 5, 0, this.pi2, true);
+          _ctx.closePath();
+          if (_hasSkin) {
+            const _ps = this.getCustomSkin(_pp.worldID);
+            if (_ps) {
+              _ctx.drawImage(_ps, _px - _pr - 5, _py - _pr - 5, 2 * (_pr + 5), 2 * (_pr + 5));
+            }
+          } else {
+            _ctx.globalAlpha = _viewAlpha;
+            _ctx.fillStyle = _pp.colorHex || '#555';
+            _ctx.fill();
+            _ctx.globalAlpha = 1;
+          }
+          _ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+          _ctx.lineWidth = 2;
+          _ctx.stroke();
+          if (_ci === 0 && _pp.nick) {
+            const _nf = 'bold ' + Math.max(12, _pr * 0.3) + 'px Ubuntu';
+            _ctx.font = _nf;
+            _ctx.fillStyle = '#fff';
+            _ctx.textAlign = 'center';
+            _ctx.textBaseline = 'bottom';
+            _ctx.fillText(_pp.nick, _px, _py - _pr - 5);
+          }
+          if (_c.m > 0) {
+            const _mf = Math.max(12, _pr * 0.3) + 'px Ubuntu';
+            _ctx.font = _mf;
+            _ctx.fillStyle = '#fff';
+            _ctx.textAlign = 'center';
+            _ctx.textBaseline = 'middle';
+            _ctx.fillText(_c.m, _px, _py);
+          }
+        }
+      }
+    }
     static ["createSkinMap"]() {
       this.arbSkin = _0x14f7b2("#arbSkin").val();
       this.skinMap.clear();
@@ -6024,4 +6078,177 @@
       return window.atob(window.atob(window.atob(this.apiUrl)));
     }
   }.init()));
+  const _0xpartyNet = {
+    _ws: null,
+    _ws2: null,
+    _inParty: false,
+    _partyCode: '',
+    _members: {},
+
+    init() {
+      this._t = document.getElementById('party-token');
+      this._c = document.getElementById('create-party');
+      this._j = document.getElementById('join-party');
+      this._l = document.getElementById('party-leave');
+      this._d = document.getElementById('party-code-display');
+
+      if (this._c) this._c.addEventListener('click', () => this.createParty());
+      if (this._j) this._j.addEventListener('click', () => this.joinParty((this._t?.value || '').trim()));
+      if (this._t) this._t.addEventListener('keydown', e => e.key === 'Enter' && this.joinParty((this._t?.value || '').trim()));
+      if (this._l) this._l.addEventListener('click', () => this.leaveParty());
+    },
+
+    _updateUI() {
+      if (this._c) this._c.style.display = this._inParty ? 'none' : '';
+      if (this._j) this._j.style.display = this._inParty ? 'none' : '';
+      if (this._t) this._t.style.display = this._inParty ? 'none' : '';
+      if (this._l) this._l.style.display = this._inParty ? '' : 'none';
+      if (this._d) {
+        this._d.style.display = this._inParty && this._partyCode ? '' : 'none';
+        this._d.textContent = this._inParty ? 'Party: ' + this._partyCode : '';
+      }
+    },
+
+    hookWs(ws) {
+      if (!this._ws) {
+        this._ws = ws;
+      }
+      const orig = ws.onmessage;
+      ws.onmessage = (e) => {
+        this._interceptMessage(e) || (orig && orig.call(ws, e));
+      };
+    },
+
+    _send(b) {
+      if (!this._ws || this._ws.readyState !== WebSocket.OPEN) return false;
+      this._ws.send(new Uint8Array(b).buffer);
+      return true;
+    },
+
+    createParty() {
+      if (!this._send([0x55, 0x00])) {
+        _0x40f48a.alert("Party", "Failed - no connection");
+        return;
+      }
+      _0x40f48a.normal("Party", "Creating party...");
+    },
+
+    joinParty(code) {
+      if (!code) return;
+      code = code.replace(/https?:\/\/(www\.)?3rb\.io\/?/i, '').replace(/^#+/, '#');
+      const enc = new TextEncoder();
+      const raw = enc.encode(code);
+      const buf = new Uint8Array(2 + raw.length);
+      buf[0] = 0x55; buf[1] = 0x01;
+      buf.set(raw, 2);
+      this._send(Array.from(buf));
+    },
+
+    leaveParty() {
+      this._send([0x55, 0x02]);
+      this._inParty = false;
+      this._partyCode = '';
+      this._members = {};
+      this._cleanTeamPlayers();
+      this._updateUI();
+      _0x40f48a.normal("Party", "Left party");
+    },
+
+    _cleanTeamPlayers() {
+      for (const _k of _0x12ac51.teamPlayers.keys()) {
+        if (typeof _k === 'string') _0x12ac51.teamPlayers["delete"](_k);
+      }
+      _0x12ac51.partyCells.clear();
+    },
+
+    _interceptMessage(e) {
+      const d = e.data;
+      if (!(d instanceof ArrayBuffer) || d.byteLength < 2) return false;
+      const v = new DataView(d);
+      const op = v.getUint8(0);
+
+      if (op === 0x55) {
+        let p = 1;
+        const c = [];
+        while (p < v.byteLength && v.getUint8(p) !== 0) { c.push(String.fromCharCode(v.getUint8(p))); p++; }
+        const code = c.join('');
+        if (!code || code === 'error') { this.leaveParty(); return false; }
+        this._inParty = true;
+        this._partyCode = code;
+        this._updateUI();
+        _0x40f48a.normal("Party", "Party code: " + code);
+        return false;
+      }
+
+      if (op === 0x57) {
+        let off = 1;
+        const cnt = v.getUint16(off, true); off += 2;
+        const nm = {};
+        const newPartyCells = new Map();
+        for (let i = 0; i < cnt; i++) {
+          if (off + 4 > v.byteLength) break;
+          const id = v.getUint32(off, true); off += 4;
+          const nb = [];
+          while (off < v.byteLength && v.getUint8(off) !== 0) { nb.push(String.fromCharCode(v.getUint8(off))); off++; }
+          off++;
+          const name = nb.join('');
+          if (off + 3 > v.byteLength) break;
+          const r = v.getUint8(off++);
+          const g = v.getUint8(off++);
+          const b = v.getUint8(off++);
+          const col = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+          if (off + 12 > v.byteLength) break;
+          const sz = v.getInt32(off, true); off += 4;
+          const px = v.getInt32(off, true); off += 4;
+          const py = v.getInt32(off, true); off += 4;
+          nm[id] = { id, name, col, px, py };
+          newPartyCells.set(id.toString(), [{ x: px, y: py, r: Math.abs(sz) || 50 }]);
+        }
+        this._members = nm;
+        _0x12ac51.partyCells = newPartyCells;
+        for (const mid in nm) {
+          const nmd = nm[mid];
+          let p = _0x12ac51.teamPlayers.get(mid);
+          if (!p) {
+            p = new _0xb33099(mid);
+            p.nick = nmd.name;
+            p.colorHex = nmd.col;
+            p.team = 1;
+            p.isAlive = 1;
+            _0x12ac51.teamPlayers.set(mid, p);
+          }
+          p.x = nmd.px;
+          p.y = nmd.py;
+          p.animX = nmd.px;
+          p.animY = nmd.py;
+          p.timeStamp = performance.now();
+        }
+        for (const _k of _0x12ac51.teamPlayers.keys()) {
+          if (typeof _k === 'string' && !nm[_k]) _0x12ac51.teamPlayers["delete"](_k);
+        }
+        return true;
+      }
+
+      if (op === 0x58) {
+        let off = 1;
+        const removeId = v.getUint32(off, true);
+        _0x12ac51.teamPlayers.delete(String(removeId));
+        console.log("Party member removed: " + removeId);
+        return true;
+      }
+
+      if (op === 0x59) {
+        this._inParty = false;
+        this._members = {};
+        this._partyCode = '';
+        this._cleanTeamPlayers();
+        this._updateUI();
+        _0x40f48a.normal("Party", "Party disbanded");
+        return true;
+      }
+
+      return false;
+    }
+  };
+  _0xpartyNet.init();
 }(window, $, document);
