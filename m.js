@@ -431,12 +431,15 @@
       this.splitRings = _0x19d5af.get('settings', "splitRings") || "off";
       this.virusRange = _0x19d5af.get("settings", 'virusRange') || 'off';
       this.multiboxRing = _0x19d5af.get('settings', "multiboxRing") || 'on';
+      this.multiboxCellColor = _0x19d5af.get('settings', "multiboxCellColor") || 'on';
       this.commander = _0x19d5af.get('settings', 'commander') || 'on';
       this.targeting = _0x19d5af.get("settings", "targeting") || "off";
       this.chatType = _0x19d5af.get("settings", "chatType") || 'popup';
       this.multiboxMode = _0x19d5af.get('settings', "multiboxMode") || 'on';
       this.virusMass = _0x19d5af.get("settings", "virusMass") || 'off';
       this.showMassInLB = _0x19d5af.get("settings", "showMassInLB") || 'off';
+      this.cellShadow = _0x19d5af.get("settings", "cellShadow") || 'off';
+      this.cellGradient = _0x19d5af.get("settings", "cellGradient") || 'off';
       this.cellLuminous = _0x19d5af.get("settings", "cellLuminous") || 'off';
       this.multiboxShield = _0x19d5af.get("settings", "multiboxShield") || 'off';
       this.grayscaleInactive = _0x19d5af.get("settings", "grayscaleInactive") || 'off';
@@ -631,6 +634,7 @@
       this.div = _0x14f7b2("#inputs");
       this.addEvents();
       _0x22a8df.init();
+      _0x50f0c6.initGallery();
       _0x56ef98.init();
       _0x128142.init();
       _0x10ab3c.init();
@@ -714,6 +718,7 @@
       _0x14f7b2("#skin2").val(_0x518ea9.skin2 || '');
       _0x14f7b2("#tag").val(this.tag);
       _0x14f7b2("#arbSkin").val(_0x518ea9.arbSkin);
+      _0x90a1a7.arbSkin = _0x518ea9.arbSkin || '';
       this.updateMainSkin();
       for (let _0x365a86 = 8; 0 < _0x365a86;) {
         this.updatePreviewSkin(_0x365a86);
@@ -758,10 +763,14 @@
       });
       _0x14f7b2("#skin").blur(() => {
         let _0x145a78 = _0x14f7b2('#skin').val();
-        if (!_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x145a78 || '')).includes('XXXXXXX')) {
+        if (!_0x145a78) {
+          _0x90a1a7._skin = "XXXXXXX";
+          this.setarbSkin();
+        } else if (!_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x145a78 || '')).includes('XXXXXXX')) {
           return this.setSkin(_0x145a78);
+        } else {
+          this.setarbSkin();
         }
-        this.setarbSkin();
       });
       _0x14f7b2("#nick2").blur(() => {
         let _0xprofile2 = _0x19d5af.get('profiles', "profile" + this.selected);
@@ -799,8 +808,9 @@
       _0x14f7b2("#arbSkin").val(_0x4d475c.arbSkin);
       _0x90a1a7.nick = '' === _0x4d475c.nick ? "Unnamed Cell" : _0x4d475c.nick;
       _0x90a1a7.nick2 = _0x4d475c.nick2 || '';
-      _0x90a1a7.skin = _0x4d475c.skin;
-      _0x90a1a7.skin2 = _0x4d475c.skin2 || '';
+      _0x90a1a7._skin = _0x4d475c.arbSkin ? '' : _0x4d475c.skin;
+      _0x90a1a7._skin2 = _0x4d475c.skin2 || '';
+      _0x90a1a7._arbSkin = _0x4d475c.arbSkin || '';
       _0x19d5af.set('profiles', "profile" + this.selected, _0x4d475c);
       this.updateMainSkin();
     }
@@ -826,31 +836,116 @@
     }
     static ["setarbSkin"]() {
       var _0x431fed = _0x14f7b2("#arbSkin").val();
+      _0x90a1a7._skin = '';
+      _0x90a1a7._skin2 = '';
       _0x90a1a7.arbSkin = _0x431fed;
-      let _0x4b4ffa = _0x14f7b2("#skin").val();
-      if (_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa || '')).includes("XXXXXXX")) {
-        const _0xprev = _0x19d5af.get('profiles', "profile" + this.selected) || {};
-        const _0x5d3148 = {
-          "nick": "profile " + this.selected,
-          "skin": '',
-          "arbSkin": _0x431fed,
-          skin: _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa)),
-          "arbSkin": _0x431fed,
-          nick2: _0xprev.nick2 || '',
-          skin2: _0xprev.skin2 || ''
+      _0x90a1a7.arbSkin2 = _0x431fed;
+      const _0prev = _0x19d5af.get('profiles', "profile" + this.selected) || {};
+      _0prev.arbSkin = _0x431fed;
+      _0prev.nick2 = _0prev.nick2 || '';
+      _0prev.skin2 = _0prev.skin2 || '';
+      _0x19d5af.set('profiles', "profile" + this.selected, _0prev);
+      this.updateMainSkin("https://3rb.io/res/skins/free/" + _0x431fed.replace(/free\/|.png/g, '') + ".png");
+      this.updatePreviewSkin(this.selected);
+      if (_0x431fed) {
+        const _0xskn = "free/" + _0x431fed.replace(/free\/|.png/g, '');
+        const _0xsendSkin = (_0id) => {
+          try {
+            const _0buf = _0x302a2c["createView"](2 + _0xskn.length);
+            _0buf.setUint8(0, 4, true);
+            for (let _0i = 0; _0i < _0xskn.length; _0i++) _0buf.setUint8(_0i + 1, _0xskn.charCodeAt(_0i), true);
+            _0buf.setUint8(_0xskn.length + 1, 0, true);
+            _0x302a2c["sendPacket"](_0buf, _0id);
+          } catch(e) {}
         };
-        _0x90a1a7.skin = _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x4b4ffa));
-        _0x19d5af.set('profiles', "profile" + this.selected, _0x5d3148);
-        this.updateMainSkin("https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + _0x431fed.replace(/free\/|.png/g, '') + ".png");
-        this.updatePreviewSkin(this.selected);
+        _0xsendSkin(1);
+        _0xsendSkin(2);
+        try { _0xpartyNet._sendSkinUpdate(_0xskn, 1); } catch(e) {}
+        try { _0xpartyNet._sendSkinUpdate(_0xskn, 2); } catch(e) {}
+        try { _0xpartyNet._sendSkinPacket(_0xskn, _0x90a1a7.nick); } catch(e) {}
+        try { _0xpartyNet._sendSkinPacket(_0xskn, _0x90a1a7.nick2); } catch(e) {}
       }
+    }
+    static ["initGallery"]() {
+      _0x14f7b2("#galleryToggle").click(function() {
+        const _0g = document.getElementById('skinGalleryWrap');
+        if (_0g.style.display === 'block') {
+          _0g.style.display = 'none';
+        } else {
+          _0g.style.display = 'block';
+          _0x50f0c6.loadSkinGallery();
+        }
+      });
+    }
+    static ["_skinList"]() {
+      return _0x50f0c6._cachedList || (_0x50f0c6._cachedList = []);
+    }
+    static ["loadSkinGallery"]() {
+      const _0list = _0x50f0c6._skinList();
+      if (_0list.length) { _0x50f0c6.renderGalleryPage(0); return; }
+      const _0url = "https://raw.githubusercontent.com/darknessxd/Endymion-3rb/main/skins.json";
+      _0x14f7b2.get(_0url, function(_0data) {
+        _0x50f0c6._cachedList = _0data;
+        _0x50f0c6._gPage = 0;
+        _0x50f0c6.renderGalleryPage(0);
+      }, "json").fail(function() {
+        _0x14f7b2("#skinGalleryGrid").html("<span style='color:red'>Failed to load skins</span>");
+      });
+      _0x14f7b2("#skinGallerySearch").off("input").on("input", function() {
+        _0x50f0c6._gPage = 0;
+        _0x50f0c6.renderGalleryPage(0);
+      });
+      _0x14f7b2("#skinGalleryGrid").off("click").on("click", function(_0e) {
+        const _0t = _0x14f7b2(_0e.target);
+        const _0img = _0t.is("img.gallery-thumb") ? _0t : _0t.find("img.gallery-thumb");
+        if (_0img.length) {
+          _0x50f0c6.galleryPick(_0img.attr("data-name"));
+        } else if (_0t.hasClass("gallery-nav")) {
+          _0x50f0c6._gPage = parseInt(_0t.attr("data-page"));
+          _0x50f0c6.renderGalleryPage(_0x50f0c6._gPage);
+        }
+      });
+    }
+    static ["renderGalleryPage"](_0page) {
+      const _0list = _0x50f0c6._skinList();
+      if (!_0list.length) return;
+      const _0search = (_0x14f7b2("#skinGallerySearch").val() || "").toLowerCase();
+      const _0filtered = _0search ? _0list.filter(function(_0n) { return _0n.toLowerCase().includes(_0search); }) : _0list;
+      const _0perPage = 30;
+      const _0start = _0page * _0perPage;
+      const _0items = _0filtered.slice(_0start, _0start + _0perPage);
+      const _0total = Math.ceil(_0filtered.length / _0perPage) || 1;
+      const _0selected = (_0x14f7b2("#arbSkin").val() || '').replace(/free\/|.png/g, '');
+      let _0html = '<div class="gallery-grid">';
+      for (let _0i = 0; _0i < _0items.length; _0i++) {
+        const _0name = _0items[_0i].replace('.png', '');
+        const _0sel = _0name === _0selected ? ' selected' : '';
+        _0html += '<div class="gallery-item' + _0sel + '">';
+        _0html += '<img class="gallery-thumb" data-name="' + _0name + '" src="https://3rb.io/res/skins/free/' + _0name + '.png" title="' + _0name + '">';
+        _0html += '<span class="gallery-name">' + _0name + '</span></div>';
+      }
+      _0html += '</div>';
+      let _0nav = '<div class="gallery-nav-wrap">';
+      _0nav += '<button class="gallery-nav" data-page="0"' + (_0page === 0 ? ' disabled' : '') + '>⏮</button>';
+      if (_0page > 0) _0nav += '<button class="gallery-nav" data-page="' + (_0page - 1) + '">◀</button>';
+      _0nav += '<span class="gallery-info">' + (_0page + 1) + ' / ' + _0total + '</span>';
+      if (_0page < _0total - 1) _0nav += '<button class="gallery-nav" data-page="' + (_0page + 1) + '">▶</button>';
+      _0nav += '<button class="gallery-nav" data-page="' + (_0total - 1) + '"' + (_0page >= _0total - 1 ? ' disabled' : '') + '>⏭</button>';
+      _0nav += '</div>';
+      _0html += _0nav;
+      _0x14f7b2("#skinGalleryGrid").html(_0html);
+    }
+    static ["galleryPick"](_0name) {
+      _0x14f7b2("#arbSkin").val(_0name);
+      _0x50f0c6.setarbSkin();
+      _0x50f0c6.renderGalleryPage(_0x50f0c6._gPage || 0);
     }
     static ["setSkin"](_0x10e480) {
       let _0x2716a1 = _0x19d5af.get('profiles', "profile" + this.selected);
       const _0x1197ad = {
         "nick": "profile " + this.selected,
         skin: "https://i.imgur.com/nRqSis7.png",
-        "arbSkin": '',
+        "arbSkin": _0x90a1a7._arbSkin || '',
         "nick2": '',
         "skin2": ''
       };
@@ -862,6 +957,15 @@
       this.updateMainSkin();
       this.updatePreviewSkin(this.selected);
       _0x90a1a7.skin = _0x10e480;
+      if (_0x10e480) try { _0xpartyNet._sendSkinUpdate(_0x10e480, 1); } catch(e) {}
+      try {
+        const _0sk = _0x386cbc.getImgurCode(_0x10e480);
+        const _0buf2 = _0x302a2c["createView"](2 + _0sk.length);
+        _0buf2.setUint8(0, 4, true);
+        for (let _0i = 0; _0i < _0sk.length; _0i++) _0buf2.setUint8(_0i + 1, _0sk.charCodeAt(_0i), true);
+        _0buf2.setUint8(_0sk.length + 1, 0, true);
+        _0x302a2c["sendPacket"](_0buf2, _0x90a1a7.typeID);
+      } catch(e) {}
     }
     static ['setTag'](_0x57c637) {
       _0x90a1a7.tag = _0x57c637;
@@ -870,13 +974,13 @@
     static ["updateMainSkin"](_0x55f338) {
       const _0x1f6a96 = _0x14f7b2('#skin').val();
       _0x55f338 = _0x55f338 || _0x14f7b2('#arbSkin').val();
-      const _0x2517b0 = !_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x1f6a96 || '')).includes("XXXXXXX") ? _0x1f6a96 : "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + _0x55f338.replace(/free\/|.png/g, '') + ".png";
+      const _0x2517b0 = !_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x1f6a96 || '')).includes("XXXXXXX") ? _0x1f6a96 : "https://3rb.io/res/skins/free/" + _0x55f338.replace(/free\/|.png/g, '') + ".png";
       _0x14f7b2(".skin-preview").css('background', "url(" + _0x2517b0 + ')');
     }
     static ["updatePreviewSkin"](_0x4207bd) {
       let _0x5cc1ac = _0x19d5af.get("profiles", "profile" + _0x4207bd);
       if (_0x5cc1ac) {
-        const _0x3d8c60 = !_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x5cc1ac.skin || '')).includes("XXXXXXX") ? _0x5cc1ac.skin : _0x5cc1ac.arbSkin && "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + _0x5cc1ac.arbSkin.replace(/free\/|.png/g, '') + "png";
+        const _0x3d8c60 = !_0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x5cc1ac.skin || '')).includes("XXXXXXX") ? _0x5cc1ac.skin : _0x5cc1ac.arbSkin && "https://3rb.io/res/skins/free/" + _0x5cc1ac.arbSkin.replace(/free\/|.png/g, '') + "png";
         _0x14f7b2(".skin-selector[value=" + _0x4207bd + ']').css("background", "url(" + _0x3d8c60 + ')');
       }
     }
@@ -1606,7 +1710,7 @@
       this.virusBorderColor = _0x19d5af.get('theme', "virusBorderColor") || "#c2c2c2";
       this.virusBorderWidth = ~~_0x19d5af.get("theme", "virusBorderWidth") || 10;
       this.commanderColor = _0x19d5af.get("theme", "commanderColor") || "#f5e35d";
-      this.commanderImageUrl = _0x19d5af.get("theme", "commanderImageUrl") || "";
+      this.commanderImageUrl = _0x19d5af.get("theme", "commanderImageUrl") || "https://i.imgur.com/RD7gHuK.png";
       this.backgroundColor = _0x19d5af.get("theme", "backgroundColor") || "#000000";
       this.indicatorSize = ~~_0x19d5af.get("theme", "indicatorSize") || 100;
       this.cursor = _0x19d5af.get("theme", "cursor") || 13;
@@ -2540,6 +2644,27 @@
       this.emojiPath = './';
       this.emojis = {};
       this.displayEmojis();
+      const _0style = document.createElement('style');
+      _0style.textContent = '.cf-turnstile{display:none!important}';
+      document.head.appendChild(_0style);
+      const _0toggle = document.createElement('div');
+      _0toggle.id = 'chat-toggle';
+      _0toggle.innerHTML = '<i class="fa fa-chevron-down"></i>';
+      _0toggle.style.cssText = 'position:fixed;bottom:314px;left:5px;width:250px;z-index:101;cursor:pointer;color:#aaa;text-align:center;padding:2px 0;font-size:12px;background:rgba(27,27,27,0.6);border-radius:2px 2px 0 0;user-select:none;';
+      _0toggle.addEventListener('click', function() {
+        const _0cr = _0x14f7b2('#chatroom');
+        const _0icon = _0x14f7b2('#chat-toggle i');
+        if (_0cr.height() < 30) {
+          _0cr.css({height:'280px',overflow:'visible'});
+          _0toggle.style.bottom = '314px';
+          _0icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        } else {
+          _0cr.css({height:'0',overflow:'hidden'});
+          _0toggle.style.bottom = '34px';
+          _0icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        }
+      });
+      document.body.appendChild(_0toggle);
     }
     static ["displayEmojis"]() {
       const _0x1b6e7b = _0x14f7b2("#emojiContainer");
@@ -2668,7 +2793,7 @@
       this.ctx = this.canvas.getContext('2d');
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = "bottom";
-      this.ctx.font = "500 12px ubuntu";
+      this.ctx.font = "500 12px 'Segoe UI','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',ubuntu,sans-serif";
       this.ctx.lineWidth = 2;
       this.selector = 0;
     }
@@ -2727,6 +2852,7 @@
       const _0x5db847 = this.ctx;
       _0x5db847.textAlign = "center";
       _0x5db847.textBaseline = "bottom";
+      _0x5db847.font = "8px 'Segoe UI','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',ubuntu,sans-serif";
       for (const _0x3f6db4 of _0x12ac51.teamPlayers.values()) if (_0x3f6db4.isAlive && (!this.selector || this.selector === _0x3f6db4.team)) {
         _0x3f6db4.animate();
         const _0x37e58c = _0x3f6db4.mapX;
@@ -2736,7 +2862,7 @@
         _0x5db847.closePath();
         if (0 < _0x3f6db4.nick.length) {
           _0x5db847.fillStyle = _0x480be4.teammateNameColor || "#fff";
-          _0x5db847.fillText(_0x3f6db4.nick, _0x37e58c, _0x5936f8 - 6);
+          _0x5db847.fillText(_0x3f6db4.nick, _0x37e58c, _0x5936f8 - 5);
         }
         _0x5db847.fillStyle = 1 === _0x3f6db4.team ? _0x480be4.team1color : _0x480be4.team2color;
         _0x5db847.fill();
@@ -2747,6 +2873,7 @@
       const _0x121e2c = this.ctx;
       _0x121e2c.textAlign = "center";
       _0x121e2c.textBaseline = "bottom";
+      _0x121e2c.font = "8px 'Segoe UI','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',ubuntu,sans-serif";
       _0x121e2c.beginPath();
       for (const _0x477434 of _0x12ac51.teamPlayers.values()) if (_0x477434.isAlive) {
         _0x477434.animate();
@@ -2756,7 +2883,7 @@
         _0x121e2c.arc(_0x15a5b7, _0x119d6b, 5, 0, this.pi2, false);
         if (0 < _0x477434.nick.length) {
           _0x121e2c.fillStyle = _0x480be4.teammateNameColor || "#fff";
-          _0x121e2c.fillText(_0x477434.nick, _0x15a5b7, _0x119d6b - 6);
+          _0x121e2c.fillText(_0x477434.nick, _0x15a5b7, _0x119d6b - 5);
         }
       }
       _0x121e2c.closePath();
@@ -2912,10 +3039,16 @@
       this.fpsCount = 0;
       this.lastUpdateTime = 0;
       this.div = _0x14f7b2('#stats-hud')[0];
+      this.div.style.fontSize = '12px';
       this.lockClosed = "<i class=\"fa fa-lock\"></i>";
       this.lockOpened = "<i class=\"fa fa-unlock-alt\"></i>";
       this.speedometer = "<i class=\"fa fa-tachometer\"></i>";
       this.iconPause = "<i class=\"fa fa-pause-circle\"></i>";
+      const _0timer = document.createElement('div');
+      _0timer.id = 'hud-reset-timer';
+      _0timer.style.cssText = 'position:absolute;left:50%;transform:translateX(-50%);bottom:100%;color:#fff;font-family:ubuntu;font-size:12px;font-weight:600;white-space:nowrap;text-shadow:0 0 3px #000;z-index:10;pointer-events:none;margin-bottom:2px;';
+      _0x14f7b2('#minimap-hud')[0].appendChild(_0timer);
+      this.timerDiv = _0timer;
     }
     static ["update"]() {
       this.fpsCount++;
@@ -2932,6 +3065,7 @@
       }
       _0x5be063 += this.PIO + this.paused + this.zoomLock;
       this.div.innerHTML = _0x5be063;
+      if (this.timerDiv) this.timerDiv.innerHTML = this.resetTimer;
     }
     static get ["zoomLock"]() {
       return 'on' === _0x2cc0f3.autoZoom ? this.lockClosed : this.lockOpened;
@@ -2965,6 +3099,18 @@
       const _0x29b3a1 = this.fpsCount;
       this.fpsCount = 0;
       return "FPS: " + _0x29b3a1 + "   ";
+    }
+    static get ["resetTimer"]() {
+      if (_0x245b10._restartTime) {
+        let _0x5f8b2a = Math.max(0, _0x245b10._restartTime - Date.now());
+        const _0x37edd8 = Math.floor(_0x5f8b2a / 3600000);
+        const _0x4d1be0 = Math.floor((_0x5f8b2a % 3600000) / 60000);
+        const _0x4f9b19 = Math.floor((_0x5f8b2a % 60000) / 1000);
+        const _0timeStr = String(_0x37edd8).padStart(2, '0') + ':' + String(_0x4d1be0).padStart(2, '0') + ':' + String(_0x4f9b19).padStart(2, '0');
+        if (_0x5f8b2a <= 300000) return 'Reset: <span style="color:#ff0000">' + _0timeStr + '</span>   ';
+        return 'Reset: ' + _0timeStr + '   ';
+      }
+      return '';
     }
   }
   class _0x3a43e7 {
@@ -3447,6 +3593,7 @@
       this._nick = _0x14f7b2("#nick").val();
       this._nick2 = _0x14f7b2("#nick2").val();
       this._arbSkin = _0x14f7b2("#arbSkin").val();
+      this._arbSkin2 = '';
       this._skin = _0x386cbc.getImgurCode(_0x14f7b2("#skin").val());
       this._skin2 = _0x386cbc.getImgurCode(_0x14f7b2("#skin2").val());
       this.tag = _0x14f7b2("#tag").val();
@@ -3616,10 +3763,16 @@
     static get ["arbSkin"]() {
       return this._arbSkin;
     }
+    static set ["arbSkin2"](_0x591f79) {
+      this._arbSkin2 = _0x591f79;
+    }
+    static get ["arbSkin2"]() {
+      return this._arbSkin2;
+    }
     static set ["skin"](_0x1a9370) {
       const _0x5518a5 = _0x386cbc.getImgurCode(_0x1a9370);
       const _0x356638 = _0x386cbc.getRaindowFlag(_0x1a9370);
-      return "XXXXXXX" !== _0x5518a5 && _0x5518a5 ? (this.isRGB !== _0x356638 && (this.isRGB = _0x356638, _0x2d5cce.rgbMode()), this._skin = _0x5518a5, void _0x2d5cce.skin()) : void _0x40f48a.alert("Multibox", _0x59f59a.current.notif.invalidSkinUrl);
+      if ("XXXXXXX" !== _0x5518a5 && _0x5518a5) { this._skin = _0x5518a5; _0x2d5cce.skin(); try { _0xpartyNet._sendSkinUpdate(_0x5518a5, 1); } catch(e){} try { _0xpartyNet._sendSkinPacket(_0x5518a5, _0x90a1a7.nick); } catch(e){} }
     }
     static get ['skin']() {
       return this._skin;
@@ -3628,6 +3781,8 @@
       const _0x5518a5 = _0x386cbc.getImgurCode(_0x1a9370);
       if ("XXXXXXX" !== _0x5518a5 && _0x5518a5) {
         this._skin2 = _0x5518a5;
+        try { _0xpartyNet._sendSkinUpdate(_0x5518a5, 2); } catch(e){}
+        try { _0xpartyNet._sendSkinPacket(_0x5518a5, _0x90a1a7.nick2); } catch(e){}
       }
     }
     static get ['skin2']() {
@@ -4461,6 +4616,18 @@
     ["endOfBuffer"]() {
       return this.index >= this.maxIndex;
     }
+    ["readUTF16String"]() {
+      let _0x340f0b = '';
+      while (this.index + 1 < this.maxIndex) {
+        const _0x563f73 = this.dataView.getUint8(this.index);
+        const _0x2ae0e0 = this.dataView.getUint8(this.index + 1);
+        if (_0x563f73 === 0 && _0x2ae0e0 === 0) break;
+        _0x340f0b += String.fromCharCode(_0x563f73);
+        this.index += 2;
+      }
+      this.index += 2;
+      return _0x340f0b;
+    }
   }
   class _0x18a8d1 {
     static ["init"]() {
@@ -4674,16 +4841,37 @@
       } else if (65 === _0x6ab5d9) {
         this.borderUpdate(_0x4f5972, _0x24de2f);
       }
-      if (86 === _0x6ab5d9 && 1 === _0x24de2f) {
-        this.handleChat(_0x4f5972);
+      if (86 === _0x6ab5d9) {
+        this.handleChat(_0x4f5972, _0x24de2f);
+      }
+      if (254 === _0x6ab5d9) {
+        this.handleServerTime(_0x4f5972);
       }
     }
-    static ["handleChat"](_0x4be406) {
+    static ["handleChat"](_0x4be406, _0x24de2f) {
       var _0id = _0x4be406.readUInt32();
       for (var _0i = 0; _0i < 7; _0i++) _0x4be406.readUInt8();
       var _0name = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '').replace(/^\[.\]/, '');
       var _0msg = _0x4be406.readStringZeroUtf8().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\ufffd]/g, '');
-      if (_0msg) _0x40f48a.normal(_0name || 'Player', _0msg);
+      if (_0msg && _0msg.indexOf('__SK__') === 0) {
+        try {
+          const _decoded = atob(_0msg.substring(6));
+          const _tp = _0x12ac51.teamPlayers.get(String(_0id));
+          if (_tp) _tp.skin = _decoded;
+          else if (_0xpartyNet && _0xpartyNet._pendingSkins) _0xpartyNet._pendingSkins[String(_0id)] = _decoded;
+        } catch(_e) {}
+        return;
+      }
+      if (_0msg && _0msg.indexOf('__PC__') === 0 && _0xpartyNet) {
+        if (!_0xpartyNet._inParty) {
+          try {
+            const _code = atob(_0msg.substring(6));
+            if (_code) _0xpartyNet._startAutoJoin(_code);
+          } catch(_e) {}
+        }
+        return;
+      }
+      if (_0msg && 1 === _0x24de2f) _0x40f48a.normal(_0name || 'Player', _0msg);
     }
     static ["worldUpdate"](_0x449cb9, _0x43ee07 = 1) {
       _0xb45f1b.refreshTime();
@@ -4772,7 +4960,7 @@
         _0x26f542 = !!(32 & _0x8aab7f);
         if (_0xe4d42a) {
           _0xabb49d.skin = _0x449cb9.readEscapedUTF8string();
-          if (_0xabb49d.skin.split('/')[1] !== "undefined") {
+          if (_0xabb49d.skin.split('/')[1] !== "undefined" && !_0xabb49d.skin.startsWith('http')) {
             _0x386cbc.get3rbSkin(_0xabb49d.skin);
           }
         }
@@ -4814,6 +5002,20 @@
       } else {
         _0x14d4a3.myCellsIDs2.clear();
         _0x14d4a3.myCells2.clear();
+      }
+    }
+    static ["handleServerTime"](_0x3bfd6e) {
+      const _0x419bc4 = _0x3bfd6e.readUTF16String();
+      if (_0x419bc4) {
+        let _0restartDate;
+        if (_0x419bc4.indexOf('[console]') > -1) {
+          _0restartDate = _0x419bc4.split('[console]')[1];
+        } else if (_0x419bc4.indexOf('[]') === -1) {
+          _0restartDate = _0x419bc4;
+        }
+        if (_0restartDate) {
+          this._restartTime = new Date(_0restartDate).getTime();
+        }
       }
     }
     static ["getMyCellId"](_0x5d6513, _0x5c4a06) {
@@ -4972,14 +5174,17 @@
           _0xisTab2 ? _0x90a1a7.nick2 = "Unnamed cell" : _0x90a1a7.nick = "Unnamed cell";
         }
         let _0x4a58df = unescape(encodeURIComponent(_0xisTab2 ? _0x90a1a7.nick2 : _0x90a1a7.nick));
-        let _0x1084d5 = unescape(encodeURIComponent("free/" + (_0xisTab2 ? _0x90a1a7.arbSkin : _0x2a0c5c.arbSkin)));
+        let _0x1084d5 = unescape(encodeURIComponent("free/" + (_0xisTab2 ? _0x90a1a7.arbSkin2 : _0x90a1a7.arbSkin)));
         const _0x4208f8 = {
           'n': _0x4a58df
         };
         if (_0xisTab2 && _0x90a1a7.skin2 && !String(_0x90a1a7.skin2).includes("XXXXXXX")) {
           _0x4208f8.s = unescape(encodeURIComponent(_0x90a1a7.skin2));
           _0x4208f8.w = '';
-        } else if (_0x90a1a7.arbSkin) {
+        } else if (!_0xisTab2 && _0x90a1a7.skin && !String(_0x90a1a7.skin).includes("XXXXXXX")) {
+          _0x4208f8.s = unescape(encodeURIComponent(_0x90a1a7.skin));
+          _0x4208f8.w = '';
+        } else if (_0xisTab2 ? _0x90a1a7.arbSkin2 : _0x90a1a7.arbSkin) {
           _0x4208f8.s = _0x1084d5;
           _0x4208f8.w = '';
         }
@@ -5281,7 +5486,7 @@
       }
     }
     static ["skin"]() {
-      if (_0x1530af.connected) {
+      if (_0x18a8d1.connected || _0x18a8d1.connected2) {
         const _0x5e1baa = _0x90a1a7.skin;
         let _0x582581 = _0x5e1baa.length;
         const _0x15de34 = this.createView(2 + _0x5e1baa.length);
@@ -5289,7 +5494,7 @@
           _0x15de34.setUint8(_0x582581 + 1, _0x5e1baa.charCodeAt(_0x582581), true);
         }
         _0x15de34.setUint8(1 + _0x5e1baa.length, 0, true);
-        _0x1530af.send(_0x15de34.buffer);
+        _0x18a8d1.send(_0x15de34.buffer, _0x90a1a7.typeID);
       }
     }
     static ['ip']() {
@@ -5402,6 +5607,7 @@
       this.ctx = this.canvas.getContext('2d');
       this.pi2 = 2 * Math.PI;
       this.skinMap = new Map();
+      this.arbSkinMap = new Map();
       this.downloadedSkins = new Map();
       this.knownSkins = {};
       this.commanderPoints = new Set();
@@ -5578,6 +5784,9 @@
       const _0x24bf81 = _0x2cc0f3.arbSkins === 'on';
       const _0x4f4928 = _0x2cc0f3.teamIndicator === 'on';
       const _0x3060bb = _0x2cc0f3.multiboxRing === 'on';
+      const _0x235e9c = _0x2cc0f3.multiboxCellColor === 'on';
+      const _0x112233 = _0x2cc0f3.cellShadow === 'on';
+      const _0x445566 = _0x2cc0f3.cellGradient === 'on';
       const _0x1c7e25 = _0x480be4.indicatorSize;
       const _0x5ab10a = _0x480be4.cellTransparency / 100;
       const _0x1005b0 = _0x480be4.cellNickSize / 100;
@@ -5590,7 +5799,7 @@
       _0xfdf4f4.strokeStyle = _0x480be4.virusBorderColor;
       _0xfdf4f4.lineWidth = _0x480be4.virusBorderWidth;
       for (const _0x5987fa of _0x14d4a3.sortedCells) {
-        const _0x48567b = !_0x5987fa.isVirus && !_0x5987fa.isEjected && this.skinMap.has(_0x5987fa.worldID);
+        const _0x48567b = !_0x5987fa.isVirus && !_0x5987fa.isEjected && (this.skinMap.has(_0x5987fa.worldID) || this.arbSkinMap.has(_0x5987fa.worldID));
         _0x5987fa.animate();
         let _0x21653d = 1;
         const _0xe84373 = {
@@ -5683,7 +5892,11 @@
           _0xfdf4f4.shadowBlur = 0;
           _0xfdf4f4.shadowColor = 'transparent';
         } else {
-          _0xfdf4f4.fillStyle = _0x2cc0f3.grayscaleInactive === "on" && _0x5987fa.isMine && _0x5987fa.cellType !== _0x90a1a7.typeID ? _0x2ab3a8.getGrayscale(_0x5987fa.colorObject, _0x30af86) : _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
+          if (_0x112233 && _0x5987fa.isMine) {
+            _0xfdf4f4.shadowColor = "black";
+            _0xfdf4f4.shadowBlur = 15;
+          }
+          _0xfdf4f4.fillStyle = _0x235e9c && _0x5987fa.isMine ? _0x5987fa.cellType === _0x90a1a7.typeID ? _0x355e3d : _0x15f66b : _0x2cc0f3.grayscaleInactive === "on" && _0x5987fa.isMine && _0x5987fa.cellType !== _0x90a1a7.typeID ? _0x2ab3a8.getGrayscale(_0x5987fa.colorObject, _0x30af86) : _0x2ab3a8.getColor(_0x5987fa.colorObject, _0x30af86);
           if (_0x5ab10a * _0x21653d < 1) {
             _0xfdf4f4.globalAlpha = _0x5ab10a * _0x21653d;
             _0xfdf4f4.fill();
@@ -5691,23 +5904,57 @@
           } else {
             _0xfdf4f4.fill();
           }
+          if (_0x112233 && _0x5987fa.isMine) {
+            _0xfdf4f4.shadowBlur = 0;
+          }
+        }
+        if (_0x445566 && !_0x5987fa.isVirus && !_0x5987fa.isEjected && _0x5987fa.animRadius > 25) {
+          const _0xgcx = _0x5987fa.animX - _0x1241cd.x;
+          const _0xgcy = _0x5987fa.animY - _0x1241cd.y;
+          const _0gcr = _0x5987fa.animRadius + 5;
+          const _0grad = _0xfdf4f4.createRadialGradient(_0xgcx, _0xgcy, _0gcr * 0.1, _0xgcx, _0xgcy, _0gcr);
+          _0grad.addColorStop(0, "rgba(0,0,0,0.35)");
+          _0grad.addColorStop(0.6, "rgba(0,0,0,0.1)");
+          _0grad.addColorStop(1, "rgba(0,0,0,0)");
+          _0xfdf4f4.fillStyle = _0grad;
+          _0xfdf4f4.beginPath();
+          _0xfdf4f4.arc(_0xgcx, _0xgcy, _0gcr, 0, this.pi2, true);
+          _0xfdf4f4.closePath();
+          _0xfdf4f4.fill();
         }
         if (_0x5987fa.isEjected) {
           continue;
         }
-        if (!_0x5987fa.isVirus && _0x21653d === 1 && _0x4f4928 && !_0x5987fa.isMine && _0x48567b && _0x5987fa.animRadius * _0xddb6d6.viewport < 50) {
-          _0xfdf4f4.drawImage(this.indicator, _0x5987fa.animX - _0x1241cd.x - _0x1c7e25 / 2, _0x5987fa.animY - _0x1241cd.y - _0x5987fa.animRadius - 10 - _0x1c7e25, _0x1c7e25, _0x1c7e25);
+        if (_0x4f4928 && _0x5987fa.isMine && _0x5987fa.cellType === _0x90a1a7.typeID && _0x21653d > 0) {
+          _0xfdf4f4.save();
+          _0xfdf4f4.textAlign = "center";
+          _0xfdf4f4.textBaseline = "bottom";
+          _0xfdf4f4.font = "600 " + (_0x1c7e25 * 2) + "px sans-serif";
+          _0xfdf4f4.fillStyle = "rgba(255,255,255,1)";
+          const _0indX = _0x5987fa.animX - _0x1241cd.x;
+          const _0indY = _0x5987fa.animY - _0x1241cd.y - _0x5987fa.animRadius - 5;
+          _0xfdf4f4.fillText("\u25BC", _0indX, _0indY + _0x1c7e25 / 2);
+          _0xfdf4f4.restore();
         }
-        if (_0x5987fa.arbSkin) {
-          console.log(_0x5987fa);
+        let _0urlSkin = this.skinMap.has(_0x5987fa.worldID) && _0x290b1c && this.getCustomSkin(_0x5987fa.worldID, 'skinMap');
+        const _0arbSkin = this.arbSkinMap.has(_0x5987fa.worldID) && _0x24bf81 && this.getCustomSkin(_0x5987fa.worldID, 'arbSkinMap');
+        let _0x1a6b68 = _0urlSkin || _0arbSkin;
+        if (!_0x1a6b68 && _0x290b1c) {
+          const _cellUrl = _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x5987fa.skin || ''));
+          if (_cellUrl && !_cellUrl.includes("XXXXXXX") && !_cellUrl.startsWith('free/')) {
+            const _cached = this.downloadedSkins.get(_cellUrl);
+            if (_cached) { _0x1a6b68 = _cached; _0urlSkin = _cached; }
+            else if (undefined === _cached) this.downloadSkin(_cellUrl);
+          }
         }
         let _0x20f1ed = _0x386cbc.code2Url(_0x386cbc.getImgurCode(_0x5987fa.skin || '')).includes("XXXXXXX") ? _0x5987fa.skin : _0x5987fa.arbSkin;
-        const _0x1a6b68 = _0x48567b && _0x290b1c && this.getCustomSkin(_0x5987fa.worldID);
-        const _0xb89262 = _0x24bf81 && !_0x1a6b68 && _0x20f1ed && this.knownSkins.hasOwnProperty(_0x20f1ed.replace(/free\/|.png/, '')) && this.get3rbSkin(_0x20f1ed);
-        if (_0x1a6b68) {
-          _0xfdf4f4.drawImage(_0x1a6b68, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
-        } else if (_0xb89262) {
-          _0xfdf4f4.drawImage(_0xb89262, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
+        const _0xb89262 = _0x24bf81 && !_0x1a6b68 && _0x20f1ed && (_0x20f1ed.startsWith('free/') || this.knownSkins.hasOwnProperty(_0x20f1ed.replace(/free\/|.png/g, ''))) && this.get3rbSkin(_0x20f1ed);
+        if (_0x1a6b68 || _0xb89262) {
+          _0xfdf4f4.save();
+          _0xfdf4f4.clip();
+          if (_0x1a6b68) _0xfdf4f4.drawImage(_0x1a6b68, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
+          else if (_0xb89262) _0xfdf4f4.drawImage(_0xb89262, _0x5987fa.animX - _0x1241cd.x - (_0x5987fa.animRadius + 5), _0x5987fa.animY - _0x1241cd.y - (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5), 2 * (_0x5987fa.animRadius + 5));
+          _0xfdf4f4.restore();
         }
         if (_0x5987fa.isMine && _0x3060bb) {
           const _0x27d8ff = _0x5987fa.animRadius * _0x26462b / 100;
@@ -5772,7 +6019,9 @@
         const _pp = _0x12ac51.teamPlayers.get(_pid);
         if (!_pp) continue;
         const _wid = _pp.worldID;
-        const _hasSkin = this.skinMap.has(_wid);
+        const _hasUrlSkin = this.skinMap.has(_wid);
+        const _hasArbSkin = this.arbSkinMap.has(_wid);
+        const _hasSkin = _hasUrlSkin && _0x2cc0f3.urlSkins === 'on' || _hasArbSkin && _0x2cc0f3.arbSkins === 'on';
         for (let _ci = 0; _ci < _cells.length; _ci++) {
           const _c = _cells[_ci];
           const _pr = _c.r;
@@ -5782,9 +6031,12 @@
           _ctx.arc(_px, _py, _pr + 5, 0, this.pi2, true);
           _ctx.closePath();
           if (_hasSkin) {
-            const _ps = this.getCustomSkin(_pp.worldID);
+            const _ps = _hasUrlSkin && _0x2cc0f3.urlSkins === 'on' ? this.getCustomSkin(_pp.worldID, 'skinMap') : this.getCustomSkin(_pp.worldID, 'arbSkinMap');
             if (_ps) {
+              _ctx.save();
+              _ctx.clip();
               _ctx.drawImage(_ps, _px - _pr - 5, _py - _pr - 5, 2 * (_pr + 5), 2 * (_pr + 5));
+              _ctx.restore();
             }
           } else {
             _ctx.globalAlpha = _viewAlpha;
@@ -5815,23 +6067,87 @@
       }
     }
     static ["createSkinMap"]() {
-      this.arbSkin = _0x14f7b2("#arbSkin").val();
+      const _0foreignCount = (_0x14d4a3.cells?.size || 0) + (_0x14d4a3.cells2?.size || 0);
+      const _0cs = (_0x14d4a3.myCells?.size || 0) + (_0x14d4a3.myCells2?.size || 0) + (_0x12ac51.teamPlayers?.size || 0) + _0foreignCount;
+      if (_0cs === this._lastSkinSize && !(_0xpartyNet && _0xpartyNet._skinMapDirty)) return;
+      this._lastSkinSize = _0cs;
+      if (_0xpartyNet) _0xpartyNet._skinMapDirty = false;
       this.skinMap.clear();
-      if (!_0x90a1a7.skin.includes("XXXXXXX")) {
-        this.skinMap.set(_0x90a1a7.worldID, this.code2Url(_0x90a1a7.skin));
-      } else if (this.arbSkin) {
-        this.skinMap.set(_0x90a1a7.worldID, "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + this.arbSkin.replace(/free\/|.png/g, '') + ".png");
+      this.arbSkinMap.clear();
+      const _isArb = (u) => u && u.includes("3rb.io/res/skins/free");
+      const _addMyCells = (_cells, _url, _map) => { if (_cells instanceof Map) for (const [_, _c] of _cells) _map.set(_c.worldID, _url); };
+      const _addForeignSkin = (_cells, _selfNicks) => {
+        if (!(_cells instanceof Map)) return;
+        for (const [_, _c] of _cells) {
+          if (!_c || _c.isMine) continue;
+          if (_selfNicks && _c.nick && (_selfNicks.includes(_c.nick) || _selfNicks.some(n => _c.nick.indexOf(n) >= 0))) continue;
+          if (this.skinMap.has(_c.worldID) || this.arbSkinMap.has(_c.worldID)) continue;
+          let _skinStr = _c.skin;
+          if (!_skinStr || _skinStr.includes("XXXXXXX")) {
+            if (_c.nick && this.hasSkinInNick(_c.nick)) {
+              _skinStr = this._decSkin(_c.nick);
+              if (!_skinStr || _skinStr.includes("XXXXXXX")) _skinStr = null;
+            }
+          }
+          if (!_skinStr) continue;
+          const _isFree = _skinStr.startsWith('free/') || _skinStr.includes("3rb.io/res/skins/free");
+          const _url = _isFree ? "https://3rb.io/res/skins/free/" + _skinStr.replace(/^free\//, '').replace(/\.png$/, '') + ".png" : this.code2Url(_skinStr);
+          (_isFree ? this.arbSkinMap : this.skinMap).set(_c.worldID, _url);
+        }
+      };
+      const _0mySkin = _0x90a1a7.skin;
+      if (_0mySkin && !_0mySkin.includes("XXXXXXX") && !_0mySkin.startsWith('free/')) {
+        _addMyCells(_0x14d4a3.myCells, this.code2Url(_0mySkin), this.skinMap);
+      }
+      if (_0x90a1a7.arbSkin) {
+        const _aurl = "https://3rb.io/res/skins/free/" + _0x90a1a7.arbSkin.replace(/free\/|.png/g, '') + ".png";
+        _addMyCells(_0x14d4a3.myCells, _aurl, this.arbSkinMap);
+      }
+      if (_0x90a1a7.arbSkin2) {
+        const _aurl2 = "https://3rb.io/res/skins/free/" + _0x90a1a7.arbSkin2.replace(/free\/|.png/g, '') + ".png";
+        _addMyCells(_0x14d4a3.myCells2, _aurl2, this.arbSkinMap);
       }
       if (_0x90a1a7.skin2 && !_0x90a1a7.skin2.includes("XXXXXXX")) {
-        this.skinMap.set(_0x90a1a7.worldID2, this.code2Url(_0x90a1a7.skin2));
-      } else if (!_0x90a1a7.skin.includes("XXXXXXX")) {
-        this.skinMap.set(_0x90a1a7.worldID2, this.code2Url(_0x90a1a7.skin));
-      } else if (this.arbSkin) {
-        this.skinMap.set(_0x90a1a7.worldID2, "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + this.arbSkin.replace(/free\/|.png/g, '') + '.png');
+        _addMyCells(_0x14d4a3.myCells2, this.code2Url(_0x90a1a7.skin2), this.skinMap);
+      } else if (_0mySkin && !_0mySkin.includes("XXXXXXX") && !_0mySkin.startsWith('free/')) {
+        _addMyCells(_0x14d4a3.myCells2, this.code2Url(_0mySkin), this.skinMap);
       }
-      for (const _0x5d3988 of _0x12ac51.teamPlayers.values()) if (_0x5d3988.isAlive && !_0x5d3988.skin.includes("XXXXXXX")) {
-        this.skinMap.set(_0x5d3988.worldID, this.code2Url(_0x5d3988.skin));
+      for (const _0x5d3988 of _0x12ac51.teamPlayers.values()) if (_0x5d3988.isAlive && _0x5d3988.skin && !_0x5d3988.skin.includes("XXXXXXX")) {
+        const _isFreeSkin = _0x5d3988.skin.startsWith('free/');
+        const _tUrl = _isFreeSkin ? "https://3rb.io/res/skins/free/" + _0x5d3988.skin.replace('free/', '') + ".png" : this.code2Url(_0x5d3988.skin);
+        const _tMap = _isFreeSkin || _isArb(_tUrl) ? this.arbSkinMap : this.skinMap;
+        _tMap.set(_0x5d3988.worldID, _tUrl);
+        const _tpNick = _0x5d3988.nick;
+        if (_0x14d4a3.cells instanceof Map) for (const [_, _c] of _0x14d4a3.cells) if (_c && !_c.isMine && _c.nick && _c.nick.indexOf(_tpNick) >= 0) _tMap.set(_c.worldID, _tUrl);
+        if (_0x14d4a3.cells2 instanceof Map) for (const [_, _c2] of _0x14d4a3.cells2) if (_c2 && _c2.nick && _c2.nick.indexOf(_tpNick) >= 0) _tMap.set(_c2.worldID, _tUrl);
       }
+      const _selfNicks = [_0x90a1a7.nick, _0x90a1a7.nick2].filter(Boolean);
+      if (_0xpartyNet && _0xpartyNet._sharedSkins) {
+        for (const _sn in _0xpartyNet._sharedSkins) {
+          if (!_sn || _selfNicks.includes(_sn)) continue;
+          const _su = _0xpartyNet._sharedSkins[_sn];
+          if (!_su || _su.includes("XXXXXXX")) continue;
+          const _sfree = _su.startsWith('free/') || _su.includes("3rb.io/res/skins/free");
+          const _surl = _sfree ? "https://3rb.io/res/skins/free/" + _su.replace(/^free\//, '').replace(/\.png$/, '') + ".png" : this.code2Url(_su);
+          const _smap = _sfree || _isArb(_surl) ? this.arbSkinMap : this.skinMap;
+          for (const [_, _c] of _0x14d4a3.cells) {
+            if (_c && !_c.isMine && _c.nick && (_c.nick === _sn || _c.nick.indexOf(_sn) >= 0)) {
+              if (!_smap.has(_c.worldID) && !(_smap === this.arbSkinMap ? this.skinMap : this.arbSkinMap).has(_c.worldID)) {
+                _smap.set(_c.worldID, _surl);
+              }
+            }
+          }
+          for (const [_, _c2] of _0x14d4a3.cells2) {
+            if (_c2 && _c2.nick && (_c2.nick === _sn || _c2.nick.indexOf(_sn) >= 0)) {
+              if (!_smap.has(_c2.worldID) && !(_smap === this.arbSkinMap ? this.skinMap : this.arbSkinMap).has(_c2.worldID)) {
+                _smap.set(_c2.worldID, _surl);
+              }
+            }
+          }
+        }
+      }
+      _addForeignSkin(_0x14d4a3.cells, _selfNicks);
+      _addForeignSkin(_0x14d4a3.cells2, _selfNicks);
     }
     static ["createRGBset"]() {
       this.rgbTeammates.clear();
@@ -5842,8 +6158,8 @@
         this.rgbTeammates.add(_0x33940b.worldID);
       }
     }
-    static ["getCustomSkin"](_0xb1bf13) {
-      const _0x35f9db = this.skinMap.get(_0xb1bf13);
+    static ["getCustomSkin"](_0xb1bf13, _0mapOnly) {
+      const _0x35f9db = _0mapOnly === 'arbSkinMap' ? this.arbSkinMap.get(_0xb1bf13) : _0mapOnly === 'skinMap' ? this.skinMap.get(_0xb1bf13) : this.skinMap.get(_0xb1bf13) || this.arbSkinMap.get(_0xb1bf13);
       if (!_0x35f9db) {
         return false;
       }
@@ -5857,7 +6173,6 @@
     static ["download3rbSkin"](_0x26f184) {
       this.downloadedSkins.set(_0x26f184, false);
       const _0x323825 = new Image();
-      _0x323825.crossOrigin = "anonymous";
       _0x323825.onload = () => {
         const _0x5753ba = _0x24f9ab.createElement("canvas");
         const _0x552ac8 = _0x5753ba.getContext('2d');
@@ -5872,26 +6187,30 @@
         _0x323825.src = _0x5753ba.toDataURL();
         this.downloadedSkins.set(_0x26f184, _0x323825);
       };
-      _0x323825.src = "https://patient-leaf-2f1a.maamargasouma.workers.dev/res/skins/free/" + _0x26f184.replace(/free\/|.png/g, '') + ".png";
+      _0x323825.src = "https://3rb.io/res/skins/free/" + _0x26f184.replace(/free\/|.png/g, '') + ".png";
     }
     static ["downloadSkin"](_0x31eb71) {
       this.downloadedSkins.set(_0x31eb71, false);
       const _0x252d42 = new Image();
-      _0x252d42.crossOrigin = "anonymous";
       _0x252d42.onload = () => {
-        const _0x4282fb = _0x24f9ab.createElement("canvas");
-        const _0x56a6bc = _0x4282fb.getContext('2d');
-        _0x4282fb.width = 512;
-        _0x4282fb.height = 512;
-        _0x56a6bc.beginPath();
-        _0x56a6bc.arc(256, 256, 256, 0, this.pi2, true);
-        _0x56a6bc.closePath();
-        _0x56a6bc.clip();
-        _0x56a6bc.drawImage(_0x252d42, 0, 0, 512, 512);
-        _0x252d42.onload = null;
-        _0x252d42.src = _0x4282fb.toDataURL();
-        this.downloadedSkins.set(_0x31eb71, _0x252d42);
+        try {
+          const _0x4282fb = _0x24f9ab.createElement("canvas");
+          const _0x56a6bc = _0x4282fb.getContext('2d');
+          _0x4282fb.width = 512;
+          _0x4282fb.height = 512;
+          _0x56a6bc.beginPath();
+          _0x56a6bc.arc(256, 256, 256, 0, this.pi2, true);
+          _0x56a6bc.closePath();
+          _0x56a6bc.clip();
+          _0x56a6bc.drawImage(_0x252d42, 0, 0, 512, 512);
+          this.downloadedSkins.set(_0x31eb71, _0x252d42);
+          _0x252d42.src = _0x4282fb.toDataURL();
+          _0x252d42.onload = null;
+        } catch(_e) {
+          this.downloadedSkins.set(_0x31eb71, _0x252d42);
+        }
       };
+      _0x252d42.onerror = () => { this.downloadedSkins.set(_0x31eb71, false); };
       _0x252d42.src = _0x31eb71;
     }
     static ["getImgurCode"](_0x96fe5e) {
@@ -5903,6 +6222,36 @@
     }
     static ["code2Url"](_0x4e8aaa) {
       return _0x4e8aaa.startsWith("http") ? _0x4e8aaa : "https://i.imgur.com/" + _0x4e8aaa + '.png';
+    }
+    static ["_SKIN_CHARS"]() { return '\u200B\u200C\u200D\u2060\u2061\u2062\u2063\u2064\u206A\u206B\u206C\u206D\u206E\u206F\uFEFF\u180E'; }
+    static ["_SKIN_PREFIX"]() { return '\u200B\u200C\u200D'; }
+    static ["_encSkin"](_0url) {
+      const _c = this._SKIN_CHARS();
+      let _r = this._SKIN_PREFIX();
+      for (let _i = 0; _i < Math.min(_0url.length, 64); _i++) {
+        const _b = _0url.charCodeAt(_i);
+        _r += _c[(_b >> 4) & 15] + _c[_b & 15];
+      }
+      return _r;
+    }
+    static ["_decSkin"](_0str) {
+      const _p = this._SKIN_PREFIX();
+      const _c = this._SKIN_CHARS();
+      const _idx = _0str.indexOf(_p);
+      if (_idx < 0) return null;
+      const _enc = _0str.slice(_idx + _p.length);
+      if (_enc.length < 2) return null;
+      const _bytes = [];
+      for (let _i = 0; _i + 1 < _enc.length; _i += 2) {
+        const _hi = _c.indexOf(_enc[_i]);
+        const _lo = _c.indexOf(_enc[_i + 1]);
+        if (_hi < 0 || _lo < 0) break;
+        _bytes.push((_hi << 4) | _lo);
+      }
+      return new TextDecoder().decode(new Uint8Array(_bytes));
+    }
+    static ["hasSkinInNick"](_0nick) {
+      return _0nick && _0nick.indexOf(this._SKIN_PREFIX()) >= 0;
     }
     static ["commands"]() {
       const _0x5b9c43 = this.ctx;
@@ -6040,7 +6389,17 @@
       this.time = Date.now();
     }
   }
-  _0x1c478d.onload = () => (_0x14f7b2("#loading-screen").html("<div class=\"ls-title\">3rb.io Multibox</div><div class=\"ls-spinner\"><span id=\"ls-icon\"><i class=\"fa fa-solid fa-circle-notch fa-spin\"></i></span><span style=\"display:block;\" id=\"ls-message\">Loading...</span></div>"), 49 > _0xb45f1b.browserVersion() ? (_0x14f7b2("#ls-icon").html("<i class=\"fa fa-chrome\" aria-hidden=\"true\"></i>"), void _0x14f7b2("#ls-message").text(" Only Chrome version 49 or higher are supported.")) : (_0x59f59a.init(), _0xb45f1b.init(), class {
+  _0x1c478d.onload = () => {
+    var _0xlsCSS = document.createElement('style');
+    _0xlsCSS.textContent = '#loading-screen{z-index:200;position:fixed;left:0;top:0;right:0;bottom:0;background-color:#1a1a2e;opacity:1;background-image:url(https://i.imgur.com/nmBQBiv.jpeg);background-position:bottom;background-size:cover;background-repeat:no-repeat;transition:opacity 1s}#loading-screen .maou-circle-container{width:512px;height:512px;position:fixed;top:calc(50% - 256px);left:calc(50% - 256px);transform:scale(1);transition:all .75s}#loading-screen .maou-circle-container .maou-circle{width:512px;height:512px;position:absolute}#loading-screen .maou-circle-container .maou-circle.p1{background:url(https://i.imgur.com/wfSDaIH.png);animation:spinRight 32s linear infinite,fadeIn 6s}#loading-screen .maou-circle-container .maou-circle.p2{background:url(https://i.imgur.com/blWRiUv.png);animation:spinLeft 20s linear infinite,fadeIn 6s}#loading-screen .maou-circle-container .maou-circle.p3{background:url(https://i.imgur.com/GRjA1gJ.png);animation:spinRight 16s linear infinite,fadeIn 6s}#loading-screen .message{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-family:raleway;font-size:25px;color:#fff;text-align:center;animation:fadeIn 1s;opacity:1;transition:opacity 1s}@keyframes spinRight{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes spinLeft{0%{transform:rotate(0)}100%{transform:rotate(-360deg)}}@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}';
+    document.head.appendChild(_0xlsCSS);
+    _0x14f7b2("#loading-screen").html('<div class="maou-circle-container"><div class="maou-circle p1"></div><div class="maou-circle p2"></div><div class="maou-circle p3"></div></div><div class="message">Loading...</div>');
+    if (49 > _0xb45f1b.browserVersion()) {
+      _0x14f7b2("#loading-screen .message").text(" Only Chrome version 49 or higher are supported.");
+    } else {
+      _0x59f59a.init();
+      _0xb45f1b.init();
+      (class {
     static ["init"]() {
       this.apiUrl = '';
       this.codeChecked = false;
@@ -6077,13 +6436,36 @@
     static ["getApiUrl"]() {
       return window.atob(window.atob(window.atob(this.apiUrl)));
     }
-  }.init()));
+    }).init();
+    }
+  };
   const _0xpartyNet = {
     _ws: null,
     _ws2: null,
     _inParty: false,
     _partyCode: '',
     _members: {},
+    _pendingSkins: {},
+    _sharedSkins: {},
+    _skinMapDirty: false,
+    _savedSkins: new Map(),
+    _myId: null,
+    _processing57: false,
+
+    _autoJoinTimer: null,
+
+    _startAutoJoin(code) {
+      if (this._autoJoinTimer) return;
+      try { localStorage.setItem('3rb_party_code', code); } catch(e) {}
+      this._autoJoinTimer = setInterval(() => {
+        if (this._inParty) { clearInterval(this._autoJoinTimer); this._autoJoinTimer = null; return; }
+        if (_0x18a8d1 && (_0x18a8d1.connected || _0x18a8d1.connected2)) {
+          clearInterval(this._autoJoinTimer); this._autoJoinTimer = null;
+          this.joinParty(code);
+        }
+      }, 1500);
+      setTimeout(() => { if (this._autoJoinTimer) { clearInterval(this._autoJoinTimer); this._autoJoinTimer = null; } }, 30000);
+    },
 
     init() {
       this._t = document.getElementById('party-token');
@@ -6096,6 +6478,11 @@
       if (this._j) this._j.addEventListener('click', () => this.joinParty((this._t?.value || '').trim()));
       if (this._t) this._t.addEventListener('keydown', e => e.key === 'Enter' && this.joinParty((this._t?.value || '').trim()));
       if (this._l) this._l.addEventListener('click', () => this.leaveParty());
+
+      try {
+        const saved = localStorage.getItem('3rb_party_code');
+        if (saved && !this._inParty) this._startAutoJoin(saved);
+      } catch(e) {}
     },
 
     _updateUI() {
@@ -6112,6 +6499,8 @@
     hookWs(ws) {
       if (!this._ws) {
         this._ws = ws;
+      } else {
+        this._ws2 = ws;
       }
       const orig = ws.onmessage;
       ws.onmessage = (e) => {
@@ -6120,12 +6509,33 @@
     },
 
     _send(b) {
-      if (!this._ws || this._ws.readyState !== WebSocket.OPEN) return false;
-      this._ws.send(new Uint8Array(b).buffer);
+      const _ws = _0x90a1a7.typeID === 2 ? (_0x18a8d1.ws2) : this._ws;
+      if (!_ws || _ws.readyState !== WebSocket.OPEN) return false;
+      _ws.send(new Uint8Array(b).buffer);
       return true;
     },
 
+    _broadcastCurrentSkins() {
+      if (!this._inParty) return;
+      try {
+        const s1 = _0x90a1a7.skin;
+        if (s1 && !s1.includes("XXXXXXX")) this._sharedSkins[_0x90a1a7.nick] = s1;
+      } catch(e) {}
+      try {
+        const s2 = _0x90a1a7.skin2;
+        if (s2 && !s2.includes("XXXXXXX")) this._sharedSkins[_0x90a1a7.nick2] = s2;
+      } catch(e) {}
+    },
+
+    _sendSkinUpdate(skinUrl, botIdx) {
+      if (!this._inParty || !skinUrl || skinUrl.includes("XXXXXXX")) return;
+      this._sharedSkins[botIdx === 2 ? _0x90a1a7.nick2 : _0x90a1a7.nick] = skinUrl;
+      this._skinMapDirty = true;
+    },
+
     createParty() {
+      this._inParty = false;
+      this._partyCode = '';
       if (!this._send([0x55, 0x00])) {
         _0x40f48a.alert("Party", "Failed - no connection");
         return;
@@ -6149,8 +6559,10 @@
       this._inParty = false;
       this._partyCode = '';
       this._members = {};
+      this._leaveTime = Date.now();
       this._cleanTeamPlayers();
       this._updateUI();
+      try { localStorage.removeItem('3rb_party_code'); } catch(e) {}
       _0x40f48a.normal("Party", "Left party");
     },
 
@@ -6158,6 +6570,10 @@
       for (const _k of _0x12ac51.teamPlayers.keys()) {
         if (typeof _k === 'string') _0x12ac51.teamPlayers["delete"](_k);
       }
+      this._savedSkins.clear();
+      this._pendingSkins = {};
+      this._sharedSkins = {};
+      this._skinMapDirty = true;
       _0x12ac51.partyCells.clear();
     },
 
@@ -6168,6 +6584,23 @@
       const op = v.getUint8(0);
 
       if (op === 0x55) {
+        if (v.byteLength > 2 && v.getUint8(1) === 0x03) {
+          if (this._inParty) {
+            let off = 2;
+            const _nlen = [];
+            while (off < v.byteLength && v.getUint8(off) !== 0) { _nlen.push(v.getUint8(off)); off++; }
+            off++;
+            const _nnick = new TextDecoder().decode(new Uint8Array(_nlen));
+            const _slen = [];
+            while (off < v.byteLength && v.getUint8(off) !== 0) { _slen.push(v.getUint8(off)); off++; }
+            const _sskin = new TextDecoder().decode(new Uint8Array(_slen));
+            if (_nnick && _sskin && !_sskin.includes("XXXXXXX")) this._sharedSkins[_nnick] = _sskin;
+            return true;
+          }
+          return true;
+        }
+        if (this._inParty) return true;
+        if (this._leaveTime && Date.now() - this._leaveTime < 3000) return true;
         let p = 1;
         const c = [];
         while (p < v.byteLength && v.getUint8(p) !== 0) { c.push(String.fromCharCode(v.getUint8(p))); p++; }
@@ -6177,10 +6610,27 @@
         this._partyCode = code;
         this._updateUI();
         _0x40f48a.normal("Party", "Party code: " + code);
-        return false;
+        try { localStorage.setItem('3rb_party_code', code); } catch(e) {}
+        try { if (_0x90a1a7.skin && !_0x90a1a7.skin.includes("XXXXXXX")) this._sharedSkins[_0x90a1a7.nick] = _0x90a1a7.skin; } catch(e) {}
+        try { if (_0x90a1a7.skin2 && !_0x90a1a7.skin2.includes("XXXXXXX")) this._sharedSkins[_0x90a1a7.nick2] = _0x90a1a7.skin2; } catch(e) {}
+        try {
+          const _enc2 = new TextEncoder();
+          const _raw2 = _enc2.encode(code);
+          const _buf2 = new Uint8Array(2 + _raw2.length);
+          _buf2[0] = 0x55; _buf2[1] = 0x01;
+          _buf2.set(_raw2, 2);
+          if (_0x18a8d1.ws2 && _0x18a8d1.ws2.readyState === WebSocket.OPEN) {
+            _0x18a8d1.ws2.send(new Uint8Array(_buf2).buffer);
+          }
+        } catch(e) {}
+        return true;
       }
 
       if (op === 0x57) {
+        if (!this._inParty) return true;
+        if (this._processing57) return true;
+        this._processing57 = true;
+        try {
         let off = 1;
         const cnt = v.getUint16(off, true); off += 2;
         const nm = {};
@@ -6189,9 +6639,9 @@
           if (off + 4 > v.byteLength) break;
           const id = v.getUint32(off, true); off += 4;
           const nb = [];
-          while (off < v.byteLength && v.getUint8(off) !== 0) { nb.push(String.fromCharCode(v.getUint8(off))); off++; }
+          while (off < v.byteLength && v.getUint8(off) !== 0) { nb.push(v.getUint8(off)); off++; }
           off++;
-          const name = nb.join('');
+          const name = new TextDecoder().decode(new Uint8Array(nb));
           if (off + 3 > v.byteLength) break;
           const r = v.getUint8(off++);
           const g = v.getUint8(off++);
@@ -6201,12 +6651,25 @@
           const sz = v.getInt32(off, true); off += 4;
           const px = v.getInt32(off, true); off += 4;
           const py = v.getInt32(off, true); off += 4;
-          nm[id] = { id, name, col, px, py };
-          newPartyCells.set(id.toString(), [{ x: px, y: py, r: Math.abs(sz) || 50 }]);
+          nm[id] = { id, name, col, px, py, sz };
+          const _r = Math.max(10, Math.sqrt(Math.abs(sz)) * 10);
+          newPartyCells.set(id.toString(), [{ x: px, y: py, r: _r }]);
         }
         this._members = nm;
         _0x12ac51.partyCells = newPartyCells;
+        this._myId = null;
+        for (const _mk of Object.keys(nm)) {
+          const _mv = nm[_mk];
+          if (_mv.name === _0x90a1a7.nick) {
+            this._myId = _mv.id;
+            break;
+          }
+        }
+        if (this._myId !== null) {
+          _0x12ac51.teamPlayers.delete(String(this._myId));
+        }
         for (const mid in nm) {
+          if (mid == this._myId) continue;
           const nmd = nm[mid];
           let p = _0x12ac51.teamPlayers.get(mid);
           if (!p) {
@@ -6217,23 +6680,68 @@
             p.isAlive = 1;
             _0x12ac51.teamPlayers.set(mid, p);
           }
-          p.x = nmd.px;
-          p.y = nmd.py;
-          p.animX = nmd.px;
-          p.animY = nmd.py;
-          p.timeStamp = performance.now();
+           p.isAlive = 1;
+           p.mass = nmd.sz;
+           p.x = nmd.px;
+           p.y = nmd.py;
+           if (Math.abs(p.animX - nmd.px) > 2000 || Math.abs(p.animY - nmd.py) > 2000) {
+             p.animX = nmd.px;
+             p.animY = nmd.py;
+           }
+         }
+         const _botNicks = [_0x90a1a7.nick, _0x90a1a7.nick2].filter(Boolean);
+         for (const _k of _0x12ac51.teamPlayers.keys()) {
+           if (typeof _k === 'string' && !nm[_k]) {
+             const _tp = _0x12ac51.teamPlayers.get(_k);
+             if (_tp && _botNicks.includes(_tp.nick)) continue;
+             if (_tp && _tp.skin) this._savedSkins.set(_k, _tp.skin);
+             _0x12ac51.teamPlayers["delete"](_k);
+           }
+         }
+        for (const _mid of _0x12ac51.teamPlayers.keys()) {
+          if (this._savedSkins.has(_mid)) {
+            const _tp = _0x12ac51.teamPlayers.get(_mid);
+            if (_tp && !_tp.skin) {
+              _tp.skin = this._savedSkins.get(_mid);
+            }
+            this._savedSkins.delete(_mid);
+          }
         }
-        for (const _k of _0x12ac51.teamPlayers.keys()) {
-          if (typeof _k === 'string' && !nm[_k]) _0x12ac51.teamPlayers["delete"](_k);
+        for (const _sid of Object.keys(this._pendingSkins)) {
+          const tp = _0x12ac51.teamPlayers.get(_sid);
+          if (tp) {
+            tp.skin = this._pendingSkins[_sid];
+            delete this._pendingSkins[_sid];
+          }
         }
+        for (const _tpk of _0x12ac51.teamPlayers.keys()) {
+          const _tp = _0x12ac51.teamPlayers.get(_tpk);
+          if (_tp && !_tp.skin) {
+            let _shared = this._sharedSkins[_tp.nick];
+            if (!_shared) {
+              for (const _sn of Object.keys(this._sharedSkins)) {
+                if (_sn.toLowerCase() === _tp.nick.toLowerCase()) {
+                  _shared = this._sharedSkins[_sn];
+                  break;
+                }
+              }
+            }
+            if (_shared && !_shared.includes("XXXXXXX")) {
+              _tp.skin = _shared;
+              this._skinMapDirty = true;
+            }
+          }
+        }
+        this._broadcastCurrentSkins();
         return true;
+        } finally { this._processing57 = false; }
       }
 
       if (op === 0x58) {
         let off = 1;
         const removeId = v.getUint32(off, true);
         _0x12ac51.teamPlayers.delete(String(removeId));
-        console.log("Party member removed: " + removeId);
+
         return true;
       }
 
@@ -6248,7 +6756,28 @@
       }
 
       return false;
+    },
+
+    _sendSkinPacket(skinUrl, nick) {
     }
+  };
+  window.partyCode = function(code) {
+    if (_0xpartyNet && !_0xpartyNet._inParty && code) _0xpartyNet.joinParty(code);
+  };
+  window.partyDebug = function() {
+    if (!_0xpartyNet) return 'partyNet not initialized';
+    return {
+      inParty: _0xpartyNet._inParty,
+      sharedSkins: Object.assign({}, _0xpartyNet._sharedSkins),
+      members: _0xpartyNet._members ? _0xpartyNet._members.map(function(m) { return m.nick; }) : [],
+      leaveTime: _0xpartyNet._leaveTime
+    };
+  };
+  window.removeChatHistory = function(code) {
+    _0x14f7b2("#chatroom .chatroom-row").each(function() {
+      if (_0x14f7b2(this).text().indexOf(code) >= 0) _0x14f7b2(this).remove();
+    });
+    if (_0xpartyNet) _0xpartyNet._startAutoJoin(code);
   };
   _0xpartyNet.init();
 }(window, $, document);
