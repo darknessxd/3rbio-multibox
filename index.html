@@ -569,7 +569,7 @@
     </style>
     <meta charset="UTF-8">
     <meta charset="utf-8">
-    <title>3rb.io — Multiboxtest</title>
+    <title>3rb.io — Multibox V1</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.0.0/css/all.css" integrity="" crossorigin="anonymous">
     <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Oswald:300,400|Raleway:300,400,500|Ubuntu:400,500,700"
@@ -619,18 +619,13 @@
         .gallery-nav:hover { background:#0f3460; color:#fff; }
         .gallery-nav.active-page { background:#e94560; color:#fff; border-color:#e94560; font-weight:bold; }
         .gallery-info { font-size:11px; color:#666; text-align:center; margin-top:4px; }
-        .skin-circles { display:flex; gap:12px; justify-content:center; margin-top:8px; margin-bottom:8px; }
-        .skin-circle-outer { width:90px; height:90px; position:relative; background:#484b52; border-radius:50%; cursor:pointer; transition:transform .5s; }
-        .skin-circle-outer:hover { transform:scale(1.05); }
-        .skin-circle { position:absolute; width:76px; height:76px; margin:7px; background:#fff; border-radius:50%; }
-        .skin-preview2 { width:62px; height:62px; border-radius:50%; margin:7px; background-color:#d0d0d0!important; background-size:cover!important; box-shadow:0 0 20px #969696 inset; }
         #skinGalleryWrap { display:none; }
 
     </style>
     <div id="loading-screen"></div>
     <div id="huds">
         <div id="leaderboard-hud">
-            <div id="leaderboard-head" data="html.leaderboard.title">Multibox</div>
+            <div id="leaderboard-head" data="html.leaderboard.title">Multibox V1</div>
             <div id="leaderboard-positions"></div>
             <div id="leaderboard-chart">
                 <div class="chart-bar red"></div>
@@ -815,18 +810,6 @@
                     <i class="fa fa-eye fa-fw"></i>
                 </a>
             </div>
-            <div class="skin-circles">
-                <div class="skin-circle-outer" id="skinCircle1">
-                    <div class="skin-circle">
-                        <div class="skin-preview"></div>
-                    </div>
-                </div>
-                <div class="skin-circle-outer" id="galleryCircle">
-                    <div class="skin-circle">
-                        <div class="skin-preview2"></div>
-                    </div>
-                </div>
-            </div>
             <div class="skin-wheel">
                 <div class="skin-wheel-bg"></div>
                 <div class="skin-selector one" value="1"></div>
@@ -841,12 +824,12 @@
             <div class="inputs-box">
                 <div style="display:flex;gap:4px;margin-bottom:4px">
                     <input class="menu-inputs" id="tag" placeholder="Tag" style="width:50px">
-                    <input class="menu-inputs" id="nick" placeholder="Nick 1" style="flex:1">
+                    <input class="menu-inputs" id="nick" placeholder="Nick 1" style="min-width:0;flex:1">
                     <input class="menu-inputs" id="nick2" placeholder="Nick 2" style="width:100px">
                 </div>
                 <div style="display:flex;gap:4px;margin-bottom:4px">
                     <input class="menu-inputs" id="arbSkin" placeholder="Free Skin" style="width:70px">
-                    <input class="menu-inputs" id="skin" placeholder="Skin URL 1" style="flex:1">
+                    <input class="menu-inputs" id="skin" placeholder="Skin URL 1" style="min-width:0;flex:1">
                     <input class="menu-inputs" id="skin2" placeholder="Skin URL 2" style="width:90px">
                 </div>
                 <div id="skinGalleryWrap">
@@ -1098,6 +1081,15 @@
                     </span>
                 </div>
                 <div class="row">
+                    <span class="title" data="html.settingMenu.multiboxShield">Multibox Shield</span>
+                    <span class="settings-options" type="options" name="multiboxShield">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        <b value="off" class="active" data="html.settingMenu.opt_off">Off</b>
+                        <b value="on" data="html.settingMenu.opt_on">On</b>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="row">
                     <span class="title" data="html.settingMenu.teamIndicator">Teammate indicator</span>
                     <span class="settings-options" type="options" name="teamIndicator">
                         <i class="fa fa-chevron-left" aria-hidden="true"></i>
@@ -1136,15 +1128,7 @@
                         <i class="fa fa-chevron-right" aria-hidden="true"></i>
                     </span>
                 </div>
-                <div class="row">
-                    <span class="title" data="html.settingMenu.showMassInLB">Show mass in leaderboard</span>
-                    <span class="settings-options" type="options" name="showMassInLB">
-                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        <b value="off" class="active" data="html.settingMenu.opt_off">Off</b>
-                        <b value="on" data="html.settingMenu.opt_on">On</b>
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </span>
-                </div>
+
                 <div class="row">
                     <span class="title" data="html.settingMenu.grayscaleInactive">Grayscale Inactive</span>
                     <span class="settings-options" type="options" name="grayscaleInactive">
@@ -1175,15 +1159,6 @@
                 <div class="row">
                     <span class="title" data="html.settingMenu.cellGradient">Cell Inner Shadow</span>
                     <span class="settings-options" type="options" name="cellGradient">
-                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        <b value="off" class="active" data="html.settingMenu.opt_off">Off</b>
-                        <b value="on" data="html.settingMenu.opt_on">On</b>
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </span>
-                </div>
-                <div class="row">
-                    <span class="title" data="html.settingMenu.multiboxShield">Multibox Shield</span>
-                    <span class="settings-options" type="options" name="multiboxShield">
                         <i class="fa fa-chevron-left" aria-hidden="true"></i>
                         <b value="off" class="active" data="html.settingMenu.opt_off">Off</b>
                         <b value="on" data="html.settingMenu.opt_on">On</b>
@@ -1922,18 +1897,7 @@
                         <input id="leaderboardTitleColor" opacity="0">
                     </span>
                 </div>
-                <div class="row">
-                    <span class="title" data="html.themeMenu.customLeaderboardHead">Custom Leaderboard Head</span>
-                    <span class="theme-options" type="options" name="customLeaderboardHead">
-                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        <b value="off" class="active">Off (DarknessV1)</b>
-                        <b value="DarknessV1">DarknessV1</b>
-                        <b value="HSLO">HSLO</b>
-                        <b value="FFA">FFA</b>
-                        <b value="Teams">Teams</b>
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </span>
-                </div>
+
                 <div class="row">
                     <span class="title" data="html.themeMenu.globalRotationSpeed">Global Rotation Speed</span>
                     <span class="theme-options" type="range" name="globalRotationSpeed">
@@ -2003,35 +1967,7 @@
                         <input id="virusGearColor" opacity="0">
                     </span>
                 </div>
-                <div class="row divider"></div>
-                <div class="row">
-                    <span class="title" data="html.themeMenu.foodGlowSize">Food Glow Size</span>
-                    <span class="theme-options" type="range" name="foodGlowSize">
-                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        <span value="20" step="5" min="5" max="200" class="outer">
-                            <span class="inner"></span>
-                        </span>
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        <span class="range-value">[0]</span>
-                    </span>
-                </div>
-                <div class="row">
-                    <span class="title" data="html.themeMenu.foodGlowStrength">Food Glow Strength</span>
-                    <span class="theme-options" type="range" name="foodGlowStrength">
-                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        <span value="1" step="1" min="1" max="20" class="outer">
-                            <span class="inner"></span>
-                        </span>
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        <span class="range-value">[0]</span>
-                    </span>
-                </div>
-                <div class="row">
-                    <span class="title" data="html.themeMenu.foodGlowColor">Food Glow Color</span>
-                    <span class="theme-options" type="colorpicker">
-                        <input id="foodGlowColor" opacity="0">
-                    </span>
-                </div>
+
                 <div class="row divider"></div>
                 <div class="row">
                     <span class="title" data="html.themeMenu.ghostColor">Ghost cell color [minimap]</span>
